@@ -1,0 +1,19 @@
+name: java-lint
+
+trigger:
+  change:
+    paths:
+      - "src/main/java/**"
+      - "pom.xml"
+      - "checkstyle.xml"
+
+jobs:
+  lint:
+    image: maven:3.9-eclipse-temurin-17
+    runs-on:
+      cluster:
+    steps:
+      - name: compile and lint
+        commands:
+          - mvn compile -q
+          - mvn checkstyle:check -q

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+  Minimal Checkstyle config for the Ark Java SDK.
+
+  Focuses on issues that actually break builds or cause confusion:
+  unused imports, star-imports, and duplicate imports.  Formatting
+  style is left to the codegen templates + editor settings.
+
+  Excludes: examples/ (developer convenience code, not library surface).
+-->
+<module name="Checker">
+  <property name="charset" value="UTF-8"/>
+  <property name="severity" value="error"/>
+
+  <module name="TreeWalker">
+    <!-- Flag imports that are never referenced in the file. -->
+    <module name="UnusedImports"/>
+
+    <!-- Disallow wildcard imports (e.g. import java.util.*) in generated code.
+         Hand-written service layer is excluded — star imports are entrenched there. -->
+    <module name="AvoidStarImport">
+      <property name="id" value="AvoidStarImport"/>
+    </module>
+    <module name="SuppressionXpathSingleFilter">
+      <property name="checks" value="AvoidStarImport"/>
+      <property name="files" value="[\\/](service|interceptor|utils)[\\/]"/>
+    </module>
+
+    <!-- Flag identical import statements. -->
+    <module name="RedundantImport"/>
+  </module>
+</module>

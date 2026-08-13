@@ -1,0 +1,19 @@
+# GitLab CI for ark-runtime-java.
+#
+# Single `lint` stage that runs checkstyle against the same checkstyle.xml
+# config the local pre-commit hook uses. This is the safety net in case
+# someone bypasses the local hook (e.g. `git commit --no-verify`) — the
+# merge-request pipeline blocks on this job before the MR can be merged.
+
+stages:
+  - lint
+
+checkstyle:
+  stage: lint
+  image: maven:3.9-eclipse-temurin-17
+  script:
+    - mvn compile -q
+    - mvn checkstyle:check -q
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'

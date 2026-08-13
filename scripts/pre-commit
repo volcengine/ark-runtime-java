@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "==> Running pre-commit checks..."
+
+# Only check staged .java files
+STAGED=$(git diff --cached --name-only --diff-filter=ACM -- '*.java' | grep -v '^examples/' || true)
+if [ -z "$STAGED" ]; then
+    echo "No staged Java files (excluding examples), skipping lint."
+    exit 0
+fi
+
+echo "==> mvn compile (check for compilation errors)..."
+mvn compile -q
+
+echo "==> mvn checkstyle:check (unused/star/redundant imports)..."
+mvn checkstyle:check -q
+
+echo "==> Pre-commit checks passed."
