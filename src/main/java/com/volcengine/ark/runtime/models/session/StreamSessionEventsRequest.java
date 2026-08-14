@@ -24,31 +24,26 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * StreamEventsRequest
+ * StreamSessionEventsRequest
  */
 @JsonPropertyOrder({
-  StreamEventsRequest.JSON_PROPERTY_SESSION_ID,
-  StreamEventsRequest.JSON_PROPERTY_THREAD_ID,
-  StreamEventsRequest.JSON_PROPERTY_EVENT_DELTAS
+  StreamSessionEventsRequest.JSON_PROPERTY_SESSION_ID,
+  StreamSessionEventsRequest.JSON_PROPERTY_EVENT_DELTAS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class StreamEventsRequest {
+public class StreamSessionEventsRequest {
   public static final String JSON_PROPERTY_SESSION_ID = "sessionId";
   @javax.annotation.Nonnull
   private String sessionId;
-
-  public static final String JSON_PROPERTY_THREAD_ID = "threadId";
-  @javax.annotation.Nonnull
-  private String threadId;
 
   public static final String JSON_PROPERTY_EVENT_DELTAS = "event_deltas";
   @javax.annotation.Nullable
   private List<String> eventDeltas;
 
-  public StreamEventsRequest() {
+  public StreamSessionEventsRequest() {
   }
 
-  public StreamEventsRequest sessionId(@javax.annotation.Nonnull String sessionId) {
+  public StreamSessionEventsRequest sessionId(@javax.annotation.Nonnull String sessionId) {
     
     this.sessionId = sessionId;
     return this;
@@ -73,38 +68,13 @@ public class StreamEventsRequest {
     this.sessionId = sessionId;
   }
 
-  public StreamEventsRequest threadId(@javax.annotation.Nonnull String threadId) {
-    
-    this.threadId = threadId;
-    return this;
-  }
-
-  /**
-   * Get threadId
-   * @return threadId
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_THREAD_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-  public String getThreadId() {
-    return threadId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_THREAD_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setThreadId(@javax.annotation.Nonnull String threadId) {
-    this.threadId = threadId;
-  }
-
-  public StreamEventsRequest eventDeltas(@javax.annotation.Nullable List<String> eventDeltas) {
+  public StreamSessionEventsRequest eventDeltas(@javax.annotation.Nullable List<String> eventDeltas) {
     
     this.eventDeltas = eventDeltas;
     return this;
   }
 
-  public StreamEventsRequest addEventDeltasItem(String eventDeltasItem) {
+  public StreamSessionEventsRequest addEventDeltasItem(String eventDeltasItem) {
     if (this.eventDeltas == null) {
       this.eventDeltas = new ArrayList<>();
     }
@@ -140,23 +110,21 @@ public class StreamEventsRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    StreamEventsRequest streamEventsRequest = (StreamEventsRequest) o;
-    return Objects.equals(this.sessionId, streamEventsRequest.sessionId) &&
-        Objects.equals(this.threadId, streamEventsRequest.threadId) &&
-        Objects.equals(this.eventDeltas, streamEventsRequest.eventDeltas);
+    StreamSessionEventsRequest streamSessionEventsRequest = (StreamSessionEventsRequest) o;
+    return Objects.equals(this.sessionId, streamSessionEventsRequest.sessionId) &&
+        Objects.equals(this.eventDeltas, streamSessionEventsRequest.eventDeltas);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sessionId, threadId, eventDeltas);
+    return Objects.hash(sessionId, eventDeltas);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class StreamEventsRequest {\n");
+    sb.append("class StreamSessionEventsRequest {\n");
     sb.append("    sessionId: ").append(toIndentedString(sessionId)).append("\n");
-    sb.append("    threadId: ").append(toIndentedString(threadId)).append("\n");
     sb.append("    eventDeltas: ").append(toIndentedString(eventDeltas)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -172,36 +140,32 @@ public class StreamEventsRequest {
 
   public static class Builder {
 
-    private StreamEventsRequest instance;
+    private StreamSessionEventsRequest instance;
 
     public Builder() {
-      this(new StreamEventsRequest());
+      this(new StreamSessionEventsRequest());
     }
 
-    protected Builder(StreamEventsRequest instance) {
+    protected Builder(StreamSessionEventsRequest instance) {
       this.instance = instance;
     }
 
-    public StreamEventsRequest.Builder sessionId(String sessionId) {
+    public StreamSessionEventsRequest.Builder sessionId(String sessionId) {
       this.instance.sessionId = sessionId;
       return this;
     }
-    public StreamEventsRequest.Builder threadId(String threadId) {
-      this.instance.threadId = threadId;
-      return this;
-    }
-    public StreamEventsRequest.Builder eventDeltas(List<String> eventDeltas) {
+    public StreamSessionEventsRequest.Builder eventDeltas(List<String> eventDeltas) {
       this.instance.eventDeltas = eventDeltas;
       return this;
     }
 
 
     /**
-    * returns a built StreamEventsRequest instance.
+    * returns a built StreamSessionEventsRequest instance.
     *
     * The builder is not reusable.
     */
-    public StreamEventsRequest build() {
+    public StreamSessionEventsRequest build() {
       try {
         return this.instance;
       } finally {
@@ -219,17 +183,16 @@ public class StreamEventsRequest {
   /**
   * Create a builder with no initialized field.
   */
-  public static StreamEventsRequest.Builder builder() {
-    return new StreamEventsRequest.Builder();
+  public static StreamSessionEventsRequest.Builder builder() {
+    return new StreamSessionEventsRequest.Builder();
   }
 
   /**
   * Create a builder with a shallow copy of this instance.
   */
-  public StreamEventsRequest.Builder toBuilder() {
-    return new StreamEventsRequest.Builder()
+  public StreamSessionEventsRequest.Builder toBuilder() {
+    return new StreamSessionEventsRequest.Builder()
       .sessionId(getSessionId())
-      .threadId(getThreadId())
       .eventDeltas(getEventDeltas());
   }
 
