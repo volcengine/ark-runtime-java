@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * 会话流上的一个事件。&#x60;type&#x60; 是判别式，其余字段随 type 变化。SDK 层建议 把这个模型作为出流事件的公共 envelope；具体 variant 的 payload 可以在 消费侧按 &#x60;type&#x60; 再解构。
+ * 会话流上的一个事件。&#x60;type&#x60; 是判别式，其余字段随 type 变化。SDK 层建议 把这个模型作为出流事件的公共 envelope；具体 variant 的 payload 可以在 消费侧按 &#x60;type&#x60; 再解构。&#x60;event_start&#x60; / &#x60;event_delta&#x60; 的强类型结构见 &#x60;ManagedAgentsStreamPreviewEvent&#x60;；这两种瞬时预览帧不携带 &#x60;id&#x60; / &#x60;processed_at&#x60;。
  */
 @JsonPropertyOrder({
   ManagedAgentsSessionEvent.JSON_PROPERTY_TYPE,
@@ -53,7 +53,7 @@ public class ManagedAgentsSessionEvent {
   }
 
   /**
-   * 事件类型判别式，例如 &#x60;agent.message&#x60; / &#x60;span.outcome_evaluation_end&#x60; / &#x60;session.status_idle&#x60;。
+   * 事件类型判别式，例如 &#x60;agent.message&#x60; / &#x60;event_start&#x60; / &#x60;event_delta&#x60; / &#x60;session.status_idle&#x60;。
    * @return type
    */
   @javax.annotation.Nonnull
