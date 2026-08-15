@@ -1,0 +1,44 @@
+name: Java CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  # A workflow added by a pull request is not loaded from the base branch for
+  # that pull_request event. Running the workflow from ark-hand's same-repo
+  # sync branch makes the first workflow-installation PR testable as well.
+  push:
+    branches:
+      - "sync/**"
+    paths:
+      - ".github/workflows/ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: java-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  java-ci:
+    name: Java CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "8"
+          cache: maven
+
+      - name: Compile
+        run: mvn -B compile
+
+      - name: Package
+        run: mvn -B package -DskipTests
