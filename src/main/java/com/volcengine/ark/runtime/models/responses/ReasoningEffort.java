@@ -25,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ReasoningEffort {
 
+  NONE("none"),
+
   MINIMAL("minimal"),
 
   LOW("low"),
@@ -32,6 +34,8 @@ public enum ReasoningEffort {
   MEDIUM("medium"),
 
   HIGH("high"),
+
+  XHIGH("xhigh"),
 
   MAX("max");
 
