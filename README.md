@@ -13,14 +13,14 @@ automatic retry logic.
 <dependency>
     <groupId>com.volcengine</groupId>
     <artifactId>ark-runtime</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'com.volcengine:ark-runtime:0.1.0'
+implementation 'com.volcengine:ark-runtime:0.2.0'
 ```
 
 ## Usage

@@ -34,7 +34,7 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class Usage {
   public static final String JSON_PROPERTY_INPUT_IMAGES = "input_images";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private Long inputImages;
 
   public static final String JSON_PROPERTY_GENERATED_IMAGES = "generated_images";
@@ -56,28 +56,28 @@ public class Usage {
   public Usage() {
   }
 
-  public Usage inputImages(@javax.annotation.Nonnull Long inputImages) {
+  public Usage inputImages(@javax.annotation.Nullable Long inputImages) {
 
     this.inputImages = inputImages;
     return this;
   }
 
   /**
-   * Number of reference images supplied by the client.
+   * Number of reference images supplied by the client. May be absent in responses from older services.
    * @return inputImages
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_INPUT_IMAGES, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_INPUT_IMAGES, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public Long getInputImages() {
     return inputImages;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_INPUT_IMAGES, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setInputImages(@javax.annotation.Nonnull Long inputImages) {
+  @JsonProperty(value = JSON_PROPERTY_INPUT_IMAGES, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setInputImages(@javax.annotation.Nullable Long inputImages) {
     this.inputImages = inputImages;
   }
 
