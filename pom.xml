@@ -21,6 +21,19 @@
         </license>
     </licenses>
 
+    <scm>
+        <url>https://github.com/volcengine/ark-runtime-java</url>
+        <connection>scm:git:https://github.com/volcengine/ark-runtime-java.git</connection>
+        <developerConnection>scm:git:https://github.com/volcengine/ark-runtime-java.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <id>volcengine</id>
+            <name>ark-runtime</name>
+            <email>volcengine@bytedance.com</email>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.source.version>8</java.source.version>
@@ -156,4 +169,73 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- Publishing to Maven Central via the volcengine Sonatype
+                 account: signed jars uploaded through the
+                 central-publishing-maven-plugin (tokenAuth + autoPublish).
+                 The workflow injects the Central token and the GPG signing
+                 key; everything here mirrors the setup proven by
+                 volcengine/volcengine-java-sdk. -->
+            <id>public</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>sonatype-nexus-staging</id>
+                    <url>https://ossrh-staging-api.central.sonatype.com/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.7</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
