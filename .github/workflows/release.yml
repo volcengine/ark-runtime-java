@@ -1,0 +1,123 @@
+name: Java Release
+
+# Publishes com.volcengine:ark-runtime to Maven Central. Tags are created
+# exclusively by ark-hand after a sync PR lands on main, so a pushed v* tag
+# is always a reviewed release snapshot whose tree matches the internal
+# source tree. Mirrors the proven setup from volcengine/volcengine-java-sdk:
+# the `public` profile in pom.xml wires maven-javadoc/gpg and the
+# central-publishing-maven-plugin (tokenAuth, autoPublish); this workflow
+# only injects the Central token and the GPG signing key.
+#
+# The workflow_dispatch input allows re-publishing (or first-publishing) an
+# existing tag — e.g. when secrets were still missing when the tag was
+# originally pushed.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (must already exist, e.g. v0.3.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# Never cancel an in-flight publish; a second dispatch for the same tag
+# should queue behind it instead of racing the upload.
+concurrency:
+  group: java-release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish to Maven Central
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Resolve release tag
+        id: tag
+        env:
+          DISPATCH_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || '' }}
+        run: |
+          tag="${DISPATCH_TAG:-${GITHUB_REF_NAME}}"
+          case "${tag}" in
+            v[0-9]*.[0-9]*.0) ;;
+            *)
+              echo "::error::${tag} is not a release tag (expected vMAJOR.MINOR.0)"
+              exit 1
+              ;;
+          esac
+          echo "name=${tag}" >> "$GITHUB_OUTPUT"
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.name }}
+
+      - name: Verify pom version matches tag
+        env:
+          RELEASE_TAG: ${{ steps.tag.outputs.name }}
+        run: |
+          version="${RELEASE_TAG#v}"
+          actual=$(python3 -c "
+          import re
+          m = re.search(r'<artifactId>ark-runtime</artifactId>\s*<version>([^<]+)</version>', open('pom.xml').read())
+          print(m.group(1) if m else 'missing')
+          ")
+          if [ "${actual}" != "${version}" ]; then
+            echo "::error::pom.xml ark-runtime version ${actual} does not match tag ${RELEASE_TAG}"
+            exit 1
+          fi
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "8"
+          distribution: "temurin"
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+
+      - name: Check Maven Central version
+        id: maven_check
+        env:
+          RELEASE_TAG: ${{ steps.tag.outputs.name }}
+        run: |
+          version="${RELEASE_TAG#v}"
+          pom_url="https://repo.maven.apache.org/maven2/com/volcengine/ark-runtime/${version}/ark-runtime-${version}.pom"
+          code=$(curl -sS -o /dev/null -w '%{http_code}' "${pom_url}")
+          echo "publish_needed=$([ "${code}" = "200" ] && echo false || echo true)" >> "$GITHUB_OUTPUT"
+
+      - name: Check publish credentials
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          missing=""
+          [ -z "${OSSRH_USERNAME}" ] && missing="${missing} OSSRH_USERNAME"
+          [ -z "${OSSRH_TOKEN}" ] && missing="${missing} OSSRH_TOKEN"
+          [ -z "${GPG_PRIVATE_KEY}" ] && missing="${missing} GPG_PRIVATE_KEY"
+          [ -z "${GPG_PASSPHRASE}" ] && missing="${missing} GPG_PASSPHRASE"
+          if [ -n "${missing}" ]; then
+            echo "::error::missing repository secrets:${missing}"
+            exit 1
+          fi
+
+      - name: Publish to Maven Central
+        if: steps.maven_check.outputs.publish_needed == 'true'
+        run: |
+          mvn clean deploy -B -Ppublic -DskipTests \
+            -Dmaven.javadoc.failOnError=false \
+            -Dmaven.javadoc.quiet=true
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
