@@ -18,12 +18,25 @@ public class ArkHttpException extends RuntimeException {
     public final String requestId;
 
     public ArkHttpException(ArkAPIError error, Exception parent, int statusCode, String requestId) {
-        super(error.error.message, parent);
+        super(errorMessage(error), parent);
+        ArkAPIError.ArkErrorDetails details = errorDetails(error);
         this.statusCode = statusCode;
-        this.code = error.error.code;
-        this.param = error.error.param;
-        this.type = error.error.type;
+        this.code = details.getCode();
+        this.param = details.getParam();
+        this.type = details.getType();
         this.requestId = requestId;
+    }
+
+    private static String errorMessage(ArkAPIError error) {
+        return errorDetails(error).getMessage();
+    }
+
+    private static ArkAPIError.ArkErrorDetails errorDetails(ArkAPIError error) {
+        if (error != null && error.getError() != null) {
+            return error.getError();
+        }
+        return new ArkAPIError.ArkErrorDetails(
+                "HTTP request failed without error details", "", "", "HTTPError");
     }
 
     public String getMessage() {

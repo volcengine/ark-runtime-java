@@ -4,6 +4,10 @@
 package com.volcengine.ark.runtime.exception;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
 public class ArkAPIError {
 
     ArkErrorDetails error;
@@ -20,6 +24,42 @@ public class ArkAPIError {
 
     public void setError(ArkErrorDetails error) {
         this.error = error;
+    }
+
+    /**
+     * Parses both the standard {"error": {...}} envelope and services that
+     * return the error details directly. Unknown response shapes retain the
+     * raw body as the exception message instead of producing a null error.
+     */
+    public static ArkAPIError fromResponseBody(ObjectMapper mapper, String responseBody, String fallbackMessage) {
+        if (responseBody != null && !responseBody.trim().isEmpty()) {
+            try {
+                JsonNode root = mapper.readTree(responseBody);
+                if (root != null && root.isObject()) {
+                    JsonNode detailsNode = root.get("error");
+                    if (detailsNode == null && root.has("message")) {
+                        detailsNode = root;
+                    }
+                    if (detailsNode != null && detailsNode.isObject()) {
+                        ArkErrorDetails details = mapper.treeToValue(detailsNode, ArkErrorDetails.class);
+                        if (details != null) {
+                            return new ArkAPIError(details);
+                        }
+                    }
+                }
+            } catch (IOException ignored) {
+                // Fall through and preserve the raw response body.
+            }
+        }
+
+        String message = responseBody;
+        if (message == null || message.trim().isEmpty()) {
+            message = fallbackMessage;
+        }
+        if (message == null || message.trim().isEmpty()) {
+            message = "HTTP request failed with an empty response body";
+        }
+        return new ArkAPIError(new ArkErrorDetails(message, "", "", "HTTPError"));
     }
 
     @Override

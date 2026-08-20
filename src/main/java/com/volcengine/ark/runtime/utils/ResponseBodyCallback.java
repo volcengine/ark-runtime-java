@@ -50,8 +50,11 @@ public class ResponseBodyCallback implements Callback<ResponseBody> {
 
         String requestId = "";
         try {
-            Headers headers = response.raw().request().headers();
-            requestId = headers.get(Const.CLIENT_REQUEST_HEADER);
+            requestId = response.headers().get(Const.SERVER_REQUEST_HEADER);
+            if (requestId == null || requestId.isEmpty()) {
+                Headers headers = response.raw().request().headers();
+                requestId = headers.get(Const.CLIENT_REQUEST_HEADER);
+            }
         } catch (Exception ignored) {
 
         }
@@ -80,22 +83,17 @@ public class ResponseBodyCallback implements Callback<ResponseBody> {
             if (!response.isSuccessful()) {
                 HttpException e = new HttpException(response);
                 ResponseBody errorBody = response.errorBody();
-
-                if (errorBody == null) {
-                    throw e;
-                } else {
-                    try {
-                        ArkAPIError error = mapper.readValue(
-                                errorBody.string(),
-                                ArkAPIError.class
-                        );
-                        throw new ArkHttpException(error, e, e.code(), requestId);
-                    } catch (ArkHttpException httpException) {
-                        throw httpException;
-                    } catch (Exception ignore) {
-                        throw new ArkHttpException(new ArkAPIError(new ArkAPIError.ArkErrorDetails(e.getMessage(), "", "", "InternalServiceError")), e, e.code(), requestId);
+                String responseBody = null;
+                try {
+                    if (errorBody != null) {
+                        responseBody = errorBody.string();
                     }
+                } catch (IOException ignored) {
+                    // Preserve status and request ID even if the body cannot be read.
                 }
+                ArkAPIError error = ArkAPIError.fromResponseBody(
+                        mapper, responseBody, e.getMessage());
+                throw new ArkHttpException(error, e, e.code(), requestId);
             }
 
             InputStream in = response.body().byteStream();

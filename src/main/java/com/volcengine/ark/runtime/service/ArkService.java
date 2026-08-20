@@ -220,24 +220,7 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
             T resp = apiCall.blockingGet();
             return resp;
         } catch (HttpException e) {
-            String requestId = "";
-            try {
-                Headers headers = e.response().raw().request().headers();
-                requestId = headers.get(Const.CLIENT_REQUEST_HEADER);
-            } catch (Exception ignored) {
-            }
-
-            try {
-                if (e.response() == null || e.response().errorBody() == null) {
-                    throw e;
-                }
-                String errorBody = e.response().errorBody().string();
-
-                ArkAPIError error = mapper.readValue(errorBody, ArkAPIError.class);
-                throw new ArkHttpException(error, e, e.code(), requestId);
-            } catch (IOException ex) {
-                throw e;
-            }
+            throw translateHttpException(e);
         }
     }
 
@@ -245,28 +228,47 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
         try {
             apiCall.blockingAwait();
         } catch (RuntimeException e) {
+            if (e instanceof HttpException) {
+                throw translateHttpException((HttpException) e);
+            }
             Throwable cause = e.getCause();
             if (cause instanceof HttpException) {
                 HttpException he = (HttpException) cause;
-                String requestId = "";
-                try {
-                    Headers headers = he.response().raw().request().headers();
-                    requestId = headers.get(Const.CLIENT_REQUEST_HEADER);
-                } catch (Exception ignored) {
-                }
-                try {
-                    if (he.response() == null || he.response().errorBody() == null) {
-                        throw he;
-                    }
-                    String errorBody = he.response().errorBody().string();
-                    ArkAPIError error = mapper.readValue(errorBody, ArkAPIError.class);
-                    throw new ArkHttpException(error, he, he.code(), requestId);
-                } catch (IOException ioe) {
-                    throw new RuntimeException(he);
-                }
+                throw translateHttpException(he);
             }
             throw e;
         }
+    }
+
+    private static ArkHttpException translateHttpException(HttpException exception) {
+        String requestId = requestId(exception);
+        String responseBody = null;
+        try {
+            if (exception.response() != null && exception.response().errorBody() != null) {
+                responseBody = exception.response().errorBody().string();
+            }
+        } catch (IOException ignored) {
+            // The fallback below retains status and request ID even if reading fails.
+        }
+
+        ArkAPIError error = ArkAPIError.fromResponseBody(mapper, responseBody, exception.getMessage());
+        return new ArkHttpException(error, exception, exception.code(), requestId);
+    }
+
+    private static String requestId(HttpException exception) {
+        try {
+            if (exception.response() != null) {
+                String serverRequestId = exception.response().headers().get(Const.SERVER_REQUEST_HEADER);
+                if (serverRequestId != null && !serverRequestId.isEmpty()) {
+                    return serverRequestId;
+                }
+                String clientRequestId = exception.response().raw().request().header(Const.CLIENT_REQUEST_HEADER);
+                return clientRequestId == null ? "" : clientRequestId;
+            }
+        } catch (Exception ignored) {
+            // Return an empty ID when the response does not expose its request.
+        }
+        return "";
     }
 
     public static Flowable<SSE> stream(Call<ResponseBody> apiCall) {
