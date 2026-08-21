@@ -16,11 +16,9 @@
 
 package com.volcengine.ark.runtime.models.messages;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 
 /**
@@ -31,43 +29,10 @@ import java.util.Objects;
   MessagesContextManagementKeepThinkingTurns.JSON_PROPERTY_VALUE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class MessagesContextManagementKeepThinkingTurns {
-  /**
-   * Gets or Sets type
-   */
-  public enum TypeEnum {
-    THINKING_TURNS(String.valueOf("thinking_turns"));
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equalsIgnoreCase(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
+public class MessagesContextManagementKeepThinkingTurns implements MessagesContextManagementKeepParameter {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private TypeEnum type;
+  private MessagesContextManagementKeepParameterType type = MessagesContextManagementKeepParameterType.THINKING_TURNS;
 
   public static final String JSON_PROPERTY_VALUE = "value";
   @javax.annotation.Nonnull
@@ -76,7 +41,7 @@ public class MessagesContextManagementKeepThinkingTurns {
   public MessagesContextManagementKeepThinkingTurns() {
   }
 
-  public MessagesContextManagementKeepThinkingTurns type(@javax.annotation.Nonnull TypeEnum type) {
+  public MessagesContextManagementKeepThinkingTurns type(@javax.annotation.Nonnull MessagesContextManagementKeepParameterType type) {
 
     this.type = type;
     return this;
@@ -90,14 +55,14 @@ public class MessagesContextManagementKeepThinkingTurns {
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public TypeEnum getType() {
+  public MessagesContextManagementKeepParameterType getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull TypeEnum type) {
+  public void setType(@javax.annotation.Nonnull MessagesContextManagementKeepParameterType type) {
     this.type = type;
   }
 
@@ -175,7 +140,7 @@ public class MessagesContextManagementKeepThinkingTurns {
       this.instance = instance;
     }
 
-    public MessagesContextManagementKeepThinkingTurns.Builder type(TypeEnum type) {
+    public MessagesContextManagementKeepThinkingTurns.Builder type(MessagesContextManagementKeepParameterType type) {
       this.instance.type = type;
       return this;
     }

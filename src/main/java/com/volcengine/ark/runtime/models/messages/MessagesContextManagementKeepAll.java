@@ -16,11 +16,9 @@
 
 package com.volcengine.ark.runtime.models.messages;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 
 /**
@@ -30,48 +28,15 @@ import java.util.Objects;
   MessagesContextManagementKeepAll.JSON_PROPERTY_TYPE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class MessagesContextManagementKeepAll {
-  /**
-   * Gets or Sets type
-   */
-  public enum TypeEnum {
-    ALL(String.valueOf("all"));
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equalsIgnoreCase(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
+public class MessagesContextManagementKeepAll implements MessagesContextManagementKeepParameter {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private TypeEnum type;
+  private MessagesContextManagementKeepParameterType type = MessagesContextManagementKeepParameterType.ALL;
 
   public MessagesContextManagementKeepAll() {
   }
 
-  public MessagesContextManagementKeepAll type(@javax.annotation.Nonnull TypeEnum type) {
+  public MessagesContextManagementKeepAll type(@javax.annotation.Nonnull MessagesContextManagementKeepParameterType type) {
 
     this.type = type;
     return this;
@@ -85,14 +50,14 @@ public class MessagesContextManagementKeepAll {
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public TypeEnum getType() {
+  public MessagesContextManagementKeepParameterType getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull TypeEnum type) {
+  public void setType(@javax.annotation.Nonnull MessagesContextManagementKeepParameterType type) {
     this.type = type;
   }
 
@@ -143,7 +108,7 @@ public class MessagesContextManagementKeepAll {
       this.instance = instance;
     }
 
-    public MessagesContextManagementKeepAll.Builder type(TypeEnum type) {
+    public MessagesContextManagementKeepAll.Builder type(MessagesContextManagementKeepParameterType type) {
       this.instance.type = type;
       return this;
     }
