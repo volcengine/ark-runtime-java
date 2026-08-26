@@ -19,46 +19,57 @@ package com.volcengine.ark.runtime.models.session;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * SendSessionEvents 响应体（回执）。
  */
 @JsonPropertyOrder({
-  SendSessionEventsResponse.JSON_PROPERTY_SUCCESS
+  SendSessionEventsResponse.JSON_PROPERTY_DATA
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class SendSessionEventsResponse {
-  public static final String JSON_PROPERTY_SUCCESS = "success";
-  @javax.annotation.Nullable
-  private Boolean success;
+  public static final String JSON_PROPERTY_DATA = "data";
+  @javax.annotation.Nonnull
+  private List<Map<String, Object>> data;
 
   public SendSessionEventsResponse() {
   }
 
-  public SendSessionEventsResponse success(@javax.annotation.Nullable Boolean success) {
+  public SendSessionEventsResponse data(@javax.annotation.Nonnull List<Map<String, Object>> data) {
 
-    this.success = success;
+    this.data = data;
+    return this;
+  }
+
+  public SendSessionEventsResponse addDataItem(Map<String, Object> dataItem) {
+    if (this.data == null) {
+      this.data = new ArrayList<>();
+    }
+    this.data.add(dataItem);
     return this;
   }
 
   /**
-   * 是否成功接收（server 决定语义）。
-   * @return success
+   * 服务端落库 / 转发完成后的事件回声。
+   * @return data
    */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_SUCCESS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_DATA, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public Boolean getSuccess() {
-    return success;
+  public List<Map<String, Object>> getData() {
+    return data;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_SUCCESS, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setSuccess(@javax.annotation.Nullable Boolean success) {
-    this.success = success;
+  @JsonProperty(value = JSON_PROPERTY_DATA, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setData(@javax.annotation.Nonnull List<Map<String, Object>> data) {
+    this.data = data;
   }
 
 
@@ -71,19 +82,19 @@ public class SendSessionEventsResponse {
       return false;
     }
     SendSessionEventsResponse sendSessionEventsResponse = (SendSessionEventsResponse) o;
-    return Objects.equals(this.success, sendSessionEventsResponse.success);
+    return Objects.equals(this.data, sendSessionEventsResponse.data);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(success);
+    return Objects.hash(data);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SendSessionEventsResponse {\n");
-    sb.append("    success: ").append(toIndentedString(success)).append("\n");
+    sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -108,8 +119,8 @@ public class SendSessionEventsResponse {
       this.instance = instance;
     }
 
-    public SendSessionEventsResponse.Builder success(Boolean success) {
-      this.instance.success = success;
+    public SendSessionEventsResponse.Builder data(List<Map<String, Object>> data) {
+      this.instance.data = data;
       return this;
     }
 
@@ -146,7 +157,7 @@ public class SendSessionEventsResponse {
   */
   public SendSessionEventsResponse.Builder toBuilder() {
     return new SendSessionEventsResponse.Builder()
-      .success(getSuccess());
+      .data(getData());
   }
 
 

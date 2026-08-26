@@ -31,7 +31,7 @@ public enum SessionThreadStatus {
 
   TERMINATED("terminated"),
 
-  ARCHIVED("archived");
+  RESCHEDULING("rescheduling");
 
   private String value;
 

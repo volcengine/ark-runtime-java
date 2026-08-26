@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 一条工具配置。按 &#x60;type&#x60; 分三类： - &#x60;agent_toolset_&lt;date&gt;&#x60;：内置工具集（当前默认 &#x60;agent_toolset_20260701&#x60;； 存量 &#x60;agent_toolset_20260401&#x60; 仍兼容） - &#x60;mcp_toolset&#x60;：来自 &#x60;mcp_servers[]&#x60; 的工具集 - &#x60;custom&#x60;：客户端执行的自定义工具  所有变体字段合并在一个 model 里，未使用的字段留空即可（proto oneof 风格；wire 上就是同一个 JSON 对象按 &#x60;type&#x60; 决定语义）。
+ * 一条工具配置。按 &#x60;type&#x60; 分三类： - &#x60;agent_toolset_&lt;date&gt;&#x60;：内置工具集（当前默认 &#x60;agent_toolset_20260701&#x60;； 存量 &#x60;agent_toolset_20260401&#x60; 仍兼容） - &#x60;mcp_toolset&#x60;：来自 &#x60;mcp_servers[]&#x60; 的工具集 - &#x60;evolution&#x60;：自演进类工具 - &#x60;custom&#x60;：客户端执行的自定义工具  所有变体字段合并在一个 model 里，未使用的字段留空即可（proto oneof 风格；wire 上就是同一个 JSON 对象按 &#x60;type&#x60; 决定语义）。
  */
 @JsonPropertyOrder({
   ToolItem.JSON_PROPERTY_TYPE,
@@ -63,7 +63,7 @@ public class ToolItem {
 
   public static final String JSON_PROPERTY_INPUT_SCHEMA = "input_schema";
   @javax.annotation.Nullable
-  private String inputSchema;
+  private CustomToolInputSchema inputSchema;
 
   public ToolItem() {
   }
@@ -226,28 +226,28 @@ public class ToolItem {
     this.description = description;
   }
 
-  public ToolItem inputSchema(@javax.annotation.Nullable String inputSchema) {
+  public ToolItem inputSchema(@javax.annotation.Nullable CustomToolInputSchema inputSchema) {
 
     this.inputSchema = inputSchema;
     return this;
   }
 
   /**
-   * &#x60;custom&#x60; 专用；承载 JSON Schema 的字符串形态 （wire 上是 JSON-encoded string，非 nested object）。
+   * &#x60;custom&#x60; 专用；承载 JSON Schema 对象。
    * @return inputSchema
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_INPUT_SCHEMA, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public String getInputSchema() {
+  public CustomToolInputSchema getInputSchema() {
     return inputSchema;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_INPUT_SCHEMA, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setInputSchema(@javax.annotation.Nullable String inputSchema) {
+  public void setInputSchema(@javax.annotation.Nullable CustomToolInputSchema inputSchema) {
     this.inputSchema = inputSchema;
   }
 
@@ -334,7 +334,7 @@ public class ToolItem {
       this.instance.description = description;
       return this;
     }
-    public ToolItem.Builder inputSchema(String inputSchema) {
+    public ToolItem.Builder inputSchema(CustomToolInputSchema inputSchema) {
       this.instance.inputSchema = inputSchema;
       return this;
     }

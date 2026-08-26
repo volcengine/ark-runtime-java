@@ -19,6 +19,8 @@ package com.volcengine.ark.runtime.models.agent;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,7 +28,12 @@ import java.util.Objects;
  */
 @JsonPropertyOrder({
   ModelConfig.JSON_PROPERTY_ID,
-  ModelConfig.JSON_PROPERTY_SPEED
+  ModelConfig.JSON_PROPERTY_SPEED,
+  ModelConfig.JSON_PROPERTY_TOKEN_LIMITS,
+  ModelConfig.JSON_PROPERTY_INPUT_MODALITIES,
+  ModelConfig.JSON_PROPERTY_PROVIDER,
+  ModelConfig.JSON_PROPERTY_THINKING,
+  ModelConfig.JSON_PROPERTY_REASONING_EFFORT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ModelConfig {
@@ -37,6 +44,26 @@ public class ModelConfig {
   public static final String JSON_PROPERTY_SPEED = "speed";
   @javax.annotation.Nullable
   private ModelSpeed speed;
+
+  public static final String JSON_PROPERTY_TOKEN_LIMITS = "token_limits";
+  @javax.annotation.Nullable
+  private TokenLimits tokenLimits;
+
+  public static final String JSON_PROPERTY_INPUT_MODALITIES = "input_modalities";
+  @javax.annotation.Nullable
+  private List<String> inputModalities;
+
+  public static final String JSON_PROPERTY_PROVIDER = "provider";
+  @javax.annotation.Nullable
+  private String provider;
+
+  public static final String JSON_PROPERTY_THINKING = "thinking";
+  @javax.annotation.Nullable
+  private String thinking;
+
+  public static final String JSON_PROPERTY_REASONING_EFFORT = "reasoning_effort";
+  @javax.annotation.Nullable
+  private String reasoningEffort;
 
   public ModelConfig() {
   }
@@ -91,6 +118,139 @@ public class ModelConfig {
     this.speed = speed;
   }
 
+  public ModelConfig tokenLimits(@javax.annotation.Nullable TokenLimits tokenLimits) {
+
+    this.tokenLimits = tokenLimits;
+    return this;
+  }
+
+  /**
+   * 模型 token 限制快照。
+   * @return tokenLimits
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOKEN_LIMITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public TokenLimits getTokenLimits() {
+    return tokenLimits;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TOKEN_LIMITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTokenLimits(@javax.annotation.Nullable TokenLimits tokenLimits) {
+    this.tokenLimits = tokenLimits;
+  }
+
+  public ModelConfig inputModalities(@javax.annotation.Nullable List<String> inputModalities) {
+
+    this.inputModalities = inputModalities;
+    return this;
+  }
+
+  public ModelConfig addInputModalitiesItem(String inputModalitiesItem) {
+    if (this.inputModalities == null) {
+      this.inputModalities = new ArrayList<>();
+    }
+    this.inputModalities.add(inputModalitiesItem);
+    return this;
+  }
+
+  /**
+   * 底模支持的输入模态列表。
+   * @return inputModalities
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_INPUT_MODALITIES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<String> getInputModalities() {
+    return inputModalities;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_INPUT_MODALITIES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setInputModalities(@javax.annotation.Nullable List<String> inputModalities) {
+    this.inputModalities = inputModalities;
+  }
+
+  public ModelConfig provider(@javax.annotation.Nullable String provider) {
+
+    this.provider = provider;
+    return this;
+  }
+
+  /**
+   * 模型提供方。
+   * @return provider
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getProvider() {
+    return provider;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProvider(@javax.annotation.Nullable String provider) {
+    this.provider = provider;
+  }
+
+  public ModelConfig thinking(@javax.annotation.Nullable String thinking) {
+
+    this.thinking = thinking;
+    return this;
+  }
+
+  /**
+   * thinking 配置。
+   * @return thinking
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_THINKING, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getThinking() {
+    return thinking;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_THINKING, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setThinking(@javax.annotation.Nullable String thinking) {
+    this.thinking = thinking;
+  }
+
+  public ModelConfig reasoningEffort(@javax.annotation.Nullable String reasoningEffort) {
+
+    this.reasoningEffort = reasoningEffort;
+    return this;
+  }
+
+  /**
+   * 推理努力程度。
+   * @return reasoningEffort
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_REASONING_EFFORT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getReasoningEffort() {
+    return reasoningEffort;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_REASONING_EFFORT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setReasoningEffort(@javax.annotation.Nullable String reasoningEffort) {
+    this.reasoningEffort = reasoningEffort;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -102,12 +262,17 @@ public class ModelConfig {
     }
     ModelConfig modelConfig = (ModelConfig) o;
     return Objects.equals(this.id, modelConfig.id) &&
-        Objects.equals(this.speed, modelConfig.speed);
+        Objects.equals(this.speed, modelConfig.speed) &&
+        Objects.equals(this.tokenLimits, modelConfig.tokenLimits) &&
+        Objects.equals(this.inputModalities, modelConfig.inputModalities) &&
+        Objects.equals(this.provider, modelConfig.provider) &&
+        Objects.equals(this.thinking, modelConfig.thinking) &&
+        Objects.equals(this.reasoningEffort, modelConfig.reasoningEffort);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, speed);
+    return Objects.hash(id, speed, tokenLimits, inputModalities, provider, thinking, reasoningEffort);
   }
 
   @Override
@@ -116,6 +281,11 @@ public class ModelConfig {
     sb.append("class ModelConfig {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    speed: ").append(toIndentedString(speed)).append("\n");
+    sb.append("    tokenLimits: ").append(toIndentedString(tokenLimits)).append("\n");
+    sb.append("    inputModalities: ").append(toIndentedString(inputModalities)).append("\n");
+    sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
+    sb.append("    thinking: ").append(toIndentedString(thinking)).append("\n");
+    sb.append("    reasoningEffort: ").append(toIndentedString(reasoningEffort)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -146,6 +316,26 @@ public class ModelConfig {
     }
     public ModelConfig.Builder speed(ModelSpeed speed) {
       this.instance.speed = speed;
+      return this;
+    }
+    public ModelConfig.Builder tokenLimits(TokenLimits tokenLimits) {
+      this.instance.tokenLimits = tokenLimits;
+      return this;
+    }
+    public ModelConfig.Builder inputModalities(List<String> inputModalities) {
+      this.instance.inputModalities = inputModalities;
+      return this;
+    }
+    public ModelConfig.Builder provider(String provider) {
+      this.instance.provider = provider;
+      return this;
+    }
+    public ModelConfig.Builder thinking(String thinking) {
+      this.instance.thinking = thinking;
+      return this;
+    }
+    public ModelConfig.Builder reasoningEffort(String reasoningEffort) {
+      this.instance.reasoningEffort = reasoningEffort;
       return this;
     }
 
@@ -183,7 +373,12 @@ public class ModelConfig {
   public ModelConfig.Builder toBuilder() {
     return new ModelConfig.Builder()
       .id(getId())
-      .speed(getSpeed());
+      .speed(getSpeed())
+      .tokenLimits(getTokenLimits())
+      .inputModalities(getInputModalities())
+      .provider(getProvider())
+      .thinking(getThinking())
+      .reasoningEffort(getReasoningEffort());
   }
 
 

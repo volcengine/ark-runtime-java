@@ -27,7 +27,8 @@ import java.util.Objects;
 @JsonPropertyOrder({
   AgentSkillRef.JSON_PROPERTY_TYPE,
   AgentSkillRef.JSON_PROPERTY_SKILL_ID,
-  AgentSkillRef.JSON_PROPERTY_VERSION
+  AgentSkillRef.JSON_PROPERTY_VERSION,
+  AgentSkillRef.JSON_PROPERTY_USE_LATEST
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class AgentSkillRef {
@@ -42,6 +43,10 @@ public class AgentSkillRef {
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable
   private String version;
+
+  public static final String JSON_PROPERTY_USE_LATEST = "use_latest";
+  @javax.annotation.Nullable
+  private Boolean useLatest;
 
   public AgentSkillRef() {
   }
@@ -121,6 +126,31 @@ public class AgentSkillRef {
     this.version = version;
   }
 
+  public AgentSkillRef useLatest(@javax.annotation.Nullable Boolean useLatest) {
+
+    this.useLatest = useLatest;
+    return this;
+  }
+
+  /**
+   * Session 快照中标识创建时用户选择的是使用最新版本。
+   * @return useLatest
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_USE_LATEST, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getUseLatest() {
+    return useLatest;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_USE_LATEST, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setUseLatest(@javax.annotation.Nullable Boolean useLatest) {
+    this.useLatest = useLatest;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -133,12 +163,13 @@ public class AgentSkillRef {
     AgentSkillRef agentSkillRef = (AgentSkillRef) o;
     return Objects.equals(this.type, agentSkillRef.type) &&
         Objects.equals(this.skillId, agentSkillRef.skillId) &&
-        Objects.equals(this.version, agentSkillRef.version);
+        Objects.equals(this.version, agentSkillRef.version) &&
+        Objects.equals(this.useLatest, agentSkillRef.useLatest);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, skillId, version);
+    return Objects.hash(type, skillId, version, useLatest);
   }
 
   @Override
@@ -148,6 +179,7 @@ public class AgentSkillRef {
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    skillId: ").append(toIndentedString(skillId)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    useLatest: ").append(toIndentedString(useLatest)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -182,6 +214,10 @@ public class AgentSkillRef {
     }
     public AgentSkillRef.Builder version(String version) {
       this.instance.version = version;
+      return this;
+    }
+    public AgentSkillRef.Builder useLatest(Boolean useLatest) {
+      this.instance.useLatest = useLatest;
       return this;
     }
 
@@ -220,7 +256,8 @@ public class AgentSkillRef {
     return new AgentSkillRef.Builder()
       .type(getType())
       .skillId(getSkillId())
-      .version(getVersion());
+      .version(getVersion())
+      .useLatest(getUseLatest());
   }
 
 

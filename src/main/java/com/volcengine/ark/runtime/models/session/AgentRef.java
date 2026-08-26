@@ -16,97 +16,101 @@
 
 package com.volcengine.ark.runtime.models.session;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
- * Agent 引用（对象形态）：&#x60;type: \&quot;agent\&quot;&#x60; + id + optional version。 与 CreateSessionRequest.agent 联合使用。
+ * Agent 引用（对象形态）：&#x60;type: \&quot;agent\&quot;&#x60; 或 &#x60;\&quot;agent_with_overrides\&quot;&#x60;。 MA wire 上两种对象形态都走同一个 JSON object 承载，避免 SDK 生成复杂 union。
  */
 @JsonPropertyOrder({
   AgentRef.JSON_PROPERTY_TYPE,
   AgentRef.JSON_PROPERTY_ID,
-  AgentRef.JSON_PROPERTY_VERSION
+  AgentRef.JSON_PROPERTY_VERSION,
+  AgentRef.JSON_PROPERTY_SYSTEM,
+  AgentRef.JSON_PROPERTY_TOOLS,
+  AgentRef.JSON_PROPERTY_MCP_SERVERS,
+  AgentRef.JSON_PROPERTY_SKILLS,
+  AgentRef.JSON_PROPERTY_MULTIAGENT,
+  AgentRef.JSON_PROPERTY_DISPLAY_NAME,
+  AgentRef.JSON_PROPERTY_MODEL
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class AgentRef {
-  /**
-   * 固定 &#x60;\&quot;agent\&quot;&#x60;。
-   */
-  public enum TypeEnum {
-    AGENT(String.valueOf("agent"));
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equalsIgnoreCase(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private TypeEnum type;
+  private String type;
 
   public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String id;
 
   public static final String JSON_PROPERTY_VERSION = "version";
   @javax.annotation.Nullable
   private Integer version;
 
+  public static final String JSON_PROPERTY_SYSTEM = "system";
+  @javax.annotation.Nullable
+  private String system;
+
+  public static final String JSON_PROPERTY_TOOLS = "tools";
+  @javax.annotation.Nullable
+  private List<Map<String, Object>> tools;
+
+  public static final String JSON_PROPERTY_MCP_SERVERS = "mcp_servers";
+  @javax.annotation.Nullable
+  private List<Map<String, Object>> mcpServers;
+
+  public static final String JSON_PROPERTY_SKILLS = "skills";
+  @javax.annotation.Nullable
+  private List<Map<String, Object>> skills;
+
+  public static final String JSON_PROPERTY_MULTIAGENT = "multiagent";
+  @javax.annotation.Nullable
+  private Map<String, Object> multiagent;
+
+  public static final String JSON_PROPERTY_DISPLAY_NAME = "display_name";
+  @javax.annotation.Nullable
+  private String displayName;
+
+  public static final String JSON_PROPERTY_MODEL = "model";
+  @javax.annotation.Nullable
+  private ModelOverrides model;
+
   public AgentRef() {
   }
 
-  public AgentRef type(@javax.annotation.Nonnull TypeEnum type) {
+  public AgentRef type(@javax.annotation.Nonnull String type) {
 
     this.type = type;
     return this;
   }
 
   /**
-   * 固定 &#x60;\&quot;agent\&quot;&#x60;。
+   * &#x60;\&quot;agent\&quot;&#x60; 或 &#x60;\&quot;agent_with_overrides\&quot;&#x60;。
    * @return type
    */
   @javax.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public TypeEnum getType() {
+  public String getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull TypeEnum type) {
+  public void setType(@javax.annotation.Nonnull String type) {
     this.type = type;
   }
 
-  public AgentRef id(@javax.annotation.Nonnull String id) {
+  public AgentRef id(@javax.annotation.Nullable String id) {
 
     this.id = id;
     return this;
@@ -116,18 +120,18 @@ public class AgentRef {
    * Agent ID。
    * @return id
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getId() {
     return id;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull String id) {
+  @JsonProperty(value = JSON_PROPERTY_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable String id) {
     this.id = id;
   }
 
@@ -156,6 +160,213 @@ public class AgentRef {
     this.version = version;
   }
 
+  public AgentRef system(@javax.annotation.Nullable String system) {
+
+    this.system = system;
+    return this;
+  }
+
+  /**
+   * System prompt 覆写。
+   * @return system
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SYSTEM, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getSystem() {
+    return system;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SYSTEM, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSystem(@javax.annotation.Nullable String system) {
+    this.system = system;
+  }
+
+  public AgentRef tools(@javax.annotation.Nullable List<Map<String, Object>> tools) {
+
+    this.tools = tools;
+    return this;
+  }
+
+  public AgentRef addToolsItem(Map<String, Object> toolsItem) {
+    if (this.tools == null) {
+      this.tools = new ArrayList<>();
+    }
+    this.tools.add(toolsItem);
+    return this;
+  }
+
+  /**
+   * 工具配置覆写。
+   * @return tools
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOOLS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<Map<String, Object>> getTools() {
+    return tools;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TOOLS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setTools(@javax.annotation.Nullable List<Map<String, Object>> tools) {
+    this.tools = tools;
+  }
+
+  public AgentRef mcpServers(@javax.annotation.Nullable List<Map<String, Object>> mcpServers) {
+
+    this.mcpServers = mcpServers;
+    return this;
+  }
+
+  public AgentRef addMcpServersItem(Map<String, Object> mcpServersItem) {
+    if (this.mcpServers == null) {
+      this.mcpServers = new ArrayList<>();
+    }
+    this.mcpServers.add(mcpServersItem);
+    return this;
+  }
+
+  /**
+   * MCP server 配置覆写。
+   * @return mcpServers
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MCP_SERVERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<Map<String, Object>> getMcpServers() {
+    return mcpServers;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MCP_SERVERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setMcpServers(@javax.annotation.Nullable List<Map<String, Object>> mcpServers) {
+    this.mcpServers = mcpServers;
+  }
+
+  public AgentRef skills(@javax.annotation.Nullable List<Map<String, Object>> skills) {
+
+    this.skills = skills;
+    return this;
+  }
+
+  public AgentRef addSkillsItem(Map<String, Object> skillsItem) {
+    if (this.skills == null) {
+      this.skills = new ArrayList<>();
+    }
+    this.skills.add(skillsItem);
+    return this;
+  }
+
+  /**
+   * Skill 配置覆写。
+   * @return skills
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SKILLS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<Map<String, Object>> getSkills() {
+    return skills;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SKILLS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setSkills(@javax.annotation.Nullable List<Map<String, Object>> skills) {
+    this.skills = skills;
+  }
+
+  public AgentRef multiagent(@javax.annotation.Nullable Map<String, Object> multiagent) {
+
+    this.multiagent = multiagent;
+    return this;
+  }
+
+  public AgentRef putMultiagentItem(String key, Object multiagentItem) {
+    if (this.multiagent == null) {
+      this.multiagent = new HashMap<>();
+    }
+    this.multiagent.put(key, multiagentItem);
+    return this;
+  }
+
+  /**
+   * 多 Agent 配置覆写。
+   * @return multiagent
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MULTIAGENT, required = false)
+  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.NON_EMPTY)
+
+  public Map<String, Object> getMultiagent() {
+    return multiagent;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MULTIAGENT, required = false)
+  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.NON_EMPTY)
+  public void setMultiagent(@javax.annotation.Nullable Map<String, Object> multiagent) {
+    this.multiagent = multiagent;
+  }
+
+  public AgentRef displayName(@javax.annotation.Nullable String displayName) {
+
+    this.displayName = displayName;
+    return this;
+  }
+
+  /**
+   * Session 响应中冻结的 Agent 展示名。
+   * @return displayName
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDisplayName(@javax.annotation.Nullable String displayName) {
+    this.displayName = displayName;
+  }
+
+  public AgentRef model(@javax.annotation.Nullable ModelOverrides model) {
+
+    this.model = model;
+    return this;
+  }
+
+  /**
+   * 模型运行参数覆写。
+   * @return model
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public ModelOverrides getModel() {
+    return model;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setModel(@javax.annotation.Nullable ModelOverrides model) {
+    this.model = model;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -168,12 +379,19 @@ public class AgentRef {
     AgentRef agentRef = (AgentRef) o;
     return Objects.equals(this.type, agentRef.type) &&
         Objects.equals(this.id, agentRef.id) &&
-        Objects.equals(this.version, agentRef.version);
+        Objects.equals(this.version, agentRef.version) &&
+        Objects.equals(this.system, agentRef.system) &&
+        Objects.equals(this.tools, agentRef.tools) &&
+        Objects.equals(this.mcpServers, agentRef.mcpServers) &&
+        Objects.equals(this.skills, agentRef.skills) &&
+        Objects.equals(this.multiagent, agentRef.multiagent) &&
+        Objects.equals(this.displayName, agentRef.displayName) &&
+        Objects.equals(this.model, agentRef.model);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, id, version);
+    return Objects.hash(type, id, version, system, tools, mcpServers, skills, multiagent, displayName, model);
   }
 
   @Override
@@ -183,6 +401,13 @@ public class AgentRef {
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
+    sb.append("    system: ").append(toIndentedString(system)).append("\n");
+    sb.append("    tools: ").append(toIndentedString(tools)).append("\n");
+    sb.append("    mcpServers: ").append(toIndentedString(mcpServers)).append("\n");
+    sb.append("    skills: ").append(toIndentedString(skills)).append("\n");
+    sb.append("    multiagent: ").append(toIndentedString(multiagent)).append("\n");
+    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
+    sb.append("    model: ").append(toIndentedString(model)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -207,7 +432,7 @@ public class AgentRef {
       this.instance = instance;
     }
 
-    public AgentRef.Builder type(TypeEnum type) {
+    public AgentRef.Builder type(String type) {
       this.instance.type = type;
       return this;
     }
@@ -217,6 +442,34 @@ public class AgentRef {
     }
     public AgentRef.Builder version(Integer version) {
       this.instance.version = version;
+      return this;
+    }
+    public AgentRef.Builder system(String system) {
+      this.instance.system = system;
+      return this;
+    }
+    public AgentRef.Builder tools(List<Map<String, Object>> tools) {
+      this.instance.tools = tools;
+      return this;
+    }
+    public AgentRef.Builder mcpServers(List<Map<String, Object>> mcpServers) {
+      this.instance.mcpServers = mcpServers;
+      return this;
+    }
+    public AgentRef.Builder skills(List<Map<String, Object>> skills) {
+      this.instance.skills = skills;
+      return this;
+    }
+    public AgentRef.Builder multiagent(Map<String, Object> multiagent) {
+      this.instance.multiagent = multiagent;
+      return this;
+    }
+    public AgentRef.Builder displayName(String displayName) {
+      this.instance.displayName = displayName;
+      return this;
+    }
+    public AgentRef.Builder model(ModelOverrides model) {
+      this.instance.model = model;
       return this;
     }
 
@@ -255,7 +508,14 @@ public class AgentRef {
     return new AgentRef.Builder()
       .type(getType())
       .id(getId())
-      .version(getVersion());
+      .version(getVersion())
+      .system(getSystem())
+      .tools(getTools())
+      .mcpServers(getMcpServers())
+      .skills(getSkills())
+      .multiagent(getMultiagent())
+      .displayName(getDisplayName())
+      .model(getModel());
   }
 
 

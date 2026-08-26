@@ -32,6 +32,7 @@ import java.util.Objects;
   CreateAgentRequest.JSON_PROPERTY_NAME,
   CreateAgentRequest.JSON_PROPERTY_MODEL,
   CreateAgentRequest.JSON_PROPERTY_DESCRIPTION,
+  CreateAgentRequest.JSON_PROPERTY_DISPLAY_NAME,
   CreateAgentRequest.JSON_PROPERTY_SYSTEM,
   CreateAgentRequest.JSON_PROPERTY_MCP_SERVERS,
   CreateAgentRequest.JSON_PROPERTY_TOOLS,
@@ -53,6 +54,10 @@ public class CreateAgentRequest {
   public static final String JSON_PROPERTY_DESCRIPTION = "description";
   @javax.annotation.Nullable
   private String description;
+
+  public static final String JSON_PROPERTY_DISPLAY_NAME = "display_name";
+  @javax.annotation.Nullable
+  private String displayName;
 
   public static final String JSON_PROPERTY_SYSTEM = "system";
   @javax.annotation.Nullable
@@ -158,6 +163,31 @@ public class CreateAgentRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setDescription(@javax.annotation.Nullable String description) {
     this.description = description;
+  }
+
+  public CreateAgentRequest displayName(@javax.annotation.Nullable String displayName) {
+
+    this.displayName = displayName;
+    return this;
+  }
+
+  /**
+   * 展示名。
+   * @return displayName
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDisplayName(@javax.annotation.Nullable String displayName) {
+    this.displayName = displayName;
   }
 
   public CreateAgentRequest system(@javax.annotation.Nullable String system) {
@@ -388,6 +418,7 @@ public class CreateAgentRequest {
     return Objects.equals(this.name, createAgentRequest.name) &&
         Objects.equals(this.model, createAgentRequest.model) &&
         Objects.equals(this.description, createAgentRequest.description) &&
+        Objects.equals(this.displayName, createAgentRequest.displayName) &&
         Objects.equals(this.system, createAgentRequest.system) &&
         Objects.equals(this.mcpServers, createAgentRequest.mcpServers) &&
         Objects.equals(this.tools, createAgentRequest.tools) &&
@@ -399,7 +430,7 @@ public class CreateAgentRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, model, description, system, mcpServers, tools, skills, multiagent, metadata, tags);
+    return Objects.hash(name, model, description, displayName, system, mcpServers, tools, skills, multiagent, metadata, tags);
   }
 
   @Override
@@ -409,6 +440,7 @@ public class CreateAgentRequest {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    system: ").append(toIndentedString(system)).append("\n");
     sb.append("    mcpServers: ").append(toIndentedString(mcpServers)).append("\n");
     sb.append("    tools: ").append(toIndentedString(tools)).append("\n");
@@ -450,6 +482,10 @@ public class CreateAgentRequest {
     }
     public CreateAgentRequest.Builder description(String description) {
       this.instance.description = description;
+      return this;
+    }
+    public CreateAgentRequest.Builder displayName(String displayName) {
+      this.instance.displayName = displayName;
       return this;
     }
     public CreateAgentRequest.Builder system(String system) {
@@ -517,6 +553,7 @@ public class CreateAgentRequest {
       .name(getName())
       .model(getModel())
       .description(getDescription())
+      .displayName(getDisplayName())
       .system(getSystem())
       .mcpServers(getMcpServers())
       .tools(getTools())

@@ -28,6 +28,9 @@ pom on purpose — install the SDK first, then build the examples separately.
 | `EnvironmentsLifecycleExample` | Managed-Agents: Environment lifecycle — Create/Get/List/Update/Delete (cloud + unrestricted networking) |
 | `SessionsLoopExample` | Managed-Agents: end-to-end agent loop — Agent + Env + Session, send user.message, stream events until idle |
 | `MemoryStoresLifecycleExample` | Managed-Agents: MemoryStore + nested Memory CRUD |
+| `SelfHostedWorkerExample` | Managed-Agents: self-hosted worker poll / handle loop |
+
+`SelfHostedWorkerExample` uses the client's production default `https://ark.cn-beijing.volces.com/api/v3`.
 
 The Managed-Agents examples additionally accept `ARK_MODEL_ID` for the model id (falls back to a `${YOUR_MODEL_ID}` placeholder that will 400 at runtime).
 

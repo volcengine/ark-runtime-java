@@ -27,6 +27,8 @@ import java.util.Objects;
 @JsonPropertyOrder({
   ListRequest.JSON_PROPERTY_LIMIT,
   ListRequest.JSON_PROPERTY_PAGE,
+  ListRequest.JSON_PROPERTY_NAME,
+  ListRequest.JSON_PROPERTY_DISPLAY_NAME,
   ListRequest.JSON_PROPERTY_CREATED_AT_GTE,
   ListRequest.JSON_PROPERTY_CREATED_AT_LTE
 })
@@ -39,6 +41,14 @@ public class ListRequest {
   public static final String JSON_PROPERTY_PAGE = "page";
   @javax.annotation.Nullable
   private String page;
+
+  public static final String JSON_PROPERTY_NAME = "name";
+  @javax.annotation.Nullable
+  private String name;
+
+  public static final String JSON_PROPERTY_DISPLAY_NAME = "display_name";
+  @javax.annotation.Nullable
+  private String displayName;
 
   public static final String JSON_PROPERTY_CREATED_AT_GTE = "created_at_gte";
   @javax.annotation.Nullable
@@ -99,6 +109,56 @@ public class ListRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setPage(@javax.annotation.Nullable String page) {
     this.page = page;
+  }
+
+  public ListRequest name(@javax.annotation.Nullable String name) {
+
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * 按名称过滤。
+   * @return name
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getName() {
+    return name;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setName(@javax.annotation.Nullable String name) {
+    this.name = name;
+  }
+
+  public ListRequest displayName(@javax.annotation.Nullable String displayName) {
+
+    this.displayName = displayName;
+    return this;
+  }
+
+  /**
+   * 按展示名过滤。
+   * @return displayName
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDisplayName(@javax.annotation.Nullable String displayName) {
+    this.displayName = displayName;
   }
 
   public ListRequest createdAtGte(@javax.annotation.Nullable String createdAtGte) {
@@ -163,13 +223,15 @@ public class ListRequest {
     ListRequest listRequest = (ListRequest) o;
     return Objects.equals(this.limit, listRequest.limit) &&
         Objects.equals(this.page, listRequest.page) &&
+        Objects.equals(this.name, listRequest.name) &&
+        Objects.equals(this.displayName, listRequest.displayName) &&
         Objects.equals(this.createdAtGte, listRequest.createdAtGte) &&
         Objects.equals(this.createdAtLte, listRequest.createdAtLte);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(limit, page, createdAtGte, createdAtLte);
+    return Objects.hash(limit, page, name, displayName, createdAtGte, createdAtLte);
   }
 
   @Override
@@ -178,6 +240,8 @@ public class ListRequest {
     sb.append("class ListRequest {\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("    page: ").append(toIndentedString(page)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    createdAtGte: ").append(toIndentedString(createdAtGte)).append("\n");
     sb.append("    createdAtLte: ").append(toIndentedString(createdAtLte)).append("\n");
     sb.append("}");
@@ -210,6 +274,14 @@ public class ListRequest {
     }
     public ListRequest.Builder page(String page) {
       this.instance.page = page;
+      return this;
+    }
+    public ListRequest.Builder name(String name) {
+      this.instance.name = name;
+      return this;
+    }
+    public ListRequest.Builder displayName(String displayName) {
+      this.instance.displayName = displayName;
       return this;
     }
     public ListRequest.Builder createdAtGte(String createdAtGte) {
@@ -256,6 +328,8 @@ public class ListRequest {
     return new ListRequest.Builder()
       .limit(getLimit())
       .page(getPage())
+      .name(getName())
+      .displayName(getDisplayName())
       .createdAtGte(getCreatedAtGte())
       .createdAtLte(getCreatedAtLte());
   }

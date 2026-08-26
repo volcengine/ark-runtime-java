@@ -44,6 +44,7 @@ import java.util.Objects;
   Agent.JSON_PROPERTY_MULTIAGENT,
   Agent.JSON_PROPERTY_METADATA,
   Agent.JSON_PROPERTY_TAGS,
+  Agent.JSON_PROPERTY_DISPLAY_NAME,
   Agent.JSON_PROPERTY_CREATED_AT,
   Agent.JSON_PROPERTY_UPDATED_AT
 })
@@ -133,6 +134,10 @@ public class Agent {
   public static final String JSON_PROPERTY_TAGS = "tags";
   @javax.annotation.Nullable
   private List<Tag> tags;
+
+  public static final String JSON_PROPERTY_DISPLAY_NAME = "display_name";
+  @javax.annotation.Nullable
+  private String displayName;
 
   public static final String JSON_PROPERTY_CREATED_AT = "created_at";
   @javax.annotation.Nonnull
@@ -510,6 +515,31 @@ public class Agent {
     this.tags = tags;
   }
 
+  public Agent displayName(@javax.annotation.Nullable String displayName) {
+
+    this.displayName = displayName;
+    return this;
+  }
+
+  /**
+   * 展示名。
+   * @return displayName
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDisplayName(@javax.annotation.Nullable String displayName) {
+    this.displayName = displayName;
+  }
+
   public Agent createdAt(@javax.annotation.Nonnull String createdAt) {
 
     this.createdAt = createdAt;
@@ -583,13 +613,14 @@ public class Agent {
         Objects.equals(this.multiagent, agent.multiagent) &&
         Objects.equals(this.metadata, agent.metadata) &&
         Objects.equals(this.tags, agent.tags) &&
+        Objects.equals(this.displayName, agent.displayName) &&
         Objects.equals(this.createdAt, agent.createdAt) &&
         Objects.equals(this.updatedAt, agent.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, name, description, version, model, system, tools, mcpServers, skills, multiagent, metadata, tags, createdAt, updatedAt);
+    return Objects.hash(id, type, name, description, version, model, system, tools, mcpServers, skills, multiagent, metadata, tags, displayName, createdAt, updatedAt);
   }
 
   @Override
@@ -609,6 +640,7 @@ public class Agent {
     sb.append("    multiagent: ").append(toIndentedString(multiagent)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
@@ -687,6 +719,10 @@ public class Agent {
       this.instance.tags = tags;
       return this;
     }
+    public Agent.Builder displayName(String displayName) {
+      this.instance.displayName = displayName;
+      return this;
+    }
     public Agent.Builder createdAt(String createdAt) {
       this.instance.createdAt = createdAt;
       return this;
@@ -742,6 +778,7 @@ public class Agent {
       .multiagent(getMultiagent())
       .metadata(getMetadata())
       .tags(getTags())
+      .displayName(getDisplayName())
       .createdAt(getCreatedAt())
       .updatedAt(getUpdatedAt());
   }
