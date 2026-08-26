@@ -20,8 +20,12 @@ import com.volcengine.ark.runtime.models.embedding.EmbeddingResponse;
 import com.volcengine.ark.runtime.models.environment.CreateEnvironmentRequest;
 import com.volcengine.ark.runtime.models.environment.DeleteEnvironmentResponse;
 import com.volcengine.ark.runtime.models.environment.Environment;
+import com.volcengine.ark.runtime.models.environment.EnvironmentWorkPoll200Response;
+import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.ListEnvironmentsResponse;
+import com.volcengine.ark.runtime.models.environment.StopWorkBody;
 import com.volcengine.ark.runtime.models.environment.UpdateEnvironmentRequest;
+import com.volcengine.ark.runtime.models.environment.WorkItem;
 import com.volcengine.ark.runtime.models.file.FileDeleted;
 import com.volcengine.ark.runtime.models.file.FileListResponse;
 import com.volcengine.ark.runtime.models.file.FileObject;
@@ -201,6 +205,34 @@ public interface ArkApi {
     @DELETE("/api/v3/environments/{environmentId}")
     Single<DeleteEnvironmentResponse> deleteEnvironment(@Path("environmentId") String environmentId, @HeaderMap Map<String, String> customHeaders);
 
+    @GET("/api/v3/environments/{environmentId}/work/poll")
+    Single<EnvironmentWorkPoll200Response> pollEnvironmentWork(
+            @Path("environmentId") String environmentId,
+            @Query("block_ms") Integer blockMs,
+            @Query("reclaim_older_than_ms") Integer reclaimOlderThanMs,
+            @HeaderMap Map<String, String> customHeaders);
+
+    @POST("/api/v3/environments/{environmentId}/work/{workId}/ack")
+    Single<WorkItem> ackEnvironmentWork(
+            @Path("environmentId") String environmentId,
+            @Path("workId") String workId,
+            @HeaderMap Map<String, String> customHeaders);
+
+    @POST("/api/v3/environments/{environmentId}/work/{workId}/heartbeat")
+    Single<HeartbeatWorkResponse> heartbeatEnvironmentWork(
+            @Path("environmentId") String environmentId,
+            @Path("workId") String workId,
+            @Query("expected_last_heartbeat") String expectedLastHeartbeat,
+            @Query("desired_ttl_seconds") Integer desiredTTLSeconds,
+            @HeaderMap Map<String, String> customHeaders);
+
+    @POST("/api/v3/environments/{environmentId}/work/{workId}/stop")
+    Single<WorkItem> stopEnvironmentWork(
+            @Path("environmentId") String environmentId,
+            @Path("workId") String workId,
+            @Body StopWorkBody body,
+            @HeaderMap Map<String, String> customHeaders);
+
     // ---- Agent ----
     @POST("/api/v3/agents")
     Single<Agent> createAgent(@Body CreateAgentRequest request, @HeaderMap Map<String, String> customHeaders);
@@ -310,6 +342,13 @@ public interface ArkApi {
 
     @GET("/api/v3/skills/{skillId}")
     Single<Skill> getSkill(@Path("skillId") String skillId, @HeaderMap Map<String, String> customHeaders);
+
+    @Streaming
+    @GET("/api/v3/skills/{skillId}/versions/{version}/content")
+    Call<ResponseBody> openSkillContent(
+            @Path("skillId") String skillId,
+            @Path("version") String version,
+            @HeaderMap Map<String, String> customHeaders);
 
     // ---- Session ----
     @POST("/api/v3/sessions")

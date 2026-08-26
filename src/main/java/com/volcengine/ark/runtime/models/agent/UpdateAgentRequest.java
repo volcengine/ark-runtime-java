@@ -31,6 +31,7 @@ import java.util.Objects;
 @JsonPropertyOrder({
   UpdateAgentRequest.JSON_PROPERTY_VERSION,
   UpdateAgentRequest.JSON_PROPERTY_NAME,
+  UpdateAgentRequest.JSON_PROPERTY_DISPLAY_NAME,
   UpdateAgentRequest.JSON_PROPERTY_MODEL,
   UpdateAgentRequest.JSON_PROPERTY_DESCRIPTION,
   UpdateAgentRequest.JSON_PROPERTY_SYSTEM,
@@ -38,7 +39,8 @@ import java.util.Objects;
   UpdateAgentRequest.JSON_PROPERTY_TOOLS,
   UpdateAgentRequest.JSON_PROPERTY_SKILLS,
   UpdateAgentRequest.JSON_PROPERTY_MULTIAGENT,
-  UpdateAgentRequest.JSON_PROPERTY_METADATA
+  UpdateAgentRequest.JSON_PROPERTY_METADATA,
+  UpdateAgentRequest.JSON_PROPERTY_TAGS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class UpdateAgentRequest {
@@ -49,6 +51,10 @@ public class UpdateAgentRequest {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nullable
   private String name;
+
+  public static final String JSON_PROPERTY_DISPLAY_NAME = "display_name";
+  @javax.annotation.Nullable
+  private String displayName;
 
   public static final String JSON_PROPERTY_MODEL = "model";
   @javax.annotation.Nullable
@@ -81,6 +87,10 @@ public class UpdateAgentRequest {
   public static final String JSON_PROPERTY_METADATA = "metadata";
   @javax.annotation.Nullable
   private Map<String, String> metadata;
+
+  public static final String JSON_PROPERTY_TAGS = "tags";
+  @javax.annotation.Nullable
+  private List<Tag> tags;
 
   public UpdateAgentRequest() {
   }
@@ -133,6 +143,31 @@ public class UpdateAgentRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setName(@javax.annotation.Nullable String name) {
     this.name = name;
+  }
+
+  public UpdateAgentRequest displayName(@javax.annotation.Nullable String displayName) {
+
+    this.displayName = displayName;
+    return this;
+  }
+
+  /**
+   * 展示名。
+   * @return displayName
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDisplayName(@javax.annotation.Nullable String displayName) {
+    this.displayName = displayName;
   }
 
   public UpdateAgentRequest model(@javax.annotation.Nullable ModelConfig model) {
@@ -367,6 +402,39 @@ public class UpdateAgentRequest {
     this.metadata = metadata;
   }
 
+  public UpdateAgentRequest tags(@javax.annotation.Nullable List<Tag> tags) {
+
+    this.tags = tags;
+    return this;
+  }
+
+  public UpdateAgentRequest addTagsItem(Tag tagsItem) {
+    if (this.tags == null) {
+      this.tags = new ArrayList<>();
+    }
+    this.tags.add(tagsItem);
+    return this;
+  }
+
+  /**
+   * 资源标签（整体替换）。
+   * @return tags
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TAGS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<Tag> getTags() {
+    return tags;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TAGS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setTags(@javax.annotation.Nullable List<Tag> tags) {
+    this.tags = tags;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -379,6 +447,7 @@ public class UpdateAgentRequest {
     UpdateAgentRequest updateAgentRequest = (UpdateAgentRequest) o;
     return Objects.equals(this.version, updateAgentRequest.version) &&
         Objects.equals(this.name, updateAgentRequest.name) &&
+        Objects.equals(this.displayName, updateAgentRequest.displayName) &&
         Objects.equals(this.model, updateAgentRequest.model) &&
         Objects.equals(this.description, updateAgentRequest.description) &&
         Objects.equals(this.system, updateAgentRequest.system) &&
@@ -386,12 +455,13 @@ public class UpdateAgentRequest {
         Objects.equals(this.tools, updateAgentRequest.tools) &&
         Objects.equals(this.skills, updateAgentRequest.skills) &&
         Objects.equals(this.multiagent, updateAgentRequest.multiagent) &&
-        Objects.equals(this.metadata, updateAgentRequest.metadata);
+        Objects.equals(this.metadata, updateAgentRequest.metadata) &&
+        Objects.equals(this.tags, updateAgentRequest.tags);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, name, model, description, system, mcpServers, tools, skills, multiagent, metadata);
+    return Objects.hash(version, name, displayName, model, description, system, mcpServers, tools, skills, multiagent, metadata, tags);
   }
 
   @Override
@@ -400,6 +470,7 @@ public class UpdateAgentRequest {
     sb.append("class UpdateAgentRequest {\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    system: ").append(toIndentedString(system)).append("\n");
@@ -408,6 +479,7 @@ public class UpdateAgentRequest {
     sb.append("    skills: ").append(toIndentedString(skills)).append("\n");
     sb.append("    multiagent: ").append(toIndentedString(multiagent)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+    sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -440,6 +512,10 @@ public class UpdateAgentRequest {
       this.instance.name = name;
       return this;
     }
+    public UpdateAgentRequest.Builder displayName(String displayName) {
+      this.instance.displayName = displayName;
+      return this;
+    }
     public UpdateAgentRequest.Builder model(ModelConfig model) {
       this.instance.model = model;
       return this;
@@ -470,6 +546,10 @@ public class UpdateAgentRequest {
     }
     public UpdateAgentRequest.Builder metadata(Map<String, String> metadata) {
       this.instance.metadata = metadata;
+      return this;
+    }
+    public UpdateAgentRequest.Builder tags(List<Tag> tags) {
+      this.instance.tags = tags;
       return this;
     }
 
@@ -508,6 +588,7 @@ public class UpdateAgentRequest {
     return new UpdateAgentRequest.Builder()
       .version(getVersion())
       .name(getName())
+      .displayName(getDisplayName())
       .model(getModel())
       .description(getDescription())
       .system(getSystem())
@@ -515,7 +596,8 @@ public class UpdateAgentRequest {
       .tools(getTools())
       .skills(getSkills())
       .multiagent(getMultiagent())
-      .metadata(getMetadata());
+      .metadata(getMetadata())
+      .tags(getTags());
   }
 
 

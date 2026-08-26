@@ -13,15 +13,15 @@ import com.volcengine.ark.runtime.models.environment.Environment;
 import com.volcengine.ark.runtime.models.environment.NetworkingConfig;
 import com.volcengine.ark.runtime.models.environment.NetworkingType;
 import com.volcengine.ark.runtime.models.session.AgentIdentifier;
+import com.volcengine.ark.runtime.models.session.ContentBlockType;
 import com.volcengine.ark.runtime.models.session.CreateSessionRequest;
-import com.volcengine.ark.runtime.models.session.IncomingEventParams;
-import com.volcengine.ark.runtime.models.session.IncomingEventParamsType;
+import com.volcengine.ark.runtime.models.session.ManagedAgentsEventParams;
+import com.volcengine.ark.runtime.models.session.ManagedAgentsEventParamsType;
+import com.volcengine.ark.runtime.models.session.ManagedAgentsMessageContentBlock;
+import com.volcengine.ark.runtime.models.session.ManagedAgentsTextBlock;
+import com.volcengine.ark.runtime.models.session.ManagedAgentsUserMessageEventParams;
 import com.volcengine.ark.runtime.models.session.SendSessionEventsRequest;
 import com.volcengine.ark.runtime.models.session.Session;
-import com.volcengine.ark.runtime.models.session.TurnInputContent;
-import com.volcengine.ark.runtime.models.session.TurnInputContentType;
-import com.volcengine.ark.runtime.models.session.TurnInputTextContent;
-import com.volcengine.ark.runtime.models.session.UserMessageEventParams;
 import com.volcengine.ark.runtime.service.ArkService;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -103,14 +103,14 @@ public class SessionsLoopExample {
             Thread sender = new Thread(() -> {
                 try {
                     Thread.sleep(500);
-                    TurnInputTextContent textBlock = new TurnInputTextContent();
-                    textBlock.setType(TurnInputContentType.TEXT);
+                    ManagedAgentsTextBlock textBlock = new ManagedAgentsTextBlock();
+                    textBlock.setType(ContentBlockType.TEXT);
                     textBlock.setText("What's the tallest mountain? One sentence.");
-                    UserMessageEventParams msg = new UserMessageEventParams();
-                    msg.setType(IncomingEventParamsType.USER_MESSAGE);
-                    msg.setContent(Arrays.<TurnInputContent>asList(textBlock));
+                    ManagedAgentsUserMessageEventParams msg = new ManagedAgentsUserMessageEventParams();
+                    msg.setType(ManagedAgentsEventParamsType.USER_MESSAGE);
+                    msg.setContent(Arrays.<ManagedAgentsMessageContentBlock>asList(textBlock));
                     SendSessionEventsRequest req = new SendSessionEventsRequest();
-                    req.setEvents(Arrays.<IncomingEventParams>asList(msg));
+                    req.setEvents(Arrays.<ManagedAgentsEventParams>asList(msg));
                     service.sendSessionEvents(sess.getId(), req);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

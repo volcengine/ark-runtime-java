@@ -31,8 +31,12 @@ import com.volcengine.ark.runtime.models.embedding.EmbeddingResponse;
 import com.volcengine.ark.runtime.models.environment.CreateEnvironmentRequest;
 import com.volcengine.ark.runtime.models.environment.DeleteEnvironmentResponse;
 import com.volcengine.ark.runtime.models.environment.Environment;
+import com.volcengine.ark.runtime.models.environment.EnvironmentWorkPoll200Response;
+import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.ListEnvironmentsResponse;
+import com.volcengine.ark.runtime.models.environment.StopWorkBody;
 import com.volcengine.ark.runtime.models.environment.UpdateEnvironmentRequest;
+import com.volcengine.ark.runtime.models.environment.WorkItem;
 import com.volcengine.ark.runtime.models.file.FileCreateRequest;
 import com.volcengine.ark.runtime.models.file.FileDeleted;
 import com.volcengine.ark.runtime.models.file.FileListRequest;
@@ -622,6 +626,33 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
 
     public DeleteEnvironmentResponse deleteEnvironment(String environmentId) {
         return execute(api.deleteEnvironment(environmentId, new HashMap<>()));
+    }
+
+    public EnvironmentWorkPoll200Response pollEnvironmentWork(
+            String environmentId, String workerId, Integer blockMs, Integer reclaimOlderThanMs) {
+        Map<String, String> headers = new HashMap<>();
+        if (workerId != null && !workerId.isEmpty()) {
+            headers.put("Ark-Worker-ID", workerId);
+        }
+        return execute(api.pollEnvironmentWork(environmentId, blockMs, reclaimOlderThanMs, headers));
+    }
+
+    public WorkItem ackEnvironmentWork(String environmentId, String workId, String workerId) {
+        Map<String, String> headers = new HashMap<>();
+        if (workerId != null && !workerId.isEmpty()) {
+            headers.put("Ark-Worker-ID", workerId);
+        }
+        return execute(api.ackEnvironmentWork(environmentId, workId, headers));
+    }
+
+    public HeartbeatWorkResponse heartbeatEnvironmentWork(
+            String environmentId, String workId, String expectedLastHeartbeat, Integer desiredTTLSeconds) {
+        return execute(api.heartbeatEnvironmentWork(
+                environmentId, workId, expectedLastHeartbeat, desiredTTLSeconds, new HashMap<>()));
+    }
+
+    public WorkItem stopEnvironmentWork(String environmentId, String workId, StopWorkBody body) {
+        return execute(api.stopEnvironmentWork(environmentId, workId, body, new HashMap<>()));
     }
 
     // ---- Agent ----

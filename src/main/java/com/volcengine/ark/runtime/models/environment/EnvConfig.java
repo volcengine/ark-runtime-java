@@ -30,7 +30,9 @@ import java.util.Objects;
   EnvConfig.JSON_PROPERTY_TYPE,
   EnvConfig.JSON_PROPERTY_NETWORKING,
   EnvConfig.JSON_PROPERTY_PACKAGES,
-  EnvConfig.JSON_PROPERTY_ENV
+  EnvConfig.JSON_PROPERTY_ENV,
+  EnvConfig.JSON_PROPERTY_SETUP_SCRIPT,
+  EnvConfig.JSON_PROPERTY_TOS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class EnvConfig {
@@ -49,6 +51,14 @@ public class EnvConfig {
   public static final String JSON_PROPERTY_ENV = "env";
   @javax.annotation.Nullable
   private Map<String, String> env;
+
+  public static final String JSON_PROPERTY_SETUP_SCRIPT = "setup_script";
+  @javax.annotation.Nullable
+  private String setupScript;
+
+  public static final String JSON_PROPERTY_TOS = "tos";
+  @javax.annotation.Nullable
+  private TosConfig tos;
 
   public EnvConfig() {
   }
@@ -161,6 +171,56 @@ public class EnvConfig {
     this.env = env;
   }
 
+  public EnvConfig setupScript(@javax.annotation.Nullable String setupScript) {
+
+    this.setupScript = setupScript;
+    return this;
+  }
+
+  /**
+   * 沙箱启动阶段执行的初始化脚本。
+   * @return setupScript
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SETUP_SCRIPT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getSetupScript() {
+    return setupScript;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SETUP_SCRIPT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSetupScript(@javax.annotation.Nullable String setupScript) {
+    this.setupScript = setupScript;
+  }
+
+  public EnvConfig tos(@javax.annotation.Nullable TosConfig tos) {
+
+    this.tos = tos;
+    return this;
+  }
+
+  /**
+   * Environment outputs 的 TOS 存储配置。
+   * @return tos
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public TosConfig getTos() {
+    return tos;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TOS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTos(@javax.annotation.Nullable TosConfig tos) {
+    this.tos = tos;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -174,12 +234,14 @@ public class EnvConfig {
     return Objects.equals(this.type, envConfig.type) &&
         Objects.equals(this.networking, envConfig.networking) &&
         Objects.equals(this.packages, envConfig.packages) &&
-        Objects.equals(this.env, envConfig.env);
+        Objects.equals(this.env, envConfig.env) &&
+        Objects.equals(this.setupScript, envConfig.setupScript) &&
+        Objects.equals(this.tos, envConfig.tos);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, networking, packages, env);
+    return Objects.hash(type, networking, packages, env, setupScript, tos);
   }
 
   @Override
@@ -190,6 +252,8 @@ public class EnvConfig {
     sb.append("    networking: ").append(toIndentedString(networking)).append("\n");
     sb.append("    packages: ").append(toIndentedString(packages)).append("\n");
     sb.append("    env: ").append(toIndentedString(env)).append("\n");
+    sb.append("    setupScript: ").append(toIndentedString(setupScript)).append("\n");
+    sb.append("    tos: ").append(toIndentedString(tos)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -230,6 +294,14 @@ public class EnvConfig {
       this.instance.env = env;
       return this;
     }
+    public EnvConfig.Builder setupScript(String setupScript) {
+      this.instance.setupScript = setupScript;
+      return this;
+    }
+    public EnvConfig.Builder tos(TosConfig tos) {
+      this.instance.tos = tos;
+      return this;
+    }
 
 
     /**
@@ -267,7 +339,9 @@ public class EnvConfig {
       .type(getType())
       .networking(getNetworking())
       .packages(getPackages())
-      .env(getEnv());
+      .env(getEnv())
+      .setupScript(getSetupScript())
+      .tos(getTos());
   }
 
 

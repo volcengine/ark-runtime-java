@@ -227,4 +227,6 @@ service.shutdownExecutor();
 
 ## License
 
-Apache License 2.0.
+This project is licensed under the Apache License 2.0. See [LICENSE](./LICENSE).
+For third-party open-source software notices, see
+[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).

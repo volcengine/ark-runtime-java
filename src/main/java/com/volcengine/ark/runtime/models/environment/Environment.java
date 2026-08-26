@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,7 +39,8 @@ import java.util.Objects;
   Environment.JSON_PROPERTY_METADATA,
   Environment.JSON_PROPERTY_SCOPE,
   Environment.JSON_PROPERTY_CREATED_AT,
-  Environment.JSON_PROPERTY_UPDATED_AT
+  Environment.JSON_PROPERTY_UPDATED_AT,
+  Environment.JSON_PROPERTY_OVERRIDDEN_FIELDS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class Environment {
@@ -109,6 +112,10 @@ public class Environment {
   public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
   @javax.annotation.Nonnull
   private String updatedAt;
+
+  public static final String JSON_PROPERTY_OVERRIDDEN_FIELDS = "overridden_fields";
+  @javax.annotation.Nullable
+  private List<String> overriddenFields;
 
   public Environment() {
   }
@@ -346,6 +353,39 @@ public class Environment {
     this.updatedAt = updatedAt;
   }
 
+  public Environment overriddenFields(@javax.annotation.Nullable List<String> overriddenFields) {
+
+    this.overriddenFields = overriddenFields;
+    return this;
+  }
+
+  public Environment addOverriddenFieldsItem(String overriddenFieldsItem) {
+    if (this.overriddenFields == null) {
+      this.overriddenFields = new ArrayList<>();
+    }
+    this.overriddenFields.add(overriddenFieldsItem);
+    return this;
+  }
+
+  /**
+   * Session 使用 EnvironmentWithOverrides 时，本次被覆写的 config 子字段。
+   * @return overriddenFields
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_OVERRIDDEN_FIELDS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<String> getOverriddenFields() {
+    return overriddenFields;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_OVERRIDDEN_FIELDS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setOverriddenFields(@javax.annotation.Nullable List<String> overriddenFields) {
+    this.overriddenFields = overriddenFields;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -364,12 +404,13 @@ public class Environment {
         Objects.equals(this.metadata, environment.metadata) &&
         Objects.equals(this.scope, environment.scope) &&
         Objects.equals(this.createdAt, environment.createdAt) &&
-        Objects.equals(this.updatedAt, environment.updatedAt);
+        Objects.equals(this.updatedAt, environment.updatedAt) &&
+        Objects.equals(this.overriddenFields, environment.overriddenFields);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, name, description, config, metadata, scope, createdAt, updatedAt);
+    return Objects.hash(id, type, name, description, config, metadata, scope, createdAt, updatedAt, overriddenFields);
   }
 
   @Override
@@ -385,6 +426,7 @@ public class Environment {
     sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
+    sb.append("    overriddenFields: ").append(toIndentedString(overriddenFields)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -445,6 +487,10 @@ public class Environment {
       this.instance.updatedAt = updatedAt;
       return this;
     }
+    public Environment.Builder overriddenFields(List<String> overriddenFields) {
+      this.instance.overriddenFields = overriddenFields;
+      return this;
+    }
 
 
     /**
@@ -487,7 +533,8 @@ public class Environment {
       .metadata(getMetadata())
       .scope(getScope())
       .createdAt(getCreatedAt())
-      .updatedAt(getUpdatedAt());
+      .updatedAt(getUpdatedAt())
+      .overriddenFields(getOverriddenFields());
   }
 
 

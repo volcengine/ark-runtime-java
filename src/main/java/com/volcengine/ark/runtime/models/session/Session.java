@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +43,8 @@ import java.util.Objects;
   Session.JSON_PROPERTY_RESOURCES,
   Session.JSON_PROPERTY_VAULT_IDS,
   Session.JSON_PROPERTY_USAGE,
-  Session.JSON_PROPERTY_TAGS
+  Session.JSON_PROPERTY_TAGS,
+  Session.JSON_PROPERTY_ENVIRONMENT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class Session {
@@ -130,6 +132,10 @@ public class Session {
   public static final String JSON_PROPERTY_TAGS = "tags";
   @javax.annotation.Nullable
   private List<Tag> tags;
+
+  public static final String JSON_PROPERTY_ENVIRONMENT = "environment";
+  @javax.annotation.Nullable
+  private Map<String, Object> environment;
 
   public Session() {
   }
@@ -488,6 +494,39 @@ public class Session {
     this.tags = tags;
   }
 
+  public Session environment(@javax.annotation.Nullable Map<String, Object> environment) {
+
+    this.environment = environment;
+    return this;
+  }
+
+  public Session putEnvironmentItem(String key, Object environmentItem) {
+    if (this.environment == null) {
+      this.environment = new HashMap<>();
+    }
+    this.environment.put(key, environmentItem);
+    return this;
+  }
+
+  /**
+   * Get environment
+   * @return environment
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT, required = false)
+  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.NON_EMPTY)
+
+  public Map<String, Object> getEnvironment() {
+    return environment;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT, required = false)
+  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.NON_EMPTY)
+  public void setEnvironment(@javax.annotation.Nullable Map<String, Object> environment) {
+    this.environment = environment;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -510,12 +549,13 @@ public class Session {
         Objects.equals(this.resources, session.resources) &&
         Objects.equals(this.vaultIds, session.vaultIds) &&
         Objects.equals(this.usage, session.usage) &&
-        Objects.equals(this.tags, session.tags);
+        Objects.equals(this.tags, session.tags) &&
+        Objects.equals(this.environment, session.environment);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, status, environmentId, agent, createdAt, updatedAt, archivedAt, title, resources, vaultIds, usage, tags);
+    return Objects.hash(id, type, status, environmentId, agent, createdAt, updatedAt, archivedAt, title, resources, vaultIds, usage, tags, environment);
   }
 
   @Override
@@ -535,6 +575,7 @@ public class Session {
     sb.append("    vaultIds: ").append(toIndentedString(vaultIds)).append("\n");
     sb.append("    usage: ").append(toIndentedString(usage)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append("    environment: ").append(toIndentedString(environment)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -611,6 +652,10 @@ public class Session {
       this.instance.tags = tags;
       return this;
     }
+    public Session.Builder environment(Map<String, Object> environment) {
+      this.instance.environment = environment;
+      return this;
+    }
 
 
     /**
@@ -657,7 +702,8 @@ public class Session {
       .resources(getResources())
       .vaultIds(getVaultIds())
       .usage(getUsage())
-      .tags(getTags());
+      .tags(getTags())
+      .environment(getEnvironment());
   }
 
 

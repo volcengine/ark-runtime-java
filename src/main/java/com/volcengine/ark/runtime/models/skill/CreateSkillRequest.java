@@ -25,13 +25,18 @@ import java.util.Objects;
  * CreateSkillRequest
  */
 @JsonPropertyOrder({
-  CreateSkillRequest.JSON_PROPERTY_DISPLAY_TITLE
+  CreateSkillRequest.JSON_PROPERTY_DISPLAY_TITLE,
+  CreateSkillRequest.JSON_PROPERTY_PROTECTION_ENABLED
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CreateSkillRequest {
   public static final String JSON_PROPERTY_DISPLAY_TITLE = "display_title";
   @javax.annotation.Nullable
   private String displayTitle;
+
+  public static final String JSON_PROPERTY_PROTECTION_ENABLED = "protection_enabled";
+  @javax.annotation.Nullable
+  private Boolean protectionEnabled;
 
   public CreateSkillRequest() {
   }
@@ -61,6 +66,31 @@ public class CreateSkillRequest {
     this.displayTitle = displayTitle;
   }
 
+  public CreateSkillRequest protectionEnabled(@javax.annotation.Nullable Boolean protectionEnabled) {
+
+    this.protectionEnabled = protectionEnabled;
+    return this;
+  }
+
+  /**
+   * 是否启用 Skill 内容保护。
+   * @return protectionEnabled
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROTECTION_ENABLED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getProtectionEnabled() {
+    return protectionEnabled;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROTECTION_ENABLED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProtectionEnabled(@javax.annotation.Nullable Boolean protectionEnabled) {
+    this.protectionEnabled = protectionEnabled;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -71,12 +101,13 @@ public class CreateSkillRequest {
       return false;
     }
     CreateSkillRequest createSkillRequest = (CreateSkillRequest) o;
-    return Objects.equals(this.displayTitle, createSkillRequest.displayTitle);
+    return Objects.equals(this.displayTitle, createSkillRequest.displayTitle) &&
+        Objects.equals(this.protectionEnabled, createSkillRequest.protectionEnabled);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(displayTitle);
+    return Objects.hash(displayTitle, protectionEnabled);
   }
 
   @Override
@@ -84,6 +115,7 @@ public class CreateSkillRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateSkillRequest {\n");
     sb.append("    displayTitle: ").append(toIndentedString(displayTitle)).append("\n");
+    sb.append("    protectionEnabled: ").append(toIndentedString(protectionEnabled)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -110,6 +142,10 @@ public class CreateSkillRequest {
 
     public CreateSkillRequest.Builder displayTitle(String displayTitle) {
       this.instance.displayTitle = displayTitle;
+      return this;
+    }
+    public CreateSkillRequest.Builder protectionEnabled(Boolean protectionEnabled) {
+      this.instance.protectionEnabled = protectionEnabled;
       return this;
     }
 
@@ -146,7 +182,8 @@ public class CreateSkillRequest {
   */
   public CreateSkillRequest.Builder toBuilder() {
     return new CreateSkillRequest.Builder()
-      .displayTitle(getDisplayTitle());
+      .displayTitle(getDisplayTitle())
+      .protectionEnabled(getProtectionEnabled());
   }
 
 

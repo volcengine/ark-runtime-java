@@ -29,6 +29,7 @@ import java.util.Objects;
 @JsonPropertyOrder({
   CreateSessionRequest.JSON_PROPERTY_AGENT,
   CreateSessionRequest.JSON_PROPERTY_ENVIRONMENT_ID,
+  CreateSessionRequest.JSON_PROPERTY_ENVIRONMENT,
   CreateSessionRequest.JSON_PROPERTY_TAGS,
   CreateSessionRequest.JSON_PROPERTY_RESOURCES,
   CreateSessionRequest.JSON_PROPERTY_TITLE,
@@ -41,8 +42,12 @@ public class CreateSessionRequest {
   private AgentIdentifier agent;
 
   public static final String JSON_PROPERTY_ENVIRONMENT_ID = "environment_id";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String environmentId;
+
+  public static final String JSON_PROPERTY_ENVIRONMENT = "environment";
+  @javax.annotation.Nullable
+  private EnvironmentWithOverrides environment;
 
   public static final String JSON_PROPERTY_TAGS = "tags";
   @javax.annotation.Nullable
@@ -88,29 +93,54 @@ public class CreateSessionRequest {
     this.agent = agent;
   }
 
-  public CreateSessionRequest environmentId(@javax.annotation.Nonnull String environmentId) {
+  public CreateSessionRequest environmentId(@javax.annotation.Nullable String environmentId) {
 
     this.environmentId = environmentId;
     return this;
   }
 
   /**
-   * 关联的 Environment ID。
+   * 关联的 Environment ID。与 &#x60;environment&#x60; 二选一。
    * @return environmentId
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getEnvironmentId() {
     return environmentId;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setEnvironmentId(@javax.annotation.Nonnull String environmentId) {
+  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEnvironmentId(@javax.annotation.Nullable String environmentId) {
     this.environmentId = environmentId;
+  }
+
+  public CreateSessionRequest environment(@javax.annotation.Nullable EnvironmentWithOverrides environment) {
+
+    this.environment = environment;
+    return this;
+  }
+
+  /**
+   * 关联 Environment 的覆写引用。与 &#x60;environment_id&#x60; 二选一。
+   * @return environment
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public EnvironmentWithOverrides getEnvironment() {
+    return environment;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_ENVIRONMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setEnvironment(@javax.annotation.Nullable EnvironmentWithOverrides environment) {
+    this.environment = environment;
   }
 
   public CreateSessionRequest tags(@javax.annotation.Nullable List<Tag> tags) {
@@ -249,6 +279,7 @@ public class CreateSessionRequest {
     CreateSessionRequest createSessionRequest = (CreateSessionRequest) o;
     return Objects.equals(this.agent, createSessionRequest.agent) &&
         Objects.equals(this.environmentId, createSessionRequest.environmentId) &&
+        Objects.equals(this.environment, createSessionRequest.environment) &&
         Objects.equals(this.tags, createSessionRequest.tags) &&
         Objects.equals(this.resources, createSessionRequest.resources) &&
         Objects.equals(this.title, createSessionRequest.title) &&
@@ -257,7 +288,7 @@ public class CreateSessionRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(agent, environmentId, tags, resources, title, vaultIds);
+    return Objects.hash(agent, environmentId, environment, tags, resources, title, vaultIds);
   }
 
   @Override
@@ -266,6 +297,7 @@ public class CreateSessionRequest {
     sb.append("class CreateSessionRequest {\n");
     sb.append("    agent: ").append(toIndentedString(agent)).append("\n");
     sb.append("    environmentId: ").append(toIndentedString(environmentId)).append("\n");
+    sb.append("    environment: ").append(toIndentedString(environment)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    resources: ").append(toIndentedString(resources)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
@@ -300,6 +332,10 @@ public class CreateSessionRequest {
     }
     public CreateSessionRequest.Builder environmentId(String environmentId) {
       this.instance.environmentId = environmentId;
+      return this;
+    }
+    public CreateSessionRequest.Builder environment(EnvironmentWithOverrides environment) {
+      this.instance.environment = environment;
       return this;
     }
     public CreateSessionRequest.Builder tags(List<Tag> tags) {
@@ -354,6 +390,7 @@ public class CreateSessionRequest {
     return new CreateSessionRequest.Builder()
       .agent(getAgent())
       .environmentId(getEnvironmentId())
+      .environment(getEnvironment())
       .tags(getTags())
       .resources(getResources())
       .title(getTitle())

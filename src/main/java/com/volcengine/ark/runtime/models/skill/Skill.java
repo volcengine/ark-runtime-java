@@ -32,7 +32,11 @@ import java.util.Objects;
   Skill.JSON_PROPERTY_CREATED_AT,
   Skill.JSON_PROPERTY_DESCRIPTION,
   Skill.JSON_PROPERTY_LATEST_VERSION,
-  Skill.JSON_PROPERTY_NAME
+  Skill.JSON_PROPERTY_DISPLAY_TITLE,
+  Skill.JSON_PROPERTY_SOURCE,
+  Skill.JSON_PROPERTY_UPDATED_AT,
+  Skill.JSON_PROPERTY_NAME,
+  Skill.JSON_PROPERTY_PROTECTION_ENABLED
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class Skill {
@@ -89,9 +93,25 @@ public class Skill {
   @javax.annotation.Nonnull
   private String latestVersion;
 
-  public static final String JSON_PROPERTY_NAME = "name";
+  public static final String JSON_PROPERTY_DISPLAY_TITLE = "display_title";
   @javax.annotation.Nonnull
+  private String displayTitle;
+
+  public static final String JSON_PROPERTY_SOURCE = "source";
+  @javax.annotation.Nonnull
+  private String source;
+
+  public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
+  @javax.annotation.Nonnull
+  private Long updatedAt;
+
+  public static final String JSON_PROPERTY_NAME = "name";
+  @javax.annotation.Nullable
   private String name;
+
+  public static final String JSON_PROPERTY_PROTECTION_ENABLED = "protection_enabled";
+  @javax.annotation.Nullable
+  private Boolean protectionEnabled;
 
   public Skill() {
   }
@@ -221,29 +241,129 @@ public class Skill {
     this.latestVersion = latestVersion;
   }
 
-  public Skill name(@javax.annotation.Nonnull String name) {
+  public Skill displayTitle(@javax.annotation.Nonnull String displayTitle) {
+
+    this.displayTitle = displayTitle;
+    return this;
+  }
+
+  /**
+   * Skill 展示名。
+   * @return displayTitle
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_TITLE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public String getDisplayTitle() {
+    return displayTitle;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DISPLAY_TITLE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setDisplayTitle(@javax.annotation.Nonnull String displayTitle) {
+    this.displayTitle = displayTitle;
+  }
+
+  public Skill source(@javax.annotation.Nonnull String source) {
+
+    this.source = source;
+    return this;
+  }
+
+  /**
+   * Skill 来源，例如 &#x60;custom&#x60; / &#x60;skill_hub&#x60; / &#x60;ark&#x60;。
+   * @return source
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_SOURCE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public String getSource() {
+    return source;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SOURCE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setSource(@javax.annotation.Nonnull String source) {
+    this.source = source;
+  }
+
+  public Skill updatedAt(@javax.annotation.Nonnull Long updatedAt) {
+
+    this.updatedAt = updatedAt;
+    return this;
+  }
+
+  /**
+   * 更新时间（Unix 秒）。
+   * @return updatedAt
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public Long getUpdatedAt() {
+    return updatedAt;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setUpdatedAt(@javax.annotation.Nonnull Long updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  public Skill name(@javax.annotation.Nullable String name) {
 
     this.name = name;
     return this;
   }
 
   /**
-   * 人类可读名称。
+   * SKILL.md 中解析出的 name。
    * @return name
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getName() {
     return name;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setName(@javax.annotation.Nullable String name) {
     this.name = name;
+  }
+
+  public Skill protectionEnabled(@javax.annotation.Nullable Boolean protectionEnabled) {
+
+    this.protectionEnabled = protectionEnabled;
+    return this;
+  }
+
+  /**
+   * 是否启用内容保护。
+   * @return protectionEnabled
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROTECTION_ENABLED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getProtectionEnabled() {
+    return protectionEnabled;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROTECTION_ENABLED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProtectionEnabled(@javax.annotation.Nullable Boolean protectionEnabled) {
+    this.protectionEnabled = protectionEnabled;
   }
 
 
@@ -261,12 +381,16 @@ public class Skill {
         Objects.equals(this.createdAt, skill.createdAt) &&
         Objects.equals(this.description, skill.description) &&
         Objects.equals(this.latestVersion, skill.latestVersion) &&
-        Objects.equals(this.name, skill.name);
+        Objects.equals(this.displayTitle, skill.displayTitle) &&
+        Objects.equals(this.source, skill.source) &&
+        Objects.equals(this.updatedAt, skill.updatedAt) &&
+        Objects.equals(this.name, skill.name) &&
+        Objects.equals(this.protectionEnabled, skill.protectionEnabled);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, _object, createdAt, description, latestVersion, name);
+    return Objects.hash(id, _object, createdAt, description, latestVersion, displayTitle, source, updatedAt, name, protectionEnabled);
   }
 
   @Override
@@ -278,7 +402,11 @@ public class Skill {
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    latestVersion: ").append(toIndentedString(latestVersion)).append("\n");
+    sb.append("    displayTitle: ").append(toIndentedString(displayTitle)).append("\n");
+    sb.append("    source: ").append(toIndentedString(source)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    protectionEnabled: ").append(toIndentedString(protectionEnabled)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -323,8 +451,24 @@ public class Skill {
       this.instance.latestVersion = latestVersion;
       return this;
     }
+    public Skill.Builder displayTitle(String displayTitle) {
+      this.instance.displayTitle = displayTitle;
+      return this;
+    }
+    public Skill.Builder source(String source) {
+      this.instance.source = source;
+      return this;
+    }
+    public Skill.Builder updatedAt(Long updatedAt) {
+      this.instance.updatedAt = updatedAt;
+      return this;
+    }
     public Skill.Builder name(String name) {
       this.instance.name = name;
+      return this;
+    }
+    public Skill.Builder protectionEnabled(Boolean protectionEnabled) {
+      this.instance.protectionEnabled = protectionEnabled;
       return this;
     }
 
@@ -366,7 +510,11 @@ public class Skill {
       .createdAt(getCreatedAt())
       .description(getDescription())
       .latestVersion(getLatestVersion())
-      .name(getName());
+      .displayTitle(getDisplayTitle())
+      .source(getSource())
+      .updatedAt(getUpdatedAt())
+      .name(getName())
+      .protectionEnabled(getProtectionEnabled());
   }
 
 
