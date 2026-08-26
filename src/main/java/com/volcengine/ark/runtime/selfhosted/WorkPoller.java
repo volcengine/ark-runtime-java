@@ -3,6 +3,7 @@
 
 package com.volcengine.ark.runtime.selfhosted;
 
+import com.volcengine.ark.runtime.models.environment.WorkItem;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +67,7 @@ public class WorkPoller implements AutoCloseable {
             if (item.getEnvironmentId() == null || item.getEnvironmentId().isEmpty()) {
                 item.setEnvironmentId(options.environmentId);
             }
-            if (item.sessionIdValue().isEmpty()) {
+            if (WorkItems.sessionId(item).isEmpty()) {
                 options.logger.warning(
                         "discard invalid work work_id=" + item.getId() + " reason=missing session id");
                 discardInvalidWork(item);
@@ -91,7 +92,7 @@ public class WorkPoller implements AutoCloseable {
                 pendingStop = () -> stopItem(item, false);
             }
             discards = 0;
-            options.logger.info("claimed work work_id=" + item.getId() + " session_id=" + item.sessionIdValue());
+            options.logger.info("claimed work work_id=" + item.getId() + " session_id=" + WorkItems.sessionId(item));
             return item;
         }
         return null;

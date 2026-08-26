@@ -3,6 +3,9 @@
 
 package com.volcengine.ark.runtime.selfhosted;
 
+import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
+import com.volcengine.ark.runtime.models.environment.WorkItem;
+import com.volcengine.ark.runtime.models.environment.WorkState;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
@@ -58,7 +61,7 @@ public class EnvironmentWorker implements AutoCloseable {
                     return;
                 }
                 try {
-                    handleItem(item, false);
+                    handleItem(claimedWorkFromItem(item), false);
                 } catch (SessionToolRunner.IdleTimeoutException | SessionToolRunner.SessionTerminatedException ignored) {
                 } catch (Exception e) {
                     options.logger.log(Level.WARNING, "handle work failed", e);
@@ -74,35 +77,28 @@ public class EnvironmentWorker implements AutoCloseable {
         Thread previous = activeThread;
         activeThread = Thread.currentThread();
         try {
-            handleItem(workItemFromOptions(handleOptions), true);
+            handleItem(claimedWorkFromOptions(handleOptions), true);
         } catch (SessionToolRunner.IdleTimeoutException | SessionToolRunner.SessionTerminatedException ignored) {
         } finally {
             activeThread = previous;
         }
     }
 
-    private void handleItem(WorkItem item, boolean useWorkdirAsSession) throws IOException {
-        if (item.getEnvironmentId() == null || item.getEnvironmentId().isEmpty()) {
-            item.setEnvironmentId(firstNonEmpty(options.environmentId, System.getenv("MA_ENVIRONMENT_ID")));
-        }
-        if (item.getId() == null || item.getId().isEmpty()) {
-            throw new IllegalArgumentException("work item id must not be empty");
-        }
-        String sessionId = item.sessionIdValue();
-        if (sessionId.isEmpty()) {
-            throw new IllegalArgumentException("work item does not contain session id");
+    private void handleItem(ClaimedWork work, boolean useWorkdirAsSession) throws IOException {
+        if (work.environmentId.isEmpty()) {
+            work.environmentId = firstNonEmpty(options.environmentId, System.getenv("MA_ENVIRONMENT_ID"));
         }
         AtomicBoolean stop = new AtomicBoolean(false);
         AtomicReference<String> heartbeatCause = new AtomicReference<>("");
         Thread heartbeat = null;
         try {
-            String workdir = workdirFor(sessionId, useWorkdirAsSession);
+            String workdir = workdirFor(work.sessionId, useWorkdirAsSession);
             Thread heartbeatThread = new Thread(
-                    () -> heartbeatLoop(item, stop, heartbeatCause), "ma-self-host-heartbeat");
+                    () -> heartbeatLoop(work, stop, heartbeatCause), "ma-self-host-heartbeat");
             heartbeatThread.setDaemon(true);
             heartbeatThread.start();
             heartbeat = heartbeatThread;
-            SessionSnapshot session = api.getSession(sessionId);
+            SessionSnapshot session = api.getSession(work.sessionId);
             if (closed.get() || stop.get()) {
                 return;
             }
@@ -110,7 +106,7 @@ public class EnvironmentWorker implements AutoCloseable {
                 throw new IOException("session response is empty");
             }
             if (session.getId() == null || session.getId().isEmpty()) {
-                session.setId(sessionId);
+                session.setId(work.sessionId);
             }
             new Initializer(api, new Initializer.Options(workdir)).setup(session);
             if (closed.get() || stop.get()) {
@@ -118,8 +114,8 @@ public class EnvironmentWorker implements AutoCloseable {
             }
             ToolContext toolContext = toolContext(workdir, stop);
             FileToolResultStore store = new FileToolResultStore(workdir);
-            SessionToolRunner runner = new SessionToolRunner(api, sessionId, new SessionToolRunner.Options()
-                    .workId(item.getId())
+            SessionToolRunner runner = new SessionToolRunner(api, work.sessionId, new SessionToolRunner.Options()
+                    .workId(work.id)
                     .tools(options.tools == null ? DefaultTools.create() : options.tools)
                     .toolContext(toolContext)
                     .customTools(options.customTools)
@@ -145,7 +141,7 @@ public class EnvironmentWorker implements AutoCloseable {
             String cause = heartbeatCause.get();
             if (shouldStopItem(cause)) {
                 try {
-                    api.stopWork(item.getEnvironmentId(), item.getId(), true);
+                    api.stopWork(work.environmentId, work.id, true);
                 } catch (RuntimeException e) {
                     if (!isResolvedStatus(e)) {
                         options.logger.log(Level.WARNING, "stop work failed", e);
@@ -158,19 +154,19 @@ public class EnvironmentWorker implements AutoCloseable {
         }
     }
 
-    private void heartbeatLoop(WorkItem item, AtomicBoolean stop, AtomicReference<String> cause) {
+    private void heartbeatLoop(ClaimedWork work, AtomicBoolean stop, AtomicReference<String> cause) {
         long interval = Math.max(1000L, SelfHostedConstants.DEFAULT_HEARTBEAT_MILLIS / 2L);
         long ttl = SelfHostedConstants.DEFAULT_HEARTBEAT_MILLIS;
-        String last = item.latestHeartbeatValue();
+        String last = work.latestHeartbeatAt;
         if (last == null || last.isEmpty()) {
             last = SelfHostedConstants.EXPECTED_LAST_HEARTBEAT_NO_HEARTBEAT;
         }
         long lastSuccess = System.currentTimeMillis();
         while (!stop.get()) {
             try {
-                HeartbeatResponse response = api.heartbeatWork(
-                        item.getEnvironmentId(),
-                        item.getId(),
+                HeartbeatWorkResponse response = api.heartbeatWork(
+                        work.environmentId,
+                        work.id,
                         last,
                         (int) (ttl / 1000L));
                 if (response == null) {
@@ -180,21 +176,13 @@ public class EnvironmentWorker implements AutoCloseable {
                         return;
                     }
                     options.logger.warning(
-                            "heartbeat empty response work_id=" + item.getId()
-                                    + " session_id=" + item.sessionIdValue());
+                            "heartbeat empty response work_id=" + work.id
+                                    + " session_id=" + work.sessionId);
                     sleep(interval, stop);
                     continue;
                 }
-                lastSuccess = System.currentTimeMillis();
-                if (response.getLastHeartbeat() != null && !response.getLastHeartbeat().isEmpty()) {
-                    last = response.getLastHeartbeat();
-                }
-                if (response.getTtlSeconds() > 0) {
-                    ttl = response.getTtlSeconds() * 1000L;
-                    interval = Math.max(1000L, Math.min(ttl / 2, SelfHostedConstants.DEFAULT_HEARTBEAT_MILLIS));
-                }
-                if (SelfHostedConstants.WORK_STATE_STOPPING.equals(response.getState())
-                        || SelfHostedConstants.WORK_STATE_STOPPED.equals(response.getState())) {
+                if (WorkState.STOPPING.equals(response.getState())
+                        || WorkState.STOPPED.equals(response.getState())) {
                     cause.set("stop_requested");
                     stop.set(true);
                     return;
@@ -203,6 +191,15 @@ public class EnvironmentWorker implements AutoCloseable {
                     cause.set("lease_not_extended");
                     stop.set(true);
                     return;
+                }
+                lastSuccess = System.currentTimeMillis();
+                if (response.getLastHeartbeat() != null && !response.getLastHeartbeat().isEmpty()) {
+                    last = response.getLastHeartbeat();
+                }
+                Long ttlSeconds = response.getTtlSeconds();
+                if (ttlSeconds != null && ttlSeconds > 0) {
+                    ttl = ttlSeconds * 1000L;
+                    interval = Math.max(1000L, Math.min(ttl / 2, SelfHostedConstants.DEFAULT_HEARTBEAT_MILLIS));
                 }
             } catch (RuntimeException e) {
                 if (WorkerAPIException.isStatus(e, 412)) {
@@ -222,8 +219,8 @@ public class EnvironmentWorker implements AutoCloseable {
                 }
                 options.logger.log(
                         Level.WARNING,
-                        "heartbeat failed work_id=" + item.getId()
-                                + " session_id=" + item.sessionIdValue()
+                        "heartbeat failed work_id=" + work.id
+                                + " session_id=" + work.sessionId
                                 + " since_last_success_ms=" + (System.currentTimeMillis() - lastSuccess)
                                 + " ttl_ms=" + ttl,
                         e);
@@ -257,7 +254,7 @@ public class EnvironmentWorker implements AutoCloseable {
         return sessionDir.toString();
     }
 
-    private WorkItem workItemFromOptions(HandleItemOptions opts) {
+    private ClaimedWork claimedWorkFromOptions(HandleItemOptions opts) {
         String workId = firstNonEmpty(opts.workId, System.getenv("MA_WORK_ID"));
         String environmentId = firstNonEmpty(opts.environmentId, System.getenv("MA_ENVIRONMENT_ID"));
         String sessionId = firstNonEmpty(opts.sessionId, System.getenv("MA_SESSION_ID"));
@@ -271,15 +268,22 @@ public class EnvironmentWorker implements AutoCloseable {
         if (sessionId.isEmpty()) {
             throw new IllegalArgumentException("session id is required");
         }
-        WorkData data = new WorkData();
-        data.setType("session");
-        data.setId(sessionId);
-        WorkItem item = new WorkItem();
-        item.setId(workId);
-        item.setEnvironmentId(environmentId);
-        item.setLatestHeartbeatAt(latestHeartbeat);
-        item.setData(data);
-        return item;
+        return new ClaimedWork(workId, environmentId, sessionId, latestHeartbeat);
+    }
+
+    private static ClaimedWork claimedWorkFromItem(WorkItem item) {
+        if (item == null || item.getId() == null || item.getId().isEmpty()) {
+            throw new IllegalArgumentException("work item id must not be empty");
+        }
+        String sessionId = WorkItems.sessionId(item);
+        if (sessionId.isEmpty()) {
+            throw new IllegalArgumentException("work item does not contain session id");
+        }
+        return new ClaimedWork(
+                item.getId(),
+                item.getEnvironmentId() == null ? "" : item.getEnvironmentId(),
+                sessionId,
+                WorkItems.latestHeartbeat(item));
     }
 
     private static void sleep(long millis, AtomicBoolean stop) {
@@ -355,6 +359,20 @@ public class EnvironmentWorker implements AutoCloseable {
 
     private static String firstNonEmpty(String first, String second) {
         return first != null && !first.isEmpty() ? first : (second == null ? "" : second);
+    }
+
+    private static final class ClaimedWork {
+        private final String id;
+        private String environmentId;
+        private final String sessionId;
+        private final String latestHeartbeatAt;
+
+        private ClaimedWork(String id, String environmentId, String sessionId, String latestHeartbeatAt) {
+            this.id = id;
+            this.environmentId = environmentId;
+            this.sessionId = sessionId;
+            this.latestHeartbeatAt = latestHeartbeatAt;
+        }
     }
 
     public static class HandleItemOptions {

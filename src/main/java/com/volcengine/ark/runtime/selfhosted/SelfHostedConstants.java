@@ -26,9 +26,6 @@ public final class SelfHostedConstants {
     public static final String EVENT_LIST_ORDER_ASC = "asc";
     public static final String SESSION_STOP_REASON_END_TURN = "end_turn";
 
-    public static final String WORK_STATE_STOPPING = "stopping";
-    public static final String WORK_STATE_STOPPED = "stopped";
-
     public static final long DEFAULT_MAX_IDLE_MILLIS = 60000L;
     public static final long DEFAULT_TOOL_TIMEOUT_MILLIS = 120000L;
     public static final long DEFAULT_HEARTBEAT_MILLIS = 30000L;
