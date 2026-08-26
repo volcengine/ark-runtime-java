@@ -10,6 +10,7 @@ import com.volcengine.ark.runtime.interceptor.RetryInterceptor;
 import com.volcengine.ark.runtime.models.environment.EnvironmentWorkPoll200Response;
 import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.StopWorkBody;
+import com.volcengine.ark.runtime.models.environment.WorkItem;
 import com.volcengine.ark.runtime.models.session.ManagedAgentsEventParams;
 import com.volcengine.ark.runtime.models.session.SendSessionEventsRequest;
 import com.volcengine.ark.runtime.models.skill.Skill;
@@ -100,7 +101,7 @@ public class SelfHostedClient {
         if (response == null || response.getId() == null || response.getId().isEmpty()) {
             return null;
         }
-        return WorkItem.fromMap(toMap(response));
+        return mapper.convertValue(response, WorkItem.class);
     }
 
     public void ackWork(String environmentId, String workId, String workerId) {
@@ -109,7 +110,7 @@ public class SelfHostedClient {
         execute(lifecycleApi.ackEnvironmentWork(environmentId, workId, workerHeader(workerId)));
     }
 
-    public HeartbeatResponse heartbeatWork(
+    public HeartbeatWorkResponse heartbeatWork(
             String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
         require(environmentId, "environmentId");
         require(workId, "workId");
@@ -117,9 +118,8 @@ public class SelfHostedClient {
                 ? SelfHostedConstants.EXPECTED_LAST_HEARTBEAT_NO_HEARTBEAT
                 : expectedLastHeartbeat;
         Integer ttl = desiredTTLSeconds > 0 ? desiredTTLSeconds : null;
-        HeartbeatWorkResponse response = execute(heartbeatApi.heartbeatEnvironmentWork(
+        return execute(heartbeatApi.heartbeatEnvironmentWork(
                 environmentId, workId, expected, ttl, Collections.<String, String>emptyMap()));
-        return HeartbeatResponse.fromMap(toMap(response));
     }
 
     public void stopWork(String environmentId, String workId, boolean force) {

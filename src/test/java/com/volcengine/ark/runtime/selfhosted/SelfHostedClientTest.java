@@ -10,6 +10,8 @@ import static org.junit.Assert.assertNull;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import com.volcengine.ark.runtime.interceptor.RetryInterceptor;
+import com.volcengine.ark.runtime.models.environment.WorkItem;
+import com.volcengine.ark.runtime.models.environment.WorkState;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
@@ -61,7 +63,7 @@ public class SelfHostedClientTest {
         assertEquals("work-1", item.getId());
         assertEquals("env-1", item.getEnvironmentId());
         assertEquals("session-1", item.getData().getId());
-        assertEquals("session-1", item.sessionIdValue());
+        assertEquals("session-1", WorkItems.sessionId(item));
     }
 
     @Test
@@ -255,7 +257,11 @@ public class SelfHostedClientTest {
                 .httpClient(httpClient)
                 .build();
 
-        assertEquals("work-1", client.pollWork("env-1", "worker-1", 999, 5000).getId());
+        WorkItem item = client.pollWork("env-1", "worker-1", 999, 5000);
+        assertEquals("work-1", item.getId());
+        assertEquals("2026-08-24T10:00:00Z", item.getCreatedAt());
+        assertEquals(WorkState.ACTIVE, item.getState());
+        assertEquals(WorkItem.TypeEnum.WORK, item.getType());
         client.ackWork("env-1", "work-1", "worker-1");
         assertEquals(
                 "2026-08-24T10:00:01Z",

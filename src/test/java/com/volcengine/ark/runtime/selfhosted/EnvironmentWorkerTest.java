@@ -6,6 +6,8 @@ package com.volcengine.ark.runtime.selfhosted;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
+import com.volcengine.ark.runtime.models.environment.WorkState;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
@@ -49,7 +51,7 @@ public class EnvironmentWorkerTest {
             String path = request.url().encodedPath();
             if (path.endsWith("/heartbeat")) {
                 heartbeat.countDown();
-                return response(request, "{\"state\":\"stopping\",\"lease_extended\":true,\"ttl_seconds\":30}");
+                return response(request, "{\"state\":\"stopping\",\"lease_extended\":true}");
             }
             if (path.endsWith("/sessions/session-1")) {
                 try {
@@ -105,6 +107,22 @@ public class EnvironmentWorkerTest {
         assertEquals(0, client.stops.get());
     }
 
+    @Test
+    public void leaseNotExtendedWithoutTtlDoesNotStopWorkOwnedByAnotherWorker() throws Exception {
+        LeaseNotExtendedClient client = new LeaseNotExtendedClient();
+        EnvironmentWorker worker = new EnvironmentWorker(
+                client,
+                new EnvironmentWorker.Options()
+                        .workdir(Files.createTempDirectory("ark-java-worker-").toString()));
+
+        worker.handleItem(new EnvironmentWorker.HandleItemOptions()
+                .environmentId("env-1")
+                .workId("work-1")
+                .sessionId("session-1"));
+
+        assertEquals(0, client.stops.get());
+    }
+
     private static Response response(Request request, String body) throws IOException {
         return new Response.Builder()
                 .request(request)
@@ -124,7 +142,7 @@ public class EnvironmentWorkerTest {
         }
 
         @Override
-        public HeartbeatResponse heartbeatWork(
+        public HeartbeatWorkResponse heartbeatWork(
                 String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
             heartbeats.incrementAndGet();
             firstHeartbeat.countDown();
@@ -157,10 +175,46 @@ public class EnvironmentWorkerTest {
         }
 
         @Override
-        public HeartbeatResponse heartbeatWork(
+        public HeartbeatWorkResponse heartbeatWork(
                 String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
             heartbeat.countDown();
             throw new WorkerAPIException(412, "lease lost", "");
+        }
+
+        @Override
+        public SessionSnapshot getSession(String sessionId) {
+            try {
+                assertTrue(heartbeat.await(2, TimeUnit.SECONDS));
+            } catch (InterruptedException error) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(error);
+            }
+            SessionSnapshot session = new SessionSnapshot();
+            session.setId(sessionId);
+            return session;
+        }
+
+        @Override
+        public void stopWork(String environmentId, String workId, boolean force) {
+            stops.incrementAndGet();
+        }
+    }
+
+    private static class LeaseNotExtendedClient extends SelfHostedClient {
+        private final CountDownLatch heartbeat = new CountDownLatch(1);
+        private final AtomicInteger stops = new AtomicInteger();
+
+        LeaseNotExtendedClient() {
+            super("test-key");
+        }
+
+        @Override
+        public HeartbeatWorkResponse heartbeatWork(
+                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
+            heartbeat.countDown();
+            return new HeartbeatWorkResponse()
+                    .state(WorkState.ACTIVE)
+                    .leaseExtended(Boolean.FALSE);
         }
 
         @Override
