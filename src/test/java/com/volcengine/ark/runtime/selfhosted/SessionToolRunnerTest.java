@@ -193,6 +193,72 @@ public class SessionToolRunnerTest {
         assertTrue(runner.getResults().get(0).isPosted());
     }
 
+    @Test
+    public void builtinToolTimeoutAbandonsNoncooperativeTool() throws Exception {
+        assertToolTimeoutAbandonsNoncooperativeTool(false);
+    }
+
+    @Test
+    public void customToolTimeoutAbandonsNoncooperativeTool() throws Exception {
+        assertToolTimeoutAbandonsNoncooperativeTool(true);
+    }
+
+    private static void assertToolTimeoutAbandonsNoncooperativeTool(boolean custom) throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        Tool tool = new Tool() {
+            @Override
+            public String name() {
+                return "blocking";
+            }
+
+            @Override
+            public ToolResult execute(Object input, ToolContext context) {
+                started.countDown();
+                while (true) {
+                    try {
+                        release.await();
+                        return ToolResult.text("late");
+                    } catch (InterruptedException ignored) {
+                        // Deliberately ignore cancellation to verify the runner's outer deadline.
+                    }
+                }
+            }
+        };
+        ToolContext context = new ToolContext(Files.createTempDirectory("ark-java-timeout-").toString());
+        context.setToolTimeoutMillis(20L);
+        SessionToolRunner.Options options = new SessionToolRunner.Options()
+                .tools(custom ? new ToolSet() : new ToolSet().add(tool))
+                .toolContext(context);
+        if (custom) {
+            options.customTools(Collections.singletonMap(tool.name(), tool));
+        }
+        SessionToolRunner runner = new SessionToolRunner(new SelfHostedClient("test-key"), "session-1", options);
+        Map<String, Object> raw = new LinkedHashMap<>();
+        raw.put("id", "tool-1");
+        raw.put("type", custom ? "agent.custom_tool_use" : "agent.tool_use");
+        raw.put("name", tool.name());
+        raw.put(custom ? "custom_tool_use_id" : "tool_use_id", "call-1");
+        raw.put("input", Collections.emptyMap());
+        Method execute = SessionToolRunner.class.getDeclaredMethod("executeTool", Event.class, boolean.class);
+        execute.setAccessible(true);
+
+        long startedAt = System.nanoTime();
+        ToolResult result;
+        try {
+            result = (ToolResult) execute.invoke(runner, Event.fromMap(raw), custom);
+            assertTrue(started.await(1L, TimeUnit.SECONDS));
+        } finally {
+            release.countDown();
+            runner.close();
+        }
+
+        long elapsedMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAt);
+        assertTrue("elapsed=" + elapsedMillis, elapsedMillis < 500L);
+        assertTrue(result.isError());
+        assertEquals("tool execution timed out after 20ms", result.getContent().get(0).getText());
+    }
+
     private static SessionToolRunner idleRunner() throws IOException {
         return new SessionToolRunner(
                 new SelfHostedClient("test-key"),

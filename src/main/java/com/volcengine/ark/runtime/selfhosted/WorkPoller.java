@@ -8,6 +8,12 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Serial work poller with optional ownership cleanup.
+ *
+ * <p>The default auto-stop behavior is intended for iterator-style serial processing. Callers
+ * dispatching work concurrently must disable it and own heartbeat and stop.
+ */
 public class WorkPoller implements AutoCloseable {
     private static final long POLL_BACKOFF_CAP_MILLIS = 60000L;
 

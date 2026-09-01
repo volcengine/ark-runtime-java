@@ -9,8 +9,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.logging.Level;
@@ -18,13 +27,20 @@ import java.util.logging.Logger;
 
 public class SessionToolRunner {
     private static final int STREAM_QUEUE_SIZE = 256;
+    private static final long TOOL_WAIT_SLICE_MILLIS = 50L;
     private static final Logger LOGGER = Logger.getLogger(SessionToolRunner.class.getName());
+    private static final AtomicInteger TOOL_THREAD_ID = new AtomicInteger();
     private final SelfHostedClient api;
     private final String sessionId;
     private final Options options;
     private final State state = new State();
     private final List<ToolCallResult> results = new ArrayList<>();
     private final Random random = new Random();
+    private final ExecutorService toolExecutor = Executors.newCachedThreadPool(runnable -> {
+        Thread thread = new Thread(runnable, "ma-self-host-tool-" + TOOL_THREAD_ID.incrementAndGet());
+        thread.setDaemon(true);
+        return thread;
+    });
     private volatile boolean closed;
     private volatile EventStream activeStream;
 
@@ -198,6 +214,7 @@ public class SessionToolRunner {
     public void close() {
         closed = true;
         closeStream(activeStream);
+        toolExecutor.shutdownNow();
     }
 
     public List<ToolCallResult> getResults() {
@@ -341,14 +358,75 @@ public class SessionToolRunner {
     }
 
     private ToolResult executeTool(Event event, boolean custom) {
-        if (custom) {
+        long timeoutMillis = options.toolContext.getToolTimeoutMillis();
+        if (timeoutMillis <= 0L) {
+            timeoutMillis = SelfHostedConstants.DEFAULT_TOOL_TIMEOUT_MILLIS;
+        }
+        AtomicBoolean executionCancelled = new AtomicBoolean();
+        ToolContext context = toolContextForExecution(timeoutMillis, executionCancelled);
+        Future<ToolResult> future;
+        try {
+            future = toolExecutor.submit(() -> executeTool(event, custom, context));
+        } catch (RejectedExecutionException error) {
+            return ToolResult.error("tool execution canceled");
+        }
+        long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMillis);
+        while (true) {
+            if (context.isCancelled()) {
+                executionCancelled.set(true);
+                future.cancel(true);
+                return ToolResult.error("tool execution canceled");
+            }
+            long remaining = deadline - System.nanoTime();
+            if (remaining <= 0L) {
+                executionCancelled.set(true);
+                future.cancel(true);
+                return ToolResult.error("tool execution timed out after " + timeoutMillis + "ms");
+            }
+            long waitNanos = Math.min(remaining, TimeUnit.MILLISECONDS.toNanos(TOOL_WAIT_SLICE_MILLIS));
             try {
-                return options.customTools.get(event.getName()).execute(event.getInput(), options.toolContext);
-            } catch (RuntimeException error) {
-                return ToolResult.error(error.getMessage());
+                return future.get(waitNanos, TimeUnit.NANOSECONDS);
+            } catch (TimeoutException ignored) {
+                // Continue so cancellation is observed without waiting for the full tool timeout.
+            } catch (CancellationException error) {
+                return ToolResult.error("tool execution canceled");
+            } catch (InterruptedException error) {
+                Thread.currentThread().interrupt();
+                executionCancelled.set(true);
+                future.cancel(true);
+                return ToolResult.error("tool execution canceled");
+            } catch (ExecutionException error) {
+                Throwable cause = error.getCause();
+                return ToolResult.error(cause == null ? error.toString() : errorText(cause));
             }
         }
-        return options.tools.execute(event.getName(), event.getInput(), options.toolContext);
+    }
+
+    private ToolResult executeTool(Event event, boolean custom, ToolContext context) {
+        if (custom) {
+            try {
+                return options.customTools.get(event.getName()).execute(event.getInput(), context);
+            } catch (RuntimeException error) {
+                return ToolResult.error(errorText(error));
+            }
+        }
+        return options.tools.execute(event.getName(), event.getInput(), context);
+    }
+
+    private ToolContext toolContextForExecution(long timeoutMillis, AtomicBoolean executionCancelled) {
+        ToolContext source = options.toolContext;
+        ToolContext context = new ToolContext(source.getWorkdir());
+        if (source.hasExplicitEnv()) {
+            context.setEnv(new LinkedHashMap<>(source.getEnv()));
+        }
+        context.setUnrestrictedPaths(source.isUnrestrictedPaths());
+        context.setToolTimeoutMillis(timeoutMillis);
+        context.setCancelled(() -> executionCancelled.get() || isClosed() || source.isCancelled());
+        return context;
+    }
+
+    private static String errorText(Throwable error) {
+        return error.getMessage() == null ? error.toString() : error.getMessage();
     }
 
     private void sendResult(String callId, Event source, boolean custom, String confirmation, Event out) throws IOException {

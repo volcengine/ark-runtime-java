@@ -236,7 +236,9 @@ public class EnvironmentWorker implements AutoCloseable {
             copy.setEnv(new LinkedHashMap<>(context.getEnv()));
         }
         copy.setUnrestrictedPaths(options.unrestrictedPaths || context.isUnrestrictedPaths());
-        copy.setToolTimeoutMillis(context.getToolTimeoutMillis());
+        copy.setToolTimeoutMillis(options.toolTimeoutMillis > 0L
+                ? options.toolTimeoutMillis
+                : context.getToolTimeoutMillis());
         copy.setCancelled(() -> closed.get() || workStop.get());
         return copy;
     }
@@ -408,6 +410,7 @@ public class EnvironmentWorker implements AutoCloseable {
         private String workdir = ".";
         private boolean unrestrictedPaths;
         private ToolContext toolContext;
+        private long toolTimeoutMillis;
         private ToolSet tools;
         private long maxIdleMillis = SelfHostedConstants.DEFAULT_MAX_IDLE_MILLIS;
         private Map<String, Tool> customTools = new LinkedHashMap<>();
@@ -435,6 +438,11 @@ public class EnvironmentWorker implements AutoCloseable {
 
         public Options toolContext(ToolContext toolContext) {
             this.toolContext = toolContext;
+            return this;
+        }
+
+        public Options toolTimeoutMillis(long toolTimeoutMillis) {
+            this.toolTimeoutMillis = toolTimeoutMillis;
             return this;
         }
 

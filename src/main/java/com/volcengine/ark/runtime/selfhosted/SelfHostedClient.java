@@ -47,6 +47,7 @@ public class SelfHostedClient {
     private static final long LIFECYCLE_TIMEOUT_SECONDS = 10L;
 
     private final ArkApi api;
+    private final ArkApi streamApi;
     private final ArkApi heartbeatApi;
     private final ArkApi lifecycleApi;
     private final OkHttpClient httpClient;
@@ -70,6 +71,12 @@ public class SelfHostedClient {
         this.skillHubBaseUrl = trimTrailingSlash(builder.skillHubBaseUrl);
         Retrofit retrofit = ArkService.defaultRetrofit(this.httpClient, this.mapper, normalizeBaseUrl(builder.baseUrl), null);
         this.api = retrofit.create(ArkApi.class);
+        OkHttpClient streamClient = this.httpClient.newBuilder()
+                .callTimeout(0L, TimeUnit.MILLISECONDS)
+                .build();
+        Retrofit streamRetrofit = ArkService.defaultRetrofit(
+                streamClient, this.mapper, normalizeBaseUrl(builder.baseUrl), null);
+        this.streamApi = streamRetrofit.create(ArkApi.class);
         OkHttpClient.Builder heartbeatClientBuilder = this.httpClient.newBuilder()
                 .retryOnConnectionFailure(false)
                 .connectTimeout(HEARTBEAT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
@@ -190,12 +197,12 @@ public class SelfHostedClient {
 
     public Call<ResponseBody> streamEvents(String sessionId) {
         require(sessionId, "sessionId");
-        return api.streamSessionEvents(sessionId, Collections.<String, String>emptyMap());
+        return streamApi.streamSessionEvents(sessionId, Collections.<String, String>emptyMap());
     }
 
     public EventStream openEventStream(String sessionId) {
         require(sessionId, "sessionId");
-        Call<ResponseBody> call = api.streamSessionEvents(sessionId, Collections.<String, String>emptyMap());
+        Call<ResponseBody> call = streamApi.streamSessionEvents(sessionId, Collections.<String, String>emptyMap());
         try {
             return new EventStream(call, call.execute());
         } catch (IOException e) {

@@ -199,6 +199,33 @@ public class SelfHostedClientTest {
     }
 
     @Test
+    public void eventStreamPreservesReadTimeoutWithoutTotalTimeout() throws Exception {
+        AtomicLong readTimeoutMillis = new AtomicLong(-1L);
+        AtomicLong callTimeoutNanos = new AtomicLong(-1L);
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .readTimeout(25L, TimeUnit.MILLISECONDS)
+                .callTimeout(25L, TimeUnit.MILLISECONDS)
+                .addInterceptor(chain -> {
+                    readTimeoutMillis.set(chain.readTimeoutMillis());
+                    callTimeoutNanos.set(chain.call().timeout().timeoutNanos());
+                    return response(chain.request(), new AtomicReference<>(), "");
+                })
+                .build();
+        SelfHostedClient client = new SelfHostedClient.Builder()
+                .apiKey("test-api-key")
+                .httpClient(httpClient)
+                .build();
+
+        try (ResponseBody ignored = client.streamEvents("session-1").execute().body()) {
+            assertEquals(25L, readTimeoutMillis.get());
+            assertEquals(0L, callTimeoutNanos.get());
+        }
+
+        assertEquals(25, httpClient.readTimeoutMillis());
+        assertEquals(25, httpClient.callTimeoutMillis());
+    }
+
+    @Test
     public void atomicEnvironmentWorkAPIMatchesOpenAPIContract() throws Exception {
         AtomicInteger calls = new AtomicInteger();
         String work = "{"
