@@ -1,47 +1,24 @@
 # Examples
 
-Runnable examples for the `ark-runtime-java` SDK. Each class has a `main` that
-reads `ARK_API_KEY` from env:
+Runnable examples for the `ark-runtime-java` SDK. Set `ARK_API_KEY` and, for most examples, `ARK_MODEL` to a model ID available in your account.
 
 ```bash
 export ARK_API_KEY=...
-cd examples
+export ARK_MODEL=...
 mvn -q -DskipTests install
-mvn -q exec:java -Dexec.mainClass=com.volcengine.ark.runtime.examples.CreateResponseExample
+mvn -q -f examples/volc/pom.xml compile exec:java \
+  -Dexec.mainClass=com.volcengine.ark.runtime.examples.volc.CreateResponseExample
 ```
 
-First-time setup: `mvn -q -DskipTests install` at the parent repo root so
-the examples module can resolve the `ark-runtime` jar from the local Maven
-cache. The examples module is **not** wired into the parent aggregator
-pom on purpose — install the SDK first, then build the examples separately.
+Run `mvn -q -DskipTests install` at the repository root first so the example modules can resolve the `ark-runtime` jar from your local Maven cache. Replace `volc` with `byteplus` in the path and main-class package to run the BytePlus version.
 
-| Class | What it shows |
-|---|---|
-| `CreateResponseExample` | Create a response, stream the output |
-| `ResponseOperationsExample` | get / delete / list input items |
-| `KnowledgeSearchCreateResponsesExample` | Create with knowledge search tool |
-| `DoubaoAppCreateResponsesExample` | Create with Doubao app tools |
-| `MultiModalEmbeddingsExample` | POST /embeddings/multimodal |
-| `ContentGenerationTaskExample` | full lifecycle on POST /contents/generations/tasks (create / poll / list / delete) |
-| `ImageGenerationExample` | POST /images/generations — Seedream T2I, Seededit edit-from-image, sequential image generation |
-| `AgentsLifecycleExample` | Managed-Agents: Agent lifecycle — Create/Get/List/Update/ListVersions/Delete |
-| `EnvironmentsLifecycleExample` | Managed-Agents: Environment lifecycle — Create/Get/List/Update/Delete (cloud + unrestricted networking) |
-| `SessionsLoopExample` | Managed-Agents: end-to-end agent loop — Agent + Env + Session, send user.message, stream events until idle |
-| `MemoryStoresLifecycleExample` | Managed-Agents: MemoryStore + nested Memory CRUD |
-| `SelfHostedWorkerExample` | Managed-Agents: self-hosted worker poll / handle loop |
+All service-calling examples are grouped by cloud:
 
-`SelfHostedWorkerExample` uses the client's production default `https://ark.cn-beijing.volces.com/api/v3`.
+- `com.volcengine.ark.runtime.examples.volc` uses `ArkService.volc()` and Volcengine China model IDs.
+- `com.volcengine.ark.runtime.examples.byteplus` uses `ArkService.byteplus()` and BytePlus model IDs.
 
-The Managed-Agents examples additionally accept `ARK_MODEL_ID` for the model id (falls back to a `${YOUR_MODEL_ID}` placeholder that will 400 at runtime).
+`com.volcengine.ark.runtime.examples.volc.SelfHostedWorkerExample` demonstrates the Managed-Agents self-hosted worker poll/handle loop and uses the client's production default `https://ark.cn-beijing.volces.com/api/v3`.
 
-Only currently-implemented APIs have runnable examples. See the API Coverage
-table in the top-level README for the roadmap.
+The paired multimodal and sparse embedding examples default to `doubao-embedding-vision-251215` / `skylark-embedding-vision-251215`. The paired image examples default to `doubao-seedream-5-0-pro-260628` / `dola-seedream-5-0-pro-260628`. The paired video-generation examples default to `doubao-seedance-2-0-fast-260128` / `dreamina-seedance-2-0-fast-260128`.
 
-## Known limitations
-
-Responses API requests use a union `ResponsesInput` (string-or-list) and a
-union `MessageContent` (string-or-list). The OpenAPI-generated stubs for
-these unions are empty placeholders today, so the ported responses examples
-construct the request shape without populating the input body. Once codegen
-emits real setters for the union variants, the examples should be updated
-to pass actual prompts through `ResponsesInput` / `MessageContent`.
+MCP is available in both clouds and its calls explicitly send `ark-beta-mcp: true`. Other built-in tools are CN-only: Knowledge Search sends `ark-beta-knowledge-search: true`, and Doubao App sends `ark-beta-doubao-app: true`.

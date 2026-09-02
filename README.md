@@ -1,9 +1,6 @@
 # Ark Runtime Java SDK
 
-The Ark Runtime Java SDK provides convenient access to the Volcengine Ark
-REST API from Java 8+ applications. It includes typed request/response
-models for every API endpoint, synchronous and streaming helpers, and
-automatic retry logic.
+The official Java library for accessing ModelArk on Volcengine and BytePlus. It provides typed request and response models, synchronous and streaming helpers, authentication, and automatic retries for Java 8+ applications.
 
 ## Installation
 
@@ -23,18 +20,29 @@ automatic retry logic.
 implementation 'com.volcengine:ark-runtime:0.4.0'
 ```
 
-## Usage
+## Choose Volcengine or BytePlus
 
-### Authentication
+Set `ARK_API_KEY`, then choose the builder for the service you use. The builder configures the correct base URL and region; request construction and all subsequent SDK calls are the same.
 
-The SDK reads the `ARK_API_KEY` environment variable by default. You can
-also pass the key explicitly via the builder:
+### Volcengine (China)
 
 ```java
-ArkService service = ArkService.builder()
+ArkService service = ArkService.volc()
         .apiKey(System.getenv("ARK_API_KEY"))
         .build();
 ```
+
+### BytePlus (BP)
+
+```java
+ArkService service = ArkService.byteplus()
+        .apiKey(System.getenv("ARK_API_KEY"))
+        .build();
+```
+
+Use a model ID available in the corresponding Volcengine or BytePlus account. Model IDs can differ between the two services; the examples use `doubao-seed-2-1-pro-260628` for Volcengine and `seed-2-0-lite-260428` for BytePlus. Override either default with `ARK_MODEL`.
+
+## Quick start
 
 ### Responses API
 
@@ -42,15 +50,15 @@ The Responses API is the primary interface for generating text with Ark
 models.
 
 ```java
-import com.volcengine.ark.runtime.ArkService;
+import com.volcengine.ark.runtime.service.ArkService;
 import com.volcengine.ark.runtime.models.responses.*;
 
-ArkService service = ArkService.builder()
+ArkService service = ArkService.volc()
         .apiKey(System.getenv("ARK_API_KEY"))
         .build();
 
 ResponsesRequest request = ResponsesRequest.builder()
-        .model("doubao-seed-2-1-pro-260628")
+        .model(System.getenv("ARK_MODEL"))
         .input(ResponsesInput.ofString("Explain Java generics in two sentences."))
         .build();
 
@@ -60,13 +68,17 @@ System.out.println(response.getOutput());
 service.shutdownExecutor();
 ```
 
+Set `ARK_MODEL` to a model ID from your account before running the example.
+
+## Usage
+
 ### Chat Completions
 
 ```java
 import com.volcengine.ark.runtime.models.chat.*;
 
 ChatCompletionRequest request = ChatCompletionRequest.builder()
-        .model("doubao-seed-2-1-pro-260628")
+        .model(System.getenv("ARK_MODEL"))
         .messages(Arrays.asList(
                 ChatCompletionRequestUserMessage.builder()
                         .role(ChatCompletionRequestMessageType.USER)
@@ -104,10 +116,9 @@ method -- you do not need to set it on the request builder.
 ```java
 import io.reactivex.Flowable;
 import com.volcengine.ark.runtime.models.responses.*;
-import com.volcengine.ark.runtime.models.responses.events.*;
 
 ResponsesRequest request = ResponsesRequest.builder()
-        .model("doubao-seed-2-1-pro-260628")
+        .model(System.getenv("ARK_MODEL"))
         .input(ResponsesInput.ofString("Write a haiku about Java."))
         .build();
 
@@ -142,19 +153,28 @@ Build tools with `FunctionTool.builder()` and pass them in the request:
 
 ```java
 import com.volcengine.ark.runtime.models.responses.*;
+import java.util.*;
+
+Map<String, Object> city = new HashMap<>();
+city.put("type", "string");
+city.put("description", "City name");
+
+Map<String, Object> properties = new HashMap<>();
+properties.put("city", city);
+
+Map<String, Object> parameters = new HashMap<>();
+parameters.put("type", "object");
+parameters.put("properties", properties);
+parameters.put("required", Collections.singletonList("city"));
 
 FunctionTool weatherTool = FunctionTool.builder()
         .name("get_weather")
         .description("Get the current weather for a city")
-        .parameters(Map.of(
-                "type", "object",
-                "properties", Map.of(
-                        "city", Map.of("type", "string", "description", "City name")),
-                "required", List.of("city")))
+        .parameters(parameters)
         .build();
 
 ResponsesRequest request = ResponsesRequest.builder()
-        .model("doubao-seed-2-1-pro-260628")
+        .model(System.getenv("ARK_MODEL"))
         .input(ResponsesInput.ofString("What is the weather in Beijing?"))
         .tools(Collections.singletonList(Tool.ofFunction(weatherTool)))
         .build();
@@ -178,32 +198,19 @@ try {
 }
 ```
 
-## API Reference
-
-| API                    | Method                                                                     |
-|------------------------|----------------------------------------------------------------------------|
-| Responses              | `service.createResponse()` / `service.streamResponse()`                    |
-| Chat Completions       | `service.createChatCompletion()` / `service.streamChatCompletion()`        |
-| Embeddings             | `service.createEmbedding()`                                                |
-| Multimodal Embeddings  | `service.createMultiModalEmbedding()`                                      |
-| Content Generation     | `service.createContentGenerationTask()`                                    |
-| Images                 | `service.createImageGeneration()`                                          |
-| Files                  | `service.createFile()` / `service.listFiles()` / `service.deleteFile()`    |
-| Tokenization           | `service.createTokenization()`                                             |
-
 ## Examples
+
+For detailed usage guidance and legacy migration, see
+[`docs/README.md`](docs/README.md) and
+[`docs/migration.md`](docs/migration.md).
 
 Runnable single-file programs are available in the
 [examples/](./examples) directory:
 
-- **Responses** -- `CreateResponseExample`, `ResponseOperationsExample`
-- **Chat Completions** -- `ChatCompletionsExample`, `ChatCompletionsFunctionCallExample`, `ChatCompletionsVisionExample`
-- **Embeddings** -- `EmbeddingsExample`, `MultiModalEmbeddingsExample`, `SparseEmbeddingsExample`
-- **Content Generation** -- `ContentGenerationTaskExample`
-- **Images** -- `ImageGenerationExample`
-- **Files** -- `FileUploadExample`, `FileVideoResponsesExample`
-- **Tokenization** -- `TokenizationExample`
-- **Batch** -- `BatchChatCompletionsExample`
+- **[Volcengine China examples](./examples/volc)** -- Chat, Responses, images, video generation, embeddings, files, tokenization, batch APIs, and resource APIs using `ArkService.volc()`
+- **[BytePlus examples](./examples/byteplus)** -- supported counterparts using `ArkService.byteplus()` and BytePlus model IDs
+
+MCP is demonstrated in both clouds with `ark-beta-mcp: true`. Other built-in-tool examples are CN-only and explicitly send their required beta headers.
 
 ## Requirements
 
