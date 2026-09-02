@@ -3,6 +3,12 @@
 
 package com.volcengine.ark.runtime.selfhosted;
 
+/**
+ * Tool execution contract.
+ *
+ * <p>The runner enforces {@link ToolContext#getToolTimeoutMillis()}. Custom tools should also
+ * poll {@link ToolContext#isCancelled()} so timed-out work releases resources promptly.
+ */
 public interface Tool {
     String name();
 

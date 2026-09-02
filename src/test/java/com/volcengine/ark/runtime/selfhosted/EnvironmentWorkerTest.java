@@ -9,9 +9,11 @@ import static org.junit.Assert.assertTrue;
 import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.WorkState;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -121,6 +123,58 @@ public class EnvironmentWorkerTest {
                 .sessionId("session-1"));
 
         assertEquals(0, client.stops.get());
+    }
+
+    @Test
+    public void workerToolTimeoutOverridesToolContext() throws Exception {
+        ToolContext baseContext = new ToolContext(".");
+        baseContext.setToolTimeoutMillis(5000L);
+        EnvironmentWorker worker = new EnvironmentWorker(
+                new SelfHostedClient("test-key"),
+                new EnvironmentWorker.Options()
+                        .toolContext(baseContext)
+                        .toolTimeoutMillis(20L));
+        Method method = EnvironmentWorker.class.getDeclaredMethod(
+                "toolContext", String.class, AtomicBoolean.class);
+        method.setAccessible(true);
+
+        ToolContext context = (ToolContext) method.invoke(worker, ".", new AtomicBoolean(false));
+
+        assertEquals(20L, context.getToolTimeoutMillis());
+    }
+
+    @Test
+    public void workerKeepsToolContextTimeoutWhenUnset() throws Exception {
+        ToolContext baseContext = new ToolContext(".");
+        baseContext.setToolTimeoutMillis(5000L);
+        EnvironmentWorker worker = new EnvironmentWorker(
+                new SelfHostedClient("test-key"),
+                new EnvironmentWorker.Options().toolContext(baseContext));
+        Method method = EnvironmentWorker.class.getDeclaredMethod(
+                "toolContext", String.class, AtomicBoolean.class);
+        method.setAccessible(true);
+
+        ToolContext context = (ToolContext) method.invoke(worker, ".", new AtomicBoolean(false));
+
+        assertEquals(5000L, context.getToolTimeoutMillis());
+    }
+
+    @Test
+    public void workerKeepsToolContextTimeoutWhenNonpositive() throws Exception {
+        ToolContext baseContext = new ToolContext(".");
+        baseContext.setToolTimeoutMillis(5000L);
+        EnvironmentWorker worker = new EnvironmentWorker(
+                new SelfHostedClient("test-key"),
+                new EnvironmentWorker.Options()
+                        .toolContext(baseContext)
+                        .toolTimeoutMillis(-1L));
+        Method method = EnvironmentWorker.class.getDeclaredMethod(
+                "toolContext", String.class, AtomicBoolean.class);
+        method.setAccessible(true);
+
+        ToolContext context = (ToolContext) method.invoke(worker, ".", new AtomicBoolean(false));
+
+        assertEquals(5000L, context.getToolTimeoutMillis());
     }
 
     private static Response response(Request request, String body) throws IOException {
