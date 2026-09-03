@@ -37,7 +37,7 @@ import java.util.Objects;
   EnvironmentWorkPoll200Response.JSON_PROPERTY_ENVIRONMENT_ID,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_LATEST_HEARTBEAT_AT,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_TAGS,
-  "secret",
+  EnvironmentWorkPoll200Response.JSON_PROPERTY_SECRET,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_STARTED_AT,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_STATE,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_STOP_REQUESTED_AT,
@@ -75,6 +75,7 @@ public class EnvironmentWorkPoll200Response {
   @javax.annotation.Nullable
   private List<VolcTag> tags;
 
+  public static final String JSON_PROPERTY_SECRET = "secret";
   @javax.annotation.Nullable
   private String secret;
 
@@ -328,7 +329,7 @@ public class EnvironmentWorkPoll200Response {
    * @return secret
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = "secret", required = false)
+  @JsonProperty(value = JSON_PROPERTY_SECRET, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getSecret() {
@@ -336,7 +337,7 @@ public class EnvironmentWorkPoll200Response {
   }
 
 
-  @JsonProperty(value = "secret", required = false)
+  @JsonProperty(value = JSON_PROPERTY_SECRET, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setSecret(@javax.annotation.Nullable String secret) {
     this.secret = secret;
@@ -508,7 +509,7 @@ public class EnvironmentWorkPoll200Response {
     sb.append("    environmentId: ").append(toIndentedString(environmentId)).append("\n");
     sb.append("    latestHeartbeatAt: ").append(toIndentedString(latestHeartbeatAt)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
-    sb.append("    secret: [REDACTED]\n");
+    sb.append("    secret: ").append(toIndentedString(secret)).append("\n");
     sb.append("    startedAt: ").append(toIndentedString(startedAt)).append("\n");
     sb.append("    state: ").append(toIndentedString(state)).append("\n");
     sb.append("    stopRequestedAt: ").append(toIndentedString(stopRequestedAt)).append("\n");
