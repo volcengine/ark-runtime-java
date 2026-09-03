@@ -36,7 +36,7 @@ import java.util.Objects;
   WorkItem.JSON_PROPERTY_ENVIRONMENT_ID,
   WorkItem.JSON_PROPERTY_LATEST_HEARTBEAT_AT,
   WorkItem.JSON_PROPERTY_TAGS,
-  "secret",
+  WorkItem.JSON_PROPERTY_SECRET,
   WorkItem.JSON_PROPERTY_STARTED_AT,
   WorkItem.JSON_PROPERTY_STATE,
   WorkItem.JSON_PROPERTY_STOP_REQUESTED_AT,
@@ -73,6 +73,7 @@ public class WorkItem {
   @javax.annotation.Nullable
   private List<VolcTag> tags;
 
+  public static final String JSON_PROPERTY_SECRET = "secret";
   @javax.annotation.Nullable
   private String secret;
 
@@ -326,7 +327,7 @@ public class WorkItem {
    * @return secret
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = "secret", required = false)
+  @JsonProperty(value = JSON_PROPERTY_SECRET, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getSecret() {
@@ -334,7 +335,7 @@ public class WorkItem {
   }
 
 
-  @JsonProperty(value = "secret", required = false)
+  @JsonProperty(value = JSON_PROPERTY_SECRET, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setSecret(@javax.annotation.Nullable String secret) {
     this.secret = secret;
@@ -506,7 +507,7 @@ public class WorkItem {
     sb.append("    environmentId: ").append(toIndentedString(environmentId)).append("\n");
     sb.append("    latestHeartbeatAt: ").append(toIndentedString(latestHeartbeatAt)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
-    sb.append("    secret: [REDACTED]\n");
+    sb.append("    secret: ").append(toIndentedString(secret)).append("\n");
     sb.append("    startedAt: ").append(toIndentedString(startedAt)).append("\n");
     sb.append("    state: ").append(toIndentedString(state)).append("\n");
     sb.append("    stopRequestedAt: ").append(toIndentedString(stopRequestedAt)).append("\n");
