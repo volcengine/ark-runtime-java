@@ -4,6 +4,7 @@
 package com.volcengine.ark.runtime.selfhosted;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -69,6 +70,40 @@ public class InitializerTest {
             return;
         }
         throw new AssertionError("expected archive entry limit failure");
+    }
+
+    @Test
+    public void cleanupRemovesOnlyInstalledSkills() throws Exception {
+        byte[] archive = zipWithTwoEntries();
+        OkHttpClient http = new OkHttpClient.Builder().addInterceptor(chain -> {
+            Request request = chain.request();
+            if (request.url().encodedPath().equals("/api/v3/skills/skill-1")) {
+                return response(
+                        request,
+                        MediaType.parse("application/json"),
+                        ("{\"id\":\"skill-1\",\"object\":\"skill\",\"created_at\":1,"
+                                + "\"name\":\"demo\",\"latest_version\":\"1\"}")
+                                .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            }
+            return response(request, MediaType.parse("application/zip"), archive);
+        }).build();
+        SelfHostedClient client = new SelfHostedClient.Builder()
+                .apiKey("test-key")
+                .baseUrl("https://ark.example.com/api/v3")
+                .httpClient(http)
+                .build();
+        Path root = Files.createTempDirectory("ark-java-skill-cleanup-");
+        Initializer initializer = new Initializer(client, new Initializer.Options(root.toString()));
+        Map<String, Object> raw = new LinkedHashMap<>();
+        raw.put("skill_id", "skill-1");
+        raw.put("version", "1");
+
+        initializer.installSkill("session-1", SkillRef.fromMap(raw));
+        Path retained = Files.createDirectories(root.resolve("skills").resolve("retained"));
+        initializer.cleanup();
+
+        assertFalse(Files.exists(root.resolve("skills").resolve("demo")));
+        assertTrue(Files.isDirectory(retained));
     }
 
     @Test
