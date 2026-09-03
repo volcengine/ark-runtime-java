@@ -32,10 +32,21 @@ public class FileToolResultStore {
     private final Path dir;
 
     public FileToolResultStore(String workdir) throws IOException {
+        this(workdir, null);
+    }
+
+    public FileToolResultStore(String workdir, String sessionId) throws IOException {
         if (workdir == null || workdir.isEmpty()) {
             throw new IllegalArgumentException("workdir must not be empty");
         }
-        this.dir = Paths.get(workdir, ".ma_self_host_worker", "tool_ledger");
+        Path storeDir = Paths.get(workdir, ".ma_self_hosted_worker", "tool_ledger");
+        if (sessionId != null) {
+            if (sessionId.isEmpty()) {
+                throw new IllegalArgumentException("session id must not be empty");
+            }
+            storeDir = storeDir.resolve(sessionLedgerName(sessionId));
+        }
+        this.dir = storeDir;
         Files.createDirectories(this.dir);
     }
 
@@ -194,6 +205,13 @@ public class FileToolResultStore {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String sessionLedgerName(String sessionId) {
+        if (sessionId.matches("[A-Za-z0-9._-]+") && !".".equals(sessionId) && !"..".equals(sessionId)) {
+            return sessionId;
+        }
+        return "session-" + sha256(sessionId);
     }
 
     @SuppressWarnings("unchecked")

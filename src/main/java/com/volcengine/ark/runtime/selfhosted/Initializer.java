@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,7 @@ public class Initializer {
 
     private final SelfHostedClient api;
     private final Options options;
+    private final List<Path> installedSkillDirs = new ArrayList<>();
 
     public Initializer(SelfHostedClient api, Options options) {
         if (api == null) {
@@ -70,6 +72,25 @@ public class Initializer {
         }
     }
 
+    public void cleanup() throws IOException {
+        IOException firstError = null;
+        for (Path path : installedSkillDirs) {
+            try {
+                deleteRecursively(path);
+            } catch (IOException error) {
+                if (firstError == null) {
+                    firstError = error;
+                } else {
+                    firstError.addSuppressed(error);
+                }
+            }
+        }
+        installedSkillDirs.clear();
+        if (firstError != null) {
+            throw firstError;
+        }
+    }
+
     public void installSkill(String sessionId, SkillRef skill) throws IOException {
         Files.createDirectories(Paths.get(options.workdir));
         Files.createDirectories(Paths.get(options.skillsDir));
@@ -91,6 +112,7 @@ public class Initializer {
             Path source = installSourceDir(tmp);
             Path target = Paths.get(options.skillsDir, name);
             Path backup = replaceSkillDir(source, target);
+            installedSkillDirs.add(target);
             committed = true;
             if (!source.equals(tmp)) {
                 try {

@@ -11,6 +11,7 @@ import com.volcengine.ark.runtime.models.environment.WorkState;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,6 +25,18 @@ import okhttp3.ResponseBody;
 import org.junit.Test;
 
 public class EnvironmentWorkerTest {
+    @Test
+    public void workerUsesConfiguredWorkdir() throws Exception {
+        Path workdir = Files.createTempDirectory("ark-java-worker-");
+        EnvironmentWorker worker = new EnvironmentWorker(
+                new SelfHostedClient("test-key"),
+                new EnvironmentWorker.Options().workdir(workdir.toString()));
+        Method method = EnvironmentWorker.class.getDeclaredMethod("workdir");
+        method.setAccessible(true);
+
+        assertEquals(workdir.toAbsolutePath().normalize().toString(), method.invoke(worker));
+    }
+
     @Test
     public void emptyHeartbeatResponseDoesNotSpin() throws Exception {
         NullHeartbeatClient client = new NullHeartbeatClient();

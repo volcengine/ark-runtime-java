@@ -9,11 +9,9 @@ import com.volcengine.ark.runtime.models.environment.WorkState;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -61,7 +59,7 @@ public class EnvironmentWorker implements AutoCloseable {
                     return;
                 }
                 try {
-                    handleItem(claimedWorkFromItem(item), false);
+                    handleItem(claimedWorkFromItem(item));
                 } catch (SessionToolRunner.IdleTimeoutException | SessionToolRunner.SessionTerminatedException ignored) {
                 } catch (Exception e) {
                     options.logger.log(Level.WARNING, "handle work failed", e);
@@ -77,22 +75,23 @@ public class EnvironmentWorker implements AutoCloseable {
         Thread previous = activeThread;
         activeThread = Thread.currentThread();
         try {
-            handleItem(claimedWorkFromOptions(handleOptions), true);
+            handleItem(claimedWorkFromOptions(handleOptions));
         } catch (SessionToolRunner.IdleTimeoutException | SessionToolRunner.SessionTerminatedException ignored) {
         } finally {
             activeThread = previous;
         }
     }
 
-    private void handleItem(ClaimedWork work, boolean useWorkdirAsSession) throws IOException {
+    private void handleItem(ClaimedWork work) throws IOException {
         if (work.environmentId.isEmpty()) {
             work.environmentId = firstNonEmpty(options.environmentId, System.getenv("MA_ENVIRONMENT_ID"));
         }
         AtomicBoolean stop = new AtomicBoolean(false);
         AtomicReference<String> heartbeatCause = new AtomicReference<>("");
         Thread heartbeat = null;
+        Initializer initializer = null;
         try {
-            String workdir = workdirFor(work.sessionId, useWorkdirAsSession);
+            String workdir = workdir();
             Thread heartbeatThread = new Thread(
                     () -> heartbeatLoop(work, stop, heartbeatCause), "ma-self-host-heartbeat");
             heartbeatThread.setDaemon(true);
@@ -108,12 +107,13 @@ public class EnvironmentWorker implements AutoCloseable {
             if (session.getId() == null || session.getId().isEmpty()) {
                 session.setId(work.sessionId);
             }
-            new Initializer(api, new Initializer.Options(workdir)).setup(session);
+            initializer = new Initializer(api, new Initializer.Options(workdir));
+            initializer.setup(session);
             if (closed.get() || stop.get()) {
                 return;
             }
             ToolContext toolContext = toolContext(workdir, stop);
-            FileToolResultStore store = new FileToolResultStore(workdir);
+            FileToolResultStore store = new FileToolResultStore(workdir, work.sessionId);
             SessionToolRunner runner = new SessionToolRunner(api, work.sessionId, new SessionToolRunner.Options()
                     .workId(work.id)
                     .tools(options.tools == null ? DefaultTools.create() : options.tools)
@@ -130,6 +130,13 @@ public class EnvironmentWorker implements AutoCloseable {
                 activeRunner = null;
             }
         } finally {
+            if (initializer != null) {
+                try {
+                    initializer.cleanup();
+                } catch (IOException error) {
+                    options.logger.log(Level.WARNING, "cleanup session skills failed", error);
+                }
+            }
             stop.set(true);
             if (heartbeat != null) {
                 try {
@@ -243,17 +250,12 @@ public class EnvironmentWorker implements AutoCloseable {
         return copy;
     }
 
-    private String workdirFor(String sessionId, boolean useWorkdirAsSession) throws IOException {
+    private String workdir() throws IOException {
         Path root = Paths.get(options.workdir == null || options.workdir.isEmpty() ? "." : options.workdir)
                 .toAbsolutePath()
                 .normalize();
         Files.createDirectories(root);
-        if (useWorkdirAsSession) {
-            return root.toString();
-        }
-        Path sessionDir = root.resolve(sessionWorkdirName(sessionId)).normalize();
-        Files.createDirectories(sessionDir);
-        return sessionDir.toString();
+        return root.toString();
     }
 
     private ClaimedWork claimedWorkFromOptions(HandleItemOptions opts) {
@@ -337,26 +339,6 @@ public class EnvironmentWorker implements AutoCloseable {
                 && !"lease_not_extended".equals(heartbeatCause)
                 && !"heartbeat_lost".equals(heartbeatCause)
                 && !"heartbeat_permanent_failure".equals(heartbeatCause);
-    }
-
-    private static String sessionWorkdirName(String sessionId) {
-        if (sessionId != null
-                && sessionId.matches("[A-Za-z0-9._-]+")
-                && !".".equals(sessionId)
-                && !"..".equals(sessionId)) {
-            return sessionId;
-        }
-        try {
-            byte[] digest = MessageDigest.getInstance("SHA-256")
-                    .digest(String.valueOf(sessionId).getBytes(StandardCharsets.UTF_8));
-            StringBuilder value = new StringBuilder("session-");
-            for (byte item : digest) {
-                value.append(String.format("%02x", item));
-            }
-            return value.toString();
-        } catch (Exception error) {
-            throw new IllegalStateException("failed to hash session id", error);
-        }
     }
 
     private static String firstNonEmpty(String first, String second) {
