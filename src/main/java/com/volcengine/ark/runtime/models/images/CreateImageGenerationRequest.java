@@ -42,6 +42,7 @@ import java.util.Objects;
   CreateImageGenerationRequest.JSON_PROPERTY_OPTIMIZE_PROMPT_OPTIONS,
   CreateImageGenerationRequest.JSON_PROPERTY_TOOLS,
   CreateImageGenerationRequest.JSON_PROPERTY_OUTPUT_FORMAT,
+  CreateImageGenerationRequest.JSON_PROPERTY_BACKGROUND,
   CreateImageGenerationRequest.JSON_PROPERTY_LAYER_DECOMPOSITION
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
@@ -51,12 +52,12 @@ public class CreateImageGenerationRequest {
   private String model;
 
   public static final String JSON_PROPERTY_PROMPT = "prompt";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String prompt;
 
   public static final String JSON_PROPERTY_IMAGE = "image";
   @javax.annotation.Nullable
-  private List<String> image;
+  private CreateImageGenerationRequestImage image;
 
   public static final String JSON_PROPERTY_STREAM = "stream";
   @javax.annotation.Nullable
@@ -106,6 +107,10 @@ public class CreateImageGenerationRequest {
   @javax.annotation.Nullable
   private OutputFormat outputFormat;
 
+  public static final String JSON_PROPERTY_BACKGROUND = "background";
+  @javax.annotation.Nullable
+  private Background background;
+
   public static final String JSON_PROPERTY_LAYER_DECOMPOSITION = "layer_decomposition";
   @javax.annotation.Nullable
   private Boolean layerDecomposition;
@@ -138,61 +143,53 @@ public class CreateImageGenerationRequest {
     this.model = model;
   }
 
-  public CreateImageGenerationRequest prompt(@javax.annotation.Nonnull String prompt) {
+  public CreateImageGenerationRequest prompt(@javax.annotation.Nullable String prompt) {
 
     this.prompt = prompt;
     return this;
   }
 
   /**
-   * Text prompt describing the desired image.
+   * Text prompt describing the desired image. Required for standard generation; may be omitted for automatic layer decomposition when &#x60;layer_decomposition&#x3D;true&#x60;.
    * @return prompt
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_PROMPT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROMPT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getPrompt() {
     return prompt;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_PROMPT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setPrompt(@javax.annotation.Nonnull String prompt) {
+  @JsonProperty(value = JSON_PROPERTY_PROMPT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPrompt(@javax.annotation.Nullable String prompt) {
     this.prompt = prompt;
   }
 
-  public CreateImageGenerationRequest image(@javax.annotation.Nullable List<String> image) {
+  public CreateImageGenerationRequest image(@javax.annotation.Nullable CreateImageGenerationRequestImage image) {
 
     this.image = image;
     return this;
   }
 
-  public CreateImageGenerationRequest addImageItem(String imageItem) {
-    if (this.image == null) {
-      this.image = new ArrayList<>();
-    }
-    this.image.add(imageItem);
-    return this;
-  }
-
   /**
-   * Reference / edit images. Each entry is a URL or a &#x60;data:&#x60; URI.
+   * Get image
    * @return image
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_IMAGE, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public List<String> getImage() {
+  public CreateImageGenerationRequestImage getImage() {
     return image;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_IMAGE, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-  public void setImage(@javax.annotation.Nullable List<String> image) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setImage(@javax.annotation.Nullable CreateImageGenerationRequestImage image) {
     this.image = image;
   }
 
@@ -504,6 +501,31 @@ public class CreateImageGenerationRequest {
     this.outputFormat = outputFormat;
   }
 
+  public CreateImageGenerationRequest background(@javax.annotation.Nullable Background background) {
+
+    this.background = background;
+    return this;
+  }
+
+  /**
+   * Output background. Defaults to &#x60;opaque&#x60;. &#x60;transparent&#x60; requires exactly one PNG reference image with an alpha channel and PNG output.
+   * @return background
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_BACKGROUND, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Background getBackground() {
+    return background;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_BACKGROUND, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBackground(@javax.annotation.Nullable Background background) {
+    this.background = background;
+  }
+
   public CreateImageGenerationRequest layerDecomposition(@javax.annotation.Nullable Boolean layerDecomposition) {
 
     this.layerDecomposition = layerDecomposition;
@@ -554,12 +576,13 @@ public class CreateImageGenerationRequest {
         Objects.equals(this.optimizePromptOptions, createImageGenerationRequest.optimizePromptOptions) &&
         Objects.equals(this.tools, createImageGenerationRequest.tools) &&
         Objects.equals(this.outputFormat, createImageGenerationRequest.outputFormat) &&
+        Objects.equals(this.background, createImageGenerationRequest.background) &&
         Objects.equals(this.layerDecomposition, createImageGenerationRequest.layerDecomposition);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(model, prompt, image, stream, responseFormat, seed, guidanceScale, imageGuidanceScale, size, watermark, sequentialImageGeneration, sequentialImageGenerationOptions, optimizePromptOptions, tools, outputFormat, layerDecomposition);
+    return Objects.hash(model, prompt, image, stream, responseFormat, seed, guidanceScale, imageGuidanceScale, size, watermark, sequentialImageGeneration, sequentialImageGenerationOptions, optimizePromptOptions, tools, outputFormat, background, layerDecomposition);
   }
 
   @Override
@@ -581,6 +604,7 @@ public class CreateImageGenerationRequest {
     sb.append("    optimizePromptOptions: ").append(toIndentedString(optimizePromptOptions)).append("\n");
     sb.append("    tools: ").append(toIndentedString(tools)).append("\n");
     sb.append("    outputFormat: ").append(toIndentedString(outputFormat)).append("\n");
+    sb.append("    background: ").append(toIndentedString(background)).append("\n");
     sb.append("    layerDecomposition: ").append(toIndentedString(layerDecomposition)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -614,7 +638,7 @@ public class CreateImageGenerationRequest {
       this.instance.prompt = prompt;
       return this;
     }
-    public CreateImageGenerationRequest.Builder image(List<String> image) {
+    public CreateImageGenerationRequest.Builder image(CreateImageGenerationRequestImage image) {
       this.instance.image = image;
       return this;
     }
@@ -664,6 +688,10 @@ public class CreateImageGenerationRequest {
     }
     public CreateImageGenerationRequest.Builder outputFormat(OutputFormat outputFormat) {
       this.instance.outputFormat = outputFormat;
+      return this;
+    }
+    public CreateImageGenerationRequest.Builder background(Background background) {
+      this.instance.background = background;
       return this;
     }
     public CreateImageGenerationRequest.Builder layerDecomposition(Boolean layerDecomposition) {
@@ -719,6 +747,7 @@ public class CreateImageGenerationRequest {
       .optimizePromptOptions(getOptimizePromptOptions())
       .tools(getTools())
       .outputFormat(getOutputFormat())
+      .background(getBackground())
       .layerDecomposition(getLayerDecomposition());
   }
 

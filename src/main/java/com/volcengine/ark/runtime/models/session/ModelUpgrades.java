@@ -22,17 +22,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * Session 创建时允许临时覆写的模型运行参数。  内部字段省略表示继承 base Agent 的对应值。
+ * Session upgrade 中允许调整的模型配置子集。  与创建期的 &#x60;ModelOverrides&#x60; 的差别在于 &#x60;id&#x60;：upgrade 允许改模型身份， 服务端把它解析成完整 provider / protocol / endpoint 后冻结进 Session 的 Agent 快照。
  */
 @JsonPropertyOrder({
-  ModelOverrides.JSON_PROPERTY_ID,
-  ModelOverrides.JSON_PROPERTY_SPEED,
-  ModelOverrides.JSON_PROPERTY_THINKING,
-  ModelOverrides.JSON_PROPERTY_REASONING_EFFORT,
-  ModelOverrides.JSON_PROPERTY_SERVICE_TIER
+  ModelUpgrades.JSON_PROPERTY_ID,
+  ModelUpgrades.JSON_PROPERTY_SPEED,
+  ModelUpgrades.JSON_PROPERTY_THINKING,
+  ModelUpgrades.JSON_PROPERTY_REASONING_EFFORT,
+  ModelUpgrades.JSON_PROPERTY_SERVICE_TIER
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class ModelOverrides {
+public class ModelUpgrades {
   public static final String JSON_PROPERTY_ID = "id";
   @javax.annotation.Nullable
   private String id;
@@ -53,17 +53,17 @@ public class ModelOverrides {
   @javax.annotation.Nullable
   private String serviceTier;
 
-  public ModelOverrides() {
+  public ModelUpgrades() {
   }
 
-  public ModelOverrides id(@javax.annotation.Nullable String id) {
+  public ModelUpgrades id(@javax.annotation.Nullable String id) {
 
     this.id = id;
     return this;
   }
 
   /**
-   * 模型 semantic 覆写，形如 &#x60;\&quot;doubao-seed-2-0-pro-260215\&quot;&#x60;；服务端按最右 侧一个 &#x60;-&#x60; 拆成 (name, version) 冻结进本 Session 的 Agent 快照，不回写 base Agent。解析失败返回 400，模型未开通返回 403 &#x60;ModelNotOpen&#x60;。
+   * 目标模型标识，形如 &#x60;\&quot;doubao-seed-2-0-pro-260215\&quot;&#x60;。  与创建期 &#x60;ModelOverrides.id&#x60; 的**解析路径不同**：此处服务端拿它当 endpoint 反查元数据来得到 (name, version)，而不是按字符串拆分。因此 endpoint 不存在 / 已关闭 / 元信息缺失均返回 400；显式传空串也返回 400 （upgrade 不支持卸载底模）。模型未开通返回 403 &#x60;ModelNotOpen&#x60;；底模不支持 作为 Agent 使用返回 400。  换 &#x60;id&#x60; 时 &#x60;speed&#x60; / &#x60;thinking&#x60; / &#x60;reasoning_effort&#x60; / &#x60;service_tier&#x60; 会按 **新**底模重新校验取值：本次未显式提供的，沿用升级前的值参与校验，落在新 底模白名单外返回 400。
    * @return id
    */
   @javax.annotation.Nullable
@@ -81,7 +81,7 @@ public class ModelOverrides {
     this.id = id;
   }
 
-  public ModelOverrides speed(@javax.annotation.Nullable String speed) {
+  public ModelUpgrades speed(@javax.annotation.Nullable String speed) {
 
     this.speed = speed;
     return this;
@@ -106,7 +106,7 @@ public class ModelOverrides {
     this.speed = speed;
   }
 
-  public ModelOverrides thinking(@javax.annotation.Nullable String thinking) {
+  public ModelUpgrades thinking(@javax.annotation.Nullable String thinking) {
 
     this.thinking = thinking;
     return this;
@@ -131,7 +131,7 @@ public class ModelOverrides {
     this.thinking = thinking;
   }
 
-  public ModelOverrides reasoningEffort(@javax.annotation.Nullable String reasoningEffort) {
+  public ModelUpgrades reasoningEffort(@javax.annotation.Nullable String reasoningEffort) {
 
     this.reasoningEffort = reasoningEffort;
     return this;
@@ -156,7 +156,7 @@ public class ModelOverrides {
     this.reasoningEffort = reasoningEffort;
   }
 
-  public ModelOverrides serviceTier(@javax.annotation.Nullable String serviceTier) {
+  public ModelUpgrades serviceTier(@javax.annotation.Nullable String serviceTier) {
 
     this.serviceTier = serviceTier;
     return this;
@@ -190,12 +190,12 @@ public class ModelOverrides {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ModelOverrides modelOverrides = (ModelOverrides) o;
-    return Objects.equals(this.id, modelOverrides.id) &&
-        Objects.equals(this.speed, modelOverrides.speed) &&
-        Objects.equals(this.thinking, modelOverrides.thinking) &&
-        Objects.equals(this.reasoningEffort, modelOverrides.reasoningEffort) &&
-        Objects.equals(this.serviceTier, modelOverrides.serviceTier);
+    ModelUpgrades modelUpgrades = (ModelUpgrades) o;
+    return Objects.equals(this.id, modelUpgrades.id) &&
+        Objects.equals(this.speed, modelUpgrades.speed) &&
+        Objects.equals(this.thinking, modelUpgrades.thinking) &&
+        Objects.equals(this.reasoningEffort, modelUpgrades.reasoningEffort) &&
+        Objects.equals(this.serviceTier, modelUpgrades.serviceTier);
   }
 
   @Override
@@ -206,7 +206,7 @@ public class ModelOverrides {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ModelOverrides {\n");
+    sb.append("class ModelUpgrades {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    speed: ").append(toIndentedString(speed)).append("\n");
     sb.append("    thinking: ").append(toIndentedString(thinking)).append("\n");
@@ -226,44 +226,44 @@ public class ModelOverrides {
 
   public static class Builder {
 
-    private ModelOverrides instance;
+    private ModelUpgrades instance;
 
     public Builder() {
-      this(new ModelOverrides());
+      this(new ModelUpgrades());
     }
 
-    protected Builder(ModelOverrides instance) {
+    protected Builder(ModelUpgrades instance) {
       this.instance = instance;
     }
 
-    public ModelOverrides.Builder id(String id) {
+    public ModelUpgrades.Builder id(String id) {
       this.instance.id = id;
       return this;
     }
-    public ModelOverrides.Builder speed(String speed) {
+    public ModelUpgrades.Builder speed(String speed) {
       this.instance.speed = speed;
       return this;
     }
-    public ModelOverrides.Builder thinking(String thinking) {
+    public ModelUpgrades.Builder thinking(String thinking) {
       this.instance.thinking = thinking;
       return this;
     }
-    public ModelOverrides.Builder reasoningEffort(String reasoningEffort) {
+    public ModelUpgrades.Builder reasoningEffort(String reasoningEffort) {
       this.instance.reasoningEffort = reasoningEffort;
       return this;
     }
-    public ModelOverrides.Builder serviceTier(String serviceTier) {
+    public ModelUpgrades.Builder serviceTier(String serviceTier) {
       this.instance.serviceTier = serviceTier;
       return this;
     }
 
 
     /**
-    * returns a built ModelOverrides instance.
+    * returns a built ModelUpgrades instance.
     *
     * The builder is not reusable.
     */
-    public ModelOverrides build() {
+    public ModelUpgrades build() {
       try {
         return this.instance;
       } finally {
@@ -281,15 +281,15 @@ public class ModelOverrides {
   /**
   * Create a builder with no initialized field.
   */
-  public static ModelOverrides.Builder builder() {
-    return new ModelOverrides.Builder();
+  public static ModelUpgrades.Builder builder() {
+    return new ModelUpgrades.Builder();
   }
 
   /**
   * Create a builder with a shallow copy of this instance.
   */
-  public ModelOverrides.Builder toBuilder() {
-    return new ModelOverrides.Builder()
+  public ModelUpgrades.Builder toBuilder() {
+    return new ModelUpgrades.Builder()
       .id(getId())
       .speed(getSpeed())
       .thinking(getThinking())
