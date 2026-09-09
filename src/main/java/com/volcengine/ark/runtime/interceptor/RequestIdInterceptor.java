@@ -6,7 +6,6 @@ package com.volcengine.ark.runtime.interceptor;
 import com.volcengine.ark.runtime.Const;
 import com.volcengine.ark.runtime.exception.ArkAPIError;
 import com.volcengine.ark.runtime.exception.ArkHttpException;
-import com.volcengine.version.Version;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,6 +51,6 @@ public class RequestIdInterceptor implements Interceptor {
         String jdkInfo = "java-" + System.getProperty("java.version");
         String arch = System.getProperty("os.arch");
 
-        return String.format(format, Version.SDK_NAME, Version.SDK_VERSION, jdkInfo, osInfo, arch);
+        return String.format(format, "ark-runtime-java", SdkVersion.VERSION, jdkInfo, osInfo, arch);
     }
 }

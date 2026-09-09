@@ -126,6 +126,13 @@
     <build>
         <resources>
             <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>com/volcengine/ark/runtime/sdk-version.properties</include>
+                </includes>
+            </resource>
+            <resource>
                 <directory>${project.basedir}</directory>
                 <targetPath>META-INF</targetPath>
                 <filtering>false</filtering>
