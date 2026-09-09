@@ -49,7 +49,7 @@ Use the same release version for the core SDK and this adapter:
 <dependency>
     <groupId>com.volcengine</groupId>
     <artifactId>ark-runtime-mcp</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
 </dependency>
 ```
 

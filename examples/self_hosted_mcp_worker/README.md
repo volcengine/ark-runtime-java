@@ -10,7 +10,7 @@ creating a Session. Printing declarations does not update the Agent
 automatically. The same MCP tool list is registered with the worker for
 execution, and the example reads every `tools/list` page.
 
-Build the standalone example after `ark-runtime` and `ark-runtime-mcp` 0.6.0
+Build the standalone example after `ark-runtime` and `ark-runtime-mcp` 0.7.0
 are available in Maven Central or installed in the local Maven repository:
 
 ```bash
@@ -38,7 +38,7 @@ following control-plane fields manually:
    # Optional, for example when testing against staging:
    # export ARK_BASE_URL=https://example.com/api/v3
 
-   JAR=examples/self_hosted_mcp_worker/target/ark-runtime-self-hosted-mcp-example-0.6.0-jar-with-dependencies.jar
+   JAR=examples/self_hosted_mcp_worker/target/ark-runtime-self-hosted-mcp-example-0.7.0-jar-with-dependencies.jar
    java -jar "$JAR" -- java -cp "$JAR" \
      com.volcengine.ark.runtime.examples.selfhostedmcp.McpEchoServer
    ```
