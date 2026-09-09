@@ -6,7 +6,7 @@
 
     <groupId>com.volcengine</groupId>
     <artifactId>ark-runtime-mcp</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <packaging>jar</packaging>
 
     <name>ark-runtime-mcp</name>
@@ -37,7 +37,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <ark-runtime.version>0.6.0</ark-runtime.version>
+        <ark-runtime.version>0.7.0</ark-runtime.version>
         <mcp.version>2.0.0</mcp.version>
         <jackson.annotations.version>2.20</jackson.annotations.version>
         <jackson.version>2.20.0</jackson.version>

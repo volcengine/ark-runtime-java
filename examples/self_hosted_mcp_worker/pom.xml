@@ -6,12 +6,12 @@
 
     <groupId>com.volcengine</groupId>
     <artifactId>ark-runtime-self-hosted-mcp-example</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <ark-runtime.version>0.6.0</ark-runtime.version>
+        <ark-runtime.version>0.7.0</ark-runtime.version>
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
     </properties>
