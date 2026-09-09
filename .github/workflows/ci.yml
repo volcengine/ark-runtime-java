@@ -42,3 +42,34 @@ jobs:
 
       - name: Package
         run: mvn -B package -DskipTests
+
+      - name: Test core
+        run: mvn -B test
+
+  mcp-ci:
+    name: MCP adapter CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: maven
+
+      - name: Install matching core artifact
+        run: |
+          adapter_version="$(mvn -q -f mcp/pom.xml help:evaluate -Dexpression=project.version -DforceStdout)"
+          mvn -B versions:set -DnewVersion="${adapter_version}" -DgenerateBackupPoms=false
+          mvn -B install -DskipTests
+
+      - name: Test and install optional MCP adapter
+        run: mvn -B -f mcp/pom.xml install
+
+      - name: Compile self-hosted MCP example
+        run: mvn -B -f examples/self_hosted_mcp_worker/pom.xml package

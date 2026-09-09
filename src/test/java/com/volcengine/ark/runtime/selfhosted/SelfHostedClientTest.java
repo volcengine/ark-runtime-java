@@ -67,6 +67,22 @@ public class SelfHostedClientTest {
     }
 
     @Test
+    public void negativeBlockMillisOmitsLongPollQuery() {
+        AtomicReference<HttpUrl> requestedURL = new AtomicReference<>();
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> response(chain.request(), requestedURL))
+                .build();
+        SelfHostedClient client = new SelfHostedClient.Builder()
+                .apiKey("test-api-key")
+                .httpClient(httpClient)
+                .build();
+
+        client.pollWork("env-1", "worker-1", -1, 0);
+
+        assertNull(requestedURL.get().queryParameter("block_ms"));
+    }
+
+    @Test
     public void opensSkillHubFromMetadataAndVersionedDownload() throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/v1/skills/download/volcengine/ark/demo", exchange -> {
@@ -168,10 +184,12 @@ public class SelfHostedClientTest {
     public void heartbeatUsesOneLeaseBoundedAttempt() {
         AtomicInteger calls = new AtomicInteger();
         AtomicLong timeoutSeconds = new AtomicLong();
+        AtomicReference<String> retryCount = new AtomicReference<>();
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(new RetryInterceptor(3))
                 .addInterceptor(chain -> {
                     calls.incrementAndGet();
+                    retryCount.set(chain.request().header("X-Stainless-Retry-Count"));
                     timeoutSeconds.set(
                             TimeUnit.NANOSECONDS.toSeconds(chain.call().timeout().timeoutNanos()));
                     return new Response.Builder()
@@ -196,6 +214,7 @@ public class SelfHostedClientTest {
 
         assertEquals(1, calls.get());
         assertEquals(15L, timeoutSeconds.get());
+        assertEquals("0", retryCount.get());
     }
 
     @Test

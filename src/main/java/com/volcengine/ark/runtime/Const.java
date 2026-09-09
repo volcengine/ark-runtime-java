@@ -12,6 +12,9 @@ public class Const {
     public static final String REQUEST_MODEL = "X-Request-Model";
     public static final String REQUEST_PROJECT_NAME = "X-Project-Name";
     public static final String RETRY_AFTER = "Retry-After";
+    public static final String RETRY_AFTER_MS = "Retry-After-Ms";
+    public static final String RETRY_COUNT_HEADER = "X-Stainless-Retry-Count";
+    public static final String SHOULD_RETRY_HEADER = "X-Should-Retry";
     public static final Integer DEFAULT_MANDATORY_REFRESH_TIMEOUT = 10 * 60;  // 10 min
     public static final Integer DEFAULT_ADVISORY_REFRESH_TIMEOUT = 30 * 60;  // 30 min
     public static final Integer DEFAULT_STS_TIMEOUT = 7 * 24 * 60 * 60;  // 7 days

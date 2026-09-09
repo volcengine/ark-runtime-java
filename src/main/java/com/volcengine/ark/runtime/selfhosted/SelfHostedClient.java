@@ -84,6 +84,7 @@ public class SelfHostedClient {
                 .writeTimeout(HEARTBEAT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .callTimeout(HEARTBEAT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         heartbeatClientBuilder.interceptors().removeIf(interceptor -> interceptor instanceof RetryInterceptor);
+        heartbeatClientBuilder.interceptors().add(0, new RetryInterceptor(0));
         Retrofit heartbeatRetrofit = ArkService.defaultRetrofit(
                 heartbeatClientBuilder.build(), this.mapper, normalizeBaseUrl(builder.baseUrl), null);
         this.heartbeatApi = heartbeatRetrofit.create(ArkApi.class);
@@ -94,6 +95,7 @@ public class SelfHostedClient {
                 .writeTimeout(LIFECYCLE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .callTimeout(LIFECYCLE_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         lifecycleClientBuilder.interceptors().removeIf(interceptor -> interceptor instanceof RetryInterceptor);
+        lifecycleClientBuilder.interceptors().add(0, new RetryInterceptor(0));
         Retrofit lifecycleRetrofit = ArkService.defaultRetrofit(
                 lifecycleClientBuilder.build(), this.mapper, normalizeBaseUrl(builder.baseUrl), null);
         this.lifecycleApi = lifecycleRetrofit.create(ArkApi.class);
