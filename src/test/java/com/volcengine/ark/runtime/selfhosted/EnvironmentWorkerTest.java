@@ -4,6 +4,7 @@
 package com.volcengine.ark.runtime.selfhosted;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
@@ -25,6 +26,15 @@ import okhttp3.ResponseBody;
 import org.junit.Test;
 
 public class EnvironmentWorkerTest {
+    @Test
+    public void defaultWorkerIdIsUniquePerWorker() {
+        String first = EnvironmentWorker.defaultWorkerId();
+        String second = EnvironmentWorker.defaultWorkerId();
+
+        assertNotEquals(first, second);
+        assertEquals(12, first.substring(first.lastIndexOf('-') + 1).length());
+    }
+
     @Test
     public void workerUsesConfiguredWorkdir() throws Exception {
         Path workdir = Files.createTempDirectory("ark-java-worker-");

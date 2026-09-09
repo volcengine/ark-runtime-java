@@ -7,13 +7,13 @@ import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.WorkItem;
 import com.volcengine.ark.runtime.models.environment.WorkState;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -305,12 +305,14 @@ public class EnvironmentWorker implements AutoCloseable {
 
     static String defaultWorkerId() {
         try {
-            String runtimeName = ManagementFactory.getRuntimeMXBean().getName();
-            String pid = runtimeName == null ? "" : runtimeName.split("@")[0];
-            return InetAddress.getLocalHost().getHostName() + "-" + pid;
+            return InetAddress.getLocalHost().getHostName() + "-" + workerIDSuffix();
         } catch (Throwable ignored) {
-            return "worker-" + System.currentTimeMillis();
+            return "worker-" + workerIDSuffix();
         }
+    }
+
+    private static String workerIDSuffix() {
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 12);
     }
 
     @Override

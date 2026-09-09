@@ -58,6 +58,9 @@ public class Event {
                     contentBlock.setText(stringValue(blockMap.get("text")));
                     contentBlock.setMediaType(stringValue(blockMap.get("media_type")));
                     contentBlock.setData(blockMap.get("data"));
+                    contentBlock.setSource(blockMap.get("source"));
+                    contentBlock.setTitle(stringValue(blockMap.get("title")));
+                    contentBlock.setContext(stringValue(blockMap.get("context")));
                     event.content.add(contentBlock);
                 }
             }
