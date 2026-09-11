@@ -203,6 +203,77 @@ public class SessionToolRunnerTest {
         assertToolTimeoutAbandonsNoncooperativeTool(true);
     }
 
+    @Test
+    public void recoveredResultsAreFilteredAgainstCurrentBlockers() throws Exception {
+        List<String> discarded = new ArrayList<>();
+        List<String> marked = new ArrayList<>();
+        FileToolResultStore store = recordingStore(discarded, marked);
+        AtomicInteger executions = new AtomicInteger();
+        List<Event> sent = new ArrayList<>();
+        Tool tool = countingTool(executions);
+        SessionToolRunner runner = runnerWithStore(store, tool, sent);
+        stateMap(runner, "pendingResults").put(
+                "foreign-call", Event.newUserCustomToolResultEvent("foreign-call", Collections.emptyList(), false, ""));
+        stateMap(runner, "pendingResults").put(
+                "stale-call", Event.newUserCustomToolResultEvent("stale-call", Collections.emptyList(), false, ""));
+        stateMap(runner, "recoveredResults").put("foreign-call", Boolean.TRUE);
+        stateMap(runner, "recoveredResults").put("stale-call", Boolean.TRUE);
+
+        processListedEvents(
+                runner,
+                java.util.Arrays.asList(
+                        toolUse("stale-call"),
+                        toolUse("current-call"),
+                        requiresAction("current-call")));
+
+        assertEquals(1, executions.get());
+        assertEquals(1, sent.size());
+        assertEquals("current-call", sent.get(0).resultCallId());
+        assertTrue(discarded.contains("foreign-call"));
+        assertTrue(discarded.contains("stale-call"));
+        assertTrue(stateMap(runner, "pendingResults").isEmpty());
+        assertTrue(stateMap(runner, "recoveredResults").isEmpty());
+        runner.close();
+    }
+
+    @Test
+    public void currentBlockerReusesRecoveredResultWithoutReexecution() throws Exception {
+        List<String> discarded = new ArrayList<>();
+        List<String> marked = new ArrayList<>();
+        FileToolResultStore store = recordingStore(discarded, marked);
+        AtomicInteger executions = new AtomicInteger();
+        List<Event> sent = new ArrayList<>();
+        SessionToolRunner runner = runnerWithStore(store, countingTool(executions), sent);
+        Event result = Event.newUserCustomToolResultEvent("current-call", Collections.emptyList(), false, "");
+        stateMap(runner, "pendingResults").put("current-call", result);
+        stateMap(runner, "recoveredResults").put("current-call", Boolean.TRUE);
+
+        processListedEvents(runner, java.util.Arrays.asList(toolUse("current-call"), requiresAction("current-call")));
+
+        assertEquals(0, executions.get());
+        assertEquals(Collections.singletonList(result), sent);
+        assertEquals(Collections.singletonList("current-call"), marked);
+        assertTrue(discarded.isEmpty());
+        runner.close();
+    }
+
+    @Test
+    public void recoveredResultWaitsForAuthoritativeStatus() throws Exception {
+        AtomicInteger executions = new AtomicInteger();
+        List<Event> sent = new ArrayList<>();
+        SessionToolRunner runner = runnerWithStore(null, countingTool(executions), sent);
+        stateMap(runner, "pendingResults").put(
+                "current-call", Event.newUserCustomToolResultEvent("current-call", Collections.emptyList(), false, ""));
+        stateMap(runner, "recoveredResults").put("current-call", Boolean.TRUE);
+
+        processListedEvents(runner, Collections.singletonList(toolUse("current-call")));
+
+        assertEquals(0, executions.get());
+        assertTrue(sent.isEmpty());
+        assertTrue(stateMap(runner, "recoveredResults").containsKey("current-call"));
+        runner.close();
+    }
+
     private static void assertToolTimeoutAbandonsNoncooperativeTool(boolean custom) throws Exception {
         CountDownLatch started = new CountDownLatch(1);
         CountDownLatch release = new CountDownLatch(1);
@@ -269,6 +340,90 @@ public class SessionToolRunnerTest {
                                 Files.createTempDirectory("ark-java-idle-").toString())));
     }
 
+    private static FileToolResultStore recordingStore(List<String> discarded, List<String> marked)
+            throws IOException {
+        return new FileToolResultStore(Files.createTempDirectory("ark-java-recovery-store-").toString()) {
+            @Override
+            public ToolCallStoreDecision begin(String callId, Event event) {
+                return new ToolCallStoreDecision(false, null);
+            }
+
+            @Override
+            public void saveResult(String callId, Event result) {
+            }
+
+            @Override
+            public void markSent(String callId) {
+                marked.add(callId);
+            }
+
+            @Override
+            public void discard(String callId) {
+                discarded.add(callId);
+            }
+        };
+    }
+
+    private static Tool countingTool(AtomicInteger executions) {
+        return new Tool() {
+            @Override
+            public String name() {
+                return "custom";
+            }
+
+            @Override
+            public ToolResult execute(Object input, ToolContext context) {
+                executions.incrementAndGet();
+                return ToolResult.text("ok");
+            }
+        };
+    }
+
+    private static SessionToolRunner runnerWithStore(FileToolResultStore store, Tool tool, List<Event> sent)
+            throws IOException {
+        SelfHostedClient client = new SelfHostedClient("test-key") {
+            @Override
+            public void sendEvent(String sessionId, Event event) {
+                sent.add(event);
+            }
+        };
+        return new SessionToolRunner(
+                client,
+                "session-1",
+                new SessionToolRunner.Options()
+                        .tools(new ToolSet())
+                        .toolContext(new ToolContext(
+                                Files.createTempDirectory("ark-java-recovery-runner-").toString()))
+                        .customTools(Collections.singletonMap("custom", tool))
+                        .resultStore(store));
+    }
+
+    private static Event toolUse(String callId) {
+        Map<String, Object> raw = new LinkedHashMap<>();
+        raw.put("id", callId);
+        raw.put("type", "agent.custom_tool_use");
+        raw.put("name", "custom");
+        raw.put("input", Collections.emptyMap());
+        return Event.fromMap(raw);
+    }
+
+    private static Event requiresAction(String callId) {
+        Map<String, Object> stopReason = new LinkedHashMap<>();
+        stopReason.put("type", "requires_action");
+        stopReason.put("event_ids", Collections.singletonList(callId));
+        Map<String, Object> raw = new LinkedHashMap<>();
+        raw.put("id", "idle-" + callId);
+        raw.put("type", "session.status_idle");
+        raw.put("stop_reason", stopReason);
+        return Event.fromMap(raw);
+    }
+
+    private static void processListedEvents(SessionToolRunner runner, List<Event> events) throws Exception {
+        Method process = SessionToolRunner.class.getDeclaredMethod("processListedEvents", List.class, boolean.class);
+        process.setAccessible(true);
+        process.invoke(runner, events, true);
+    }
+
     private static Event idleEvent() {
         Map<String, Object> stopReason = new LinkedHashMap<>();
         stopReason.put("type", "end_turn");
@@ -296,6 +451,16 @@ public class SessionToolRunnerTest {
         Field answeredField = state.getClass().getDeclaredField("answered");
         answeredField.setAccessible(true);
         return (Map<String, Boolean>) answeredField.get(state);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> stateMap(SessionToolRunner runner, String fieldName) throws Exception {
+        Field stateField = SessionToolRunner.class.getDeclaredField("state");
+        stateField.setAccessible(true);
+        Object state = stateField.get(runner);
+        Field field = state.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return (Map<String, Object>) field.get(state);
     }
 
     private static Response response(Request request, int code, String body) throws IOException {

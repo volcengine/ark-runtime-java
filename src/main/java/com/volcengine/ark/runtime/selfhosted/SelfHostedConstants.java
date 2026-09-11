@@ -13,6 +13,8 @@ public final class SelfHostedConstants {
     public static final String EVENT_TYPE_USER_TOOL_RESULT = "user.tool_result";
     public static final String EVENT_TYPE_USER_CUSTOM_TOOL_RESULT = "user.custom_tool_result";
     public static final String EVENT_TYPE_SESSION_STATUS_IDLE = "session.status_idle";
+    public static final String EVENT_TYPE_SESSION_STATUS_RUNNING = "session.status_running";
+    public static final String EVENT_TYPE_SESSION_STATUS_RESCHEDULED = "session.status_rescheduled";
     public static final String EVENT_TYPE_SESSION_STATUS_TERMINATED = "session.status_terminated";
     public static final String EVENT_TYPE_SESSION_DELETED = "session.deleted";
 
@@ -25,6 +27,7 @@ public final class SelfHostedConstants {
 
     public static final String EVENT_LIST_ORDER_ASC = "asc";
     public static final String SESSION_STOP_REASON_END_TURN = "end_turn";
+    public static final String SESSION_STOP_REASON_REQUIRES_ACTION = "requires_action";
 
     public static final long DEFAULT_MAX_IDLE_MILLIS = 60000L;
     public static final long DEFAULT_TOOL_TIMEOUT_MILLIS = 120000L;

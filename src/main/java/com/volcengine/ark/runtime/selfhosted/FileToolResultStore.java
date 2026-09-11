@@ -122,6 +122,14 @@ public class FileToolResultStore {
         write(record);
     }
 
+    public void discard(String callId) throws IOException {
+        if (callId == null || callId.isEmpty()) {
+            throw new IllegalArgumentException("call id must not be empty");
+        }
+        Files.deleteIfExists(path(callId));
+        syncDirectory();
+    }
+
     private Map<String, Object> read(String callId) throws IOException {
         Path path = path(callId);
         if (!Files.exists(path)) {
