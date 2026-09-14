@@ -29,7 +29,9 @@ public enum RequestServiceTier {
 
   DEFAULT("default"),
 
-  FAST("fast");
+  FAST("fast"),
+
+  FLEX("flex");
 
   private String value;
 

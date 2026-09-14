@@ -54,7 +54,7 @@ public class ChatCompletionRequestAssistantMessage implements ChatCompletionRequ
 
   public static final String JSON_PROPERTY_TOOL_CALLS = "tool_calls";
   @javax.annotation.Nullable
-  private List<ChatCompletionMessageToolCall> toolCalls;
+  private List<ChatCompletionRequestMessageToolCall> toolCalls;
 
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nullable
@@ -95,7 +95,7 @@ public class ChatCompletionRequestAssistantMessage implements ChatCompletionRequ
   }
 
   /**
-   * The contents of the assistant message. Required unless &#x60;tool_calls&#x60; is specified.
+   * Get content
    * @return content
    */
   @javax.annotation.Nullable
@@ -120,7 +120,7 @@ public class ChatCompletionRequestAssistantMessage implements ChatCompletionRequ
   }
 
   /**
-   * The reasoning content emitted by the assistant alongside &#x60;content&#x60;.
+   * Get reasoningContent
    * @return reasoningContent
    */
   @javax.annotation.Nullable
@@ -163,13 +163,13 @@ public class ChatCompletionRequestAssistantMessage implements ChatCompletionRequ
     this.encryptedContent = encryptedContent;
   }
 
-  public ChatCompletionRequestAssistantMessage toolCalls(@javax.annotation.Nullable List<ChatCompletionMessageToolCall> toolCalls) {
+  public ChatCompletionRequestAssistantMessage toolCalls(@javax.annotation.Nullable List<ChatCompletionRequestMessageToolCall> toolCalls) {
 
     this.toolCalls = toolCalls;
     return this;
   }
 
-  public ChatCompletionRequestAssistantMessage addToolCallsItem(ChatCompletionMessageToolCall toolCallsItem) {
+  public ChatCompletionRequestAssistantMessage addToolCallsItem(ChatCompletionRequestMessageToolCall toolCallsItem) {
     if (this.toolCalls == null) {
       this.toolCalls = new ArrayList<>();
     }
@@ -185,14 +185,14 @@ public class ChatCompletionRequestAssistantMessage implements ChatCompletionRequ
   @JsonProperty(value = JSON_PROPERTY_TOOL_CALLS, required = false)
   @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 
-  public List<ChatCompletionMessageToolCall> getToolCalls() {
+  public List<ChatCompletionRequestMessageToolCall> getToolCalls() {
     return toolCalls;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TOOL_CALLS, required = false)
   @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-  public void setToolCalls(@javax.annotation.Nullable List<ChatCompletionMessageToolCall> toolCalls) {
+  public void setToolCalls(@javax.annotation.Nullable List<ChatCompletionRequestMessageToolCall> toolCalls) {
     this.toolCalls = toolCalls;
   }
 
@@ -294,7 +294,7 @@ public class ChatCompletionRequestAssistantMessage implements ChatCompletionRequ
       this.instance.encryptedContent = encryptedContent;
       return this;
     }
-    public ChatCompletionRequestAssistantMessage.Builder toolCalls(List<ChatCompletionMessageToolCall> toolCalls) {
+    public ChatCompletionRequestAssistantMessage.Builder toolCalls(List<ChatCompletionRequestMessageToolCall> toolCalls) {
       this.instance.toolCalls = toolCalls;
       return this;
     }

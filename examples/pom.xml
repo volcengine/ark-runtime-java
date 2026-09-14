@@ -13,6 +13,7 @@
     <description>Runnable examples for the ark-runtime Java SDK.</description>
 
     <properties>
+        <ark-runtime.version>0.8.0</ark-runtime.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,7 +23,7 @@
         <dependency>
             <groupId>com.volcengine</groupId>
             <artifactId>ark-runtime</artifactId>
-            <version>0.1.0</version>
+            <version>${ark-runtime.version}</version>
         </dependency>
     </dependencies>
 

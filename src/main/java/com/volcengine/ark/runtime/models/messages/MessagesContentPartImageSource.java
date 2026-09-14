@@ -93,7 +93,7 @@ public class MessagesContentPartImageSource {
   }
 
   /**
-   * A URL of the image when &#x60;type&#x60; is &#x60;url&#x60;.
+   * Get url
    * @return url
    */
   @javax.annotation.Nullable
@@ -118,7 +118,7 @@ public class MessagesContentPartImageSource {
   }
 
   /**
-   * The media type of base64-encoded image data.
+   * Get mediaType
    * @return mediaType
    */
   @javax.annotation.Nullable
@@ -143,7 +143,7 @@ public class MessagesContentPartImageSource {
   }
 
   /**
-   * Base64-encoded image data when &#x60;type&#x60; is &#x60;base64&#x60;.
+   * Get data
    * @return data
    */
   @javax.annotation.Nullable
@@ -168,7 +168,7 @@ public class MessagesContentPartImageSource {
   }
 
   /**
-   * The blob id of an image uploaded out-of-band.
+   * Get fileId
    * @return fileId
    */
   @javax.annotation.Nullable
@@ -193,7 +193,7 @@ public class MessagesContentPartImageSource {
   }
 
   /**
-   * Whether this image was extracted from a document or video.
+   * Get isFrame
    * @return isFrame
    */
   @javax.annotation.Nullable

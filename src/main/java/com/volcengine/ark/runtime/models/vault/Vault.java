@@ -105,7 +105,7 @@ public class Vault {
   }
 
   /**
-   * Vault ID。
+   * Vault ID，形如 &#x60;vlt-...&#x60;。
    * @return id
    */
   @javax.annotation.Nonnull

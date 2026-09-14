@@ -12,7 +12,6 @@ import com.volcengine.ark.runtime.selfhosted.ContentBlock;
 import com.volcengine.ark.runtime.selfhosted.Tool;
 import com.volcengine.ark.runtime.selfhosted.ToolContext;
 import com.volcengine.ark.runtime.selfhosted.ToolResult;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;

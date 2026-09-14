@@ -25,13 +25,18 @@ import java.util.Objects;
  * CompletionTokensDetails
  */
 @JsonPropertyOrder({
-  CompletionTokensDetails.JSON_PROPERTY_REASONING_TOKENS
+  CompletionTokensDetails.JSON_PROPERTY_REASONING_TOKENS,
+  CompletionTokensDetails.JSON_PROPERTY_PROVISIONED_TOKENS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CompletionTokensDetails {
   public static final String JSON_PROPERTY_REASONING_TOKENS = "reasoning_tokens";
   @javax.annotation.Nonnull
   private Integer reasoningTokens;
+
+  public static final String JSON_PROPERTY_PROVISIONED_TOKENS = "provisioned_tokens";
+  @javax.annotation.Nullable
+  private Integer provisionedTokens;
 
   public CompletionTokensDetails() {
   }
@@ -61,6 +66,31 @@ public class CompletionTokensDetails {
     this.reasoningTokens = reasoningTokens;
   }
 
+  public CompletionTokensDetails provisionedTokens(@javax.annotation.Nullable Integer provisionedTokens) {
+
+    this.provisionedTokens = provisionedTokens;
+    return this;
+  }
+
+  /**
+   * Completion tokens charged against provisioned throughput after conversion.
+   * @return provisionedTokens
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROVISIONED_TOKENS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Integer getProvisionedTokens() {
+    return provisionedTokens;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROVISIONED_TOKENS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProvisionedTokens(@javax.annotation.Nullable Integer provisionedTokens) {
+    this.provisionedTokens = provisionedTokens;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -71,12 +101,13 @@ public class CompletionTokensDetails {
       return false;
     }
     CompletionTokensDetails completionTokensDetails = (CompletionTokensDetails) o;
-    return Objects.equals(this.reasoningTokens, completionTokensDetails.reasoningTokens);
+    return Objects.equals(this.reasoningTokens, completionTokensDetails.reasoningTokens) &&
+        Objects.equals(this.provisionedTokens, completionTokensDetails.provisionedTokens);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(reasoningTokens);
+    return Objects.hash(reasoningTokens, provisionedTokens);
   }
 
   @Override
@@ -84,6 +115,7 @@ public class CompletionTokensDetails {
     StringBuilder sb = new StringBuilder();
     sb.append("class CompletionTokensDetails {\n");
     sb.append("    reasoningTokens: ").append(toIndentedString(reasoningTokens)).append("\n");
+    sb.append("    provisionedTokens: ").append(toIndentedString(provisionedTokens)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -110,6 +142,10 @@ public class CompletionTokensDetails {
 
     public CompletionTokensDetails.Builder reasoningTokens(Integer reasoningTokens) {
       this.instance.reasoningTokens = reasoningTokens;
+      return this;
+    }
+    public CompletionTokensDetails.Builder provisionedTokens(Integer provisionedTokens) {
+      this.instance.provisionedTokens = provisionedTokens;
       return this;
     }
 
@@ -146,7 +182,8 @@ public class CompletionTokensDetails {
   */
   public CompletionTokensDetails.Builder toBuilder() {
     return new CompletionTokensDetails.Builder()
-      .reasoningTokens(getReasoningTokens());
+      .reasoningTokens(getReasoningTokens())
+      .provisionedTokens(getProvisionedTokens());
   }
 
 

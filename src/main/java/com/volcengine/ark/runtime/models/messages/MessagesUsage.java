@@ -29,6 +29,7 @@ import java.util.Objects;
 @JsonPropertyOrder({
   MessagesUsage.JSON_PROPERTY_INPUT_TOKENS,
   MessagesUsage.JSON_PROPERTY_OUTPUT_TOKENS,
+  MessagesUsage.JSON_PROPERTY_CACHE_CREATION_INPUT_TOKENS,
   MessagesUsage.JSON_PROPERTY_CACHE_READ_INPUT_TOKENS,
   MessagesUsage.JSON_PROPERTY_SERVER_TOOL_USE,
   MessagesUsage.JSON_PROPERTY_ITERATIONS
@@ -42,6 +43,10 @@ public class MessagesUsage {
   public static final String JSON_PROPERTY_OUTPUT_TOKENS = "output_tokens";
   @javax.annotation.Nullable
   private Integer outputTokens;
+
+  public static final String JSON_PROPERTY_CACHE_CREATION_INPUT_TOKENS = "cache_creation_input_tokens";
+  @javax.annotation.Nonnull
+  private Integer cacheCreationInputTokens;
 
   public static final String JSON_PROPERTY_CACHE_READ_INPUT_TOKENS = "cache_read_input_tokens";
   @javax.annotation.Nullable
@@ -65,7 +70,7 @@ public class MessagesUsage {
   }
 
   /**
-   * Number of tokens in the prompt.
+   * Number of prompt tokens excluding tokens read from the prefill cache.
    * @return inputTokens
    */
   @javax.annotation.Nullable
@@ -106,6 +111,31 @@ public class MessagesUsage {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setOutputTokens(@javax.annotation.Nullable Integer outputTokens) {
     this.outputTokens = outputTokens;
+  }
+
+  public MessagesUsage cacheCreationInputTokens(@javax.annotation.Nonnull Integer cacheCreationInputTokens) {
+
+    this.cacheCreationInputTokens = cacheCreationInputTokens;
+    return this;
+  }
+
+  /**
+   * Cache-creation tokens are not currently supported; this field is returned as zero.
+   * @return cacheCreationInputTokens
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_CACHE_CREATION_INPUT_TOKENS, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public Integer getCacheCreationInputTokens() {
+    return cacheCreationInputTokens;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CACHE_CREATION_INPUT_TOKENS, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setCacheCreationInputTokens(@javax.annotation.Nonnull Integer cacheCreationInputTokens) {
+    this.cacheCreationInputTokens = cacheCreationInputTokens;
   }
 
   public MessagesUsage cacheReadInputTokens(@javax.annotation.Nullable Integer cacheReadInputTokens) {
@@ -173,7 +203,7 @@ public class MessagesUsage {
   }
 
   /**
-   * One token-usage record for each model iteration.
+   * One token-usage record per model iteration, included for multi-round requests.
    * @return iterations
    */
   @javax.annotation.Nullable
@@ -203,6 +233,7 @@ public class MessagesUsage {
     MessagesUsage messagesUsage = (MessagesUsage) o;
     return Objects.equals(this.inputTokens, messagesUsage.inputTokens) &&
         Objects.equals(this.outputTokens, messagesUsage.outputTokens) &&
+        Objects.equals(this.cacheCreationInputTokens, messagesUsage.cacheCreationInputTokens) &&
         Objects.equals(this.cacheReadInputTokens, messagesUsage.cacheReadInputTokens) &&
         Objects.equals(this.serverToolUse, messagesUsage.serverToolUse) &&
         Objects.equals(this.iterations, messagesUsage.iterations);
@@ -210,7 +241,7 @@ public class MessagesUsage {
 
   @Override
   public int hashCode() {
-    return Objects.hash(inputTokens, outputTokens, cacheReadInputTokens, serverToolUse, iterations);
+    return Objects.hash(inputTokens, outputTokens, cacheCreationInputTokens, cacheReadInputTokens, serverToolUse, iterations);
   }
 
   @Override
@@ -219,6 +250,7 @@ public class MessagesUsage {
     sb.append("class MessagesUsage {\n");
     sb.append("    inputTokens: ").append(toIndentedString(inputTokens)).append("\n");
     sb.append("    outputTokens: ").append(toIndentedString(outputTokens)).append("\n");
+    sb.append("    cacheCreationInputTokens: ").append(toIndentedString(cacheCreationInputTokens)).append("\n");
     sb.append("    cacheReadInputTokens: ").append(toIndentedString(cacheReadInputTokens)).append("\n");
     sb.append("    serverToolUse: ").append(toIndentedString(serverToolUse)).append("\n");
     sb.append("    iterations: ").append(toIndentedString(iterations)).append("\n");
@@ -252,6 +284,10 @@ public class MessagesUsage {
     }
     public MessagesUsage.Builder outputTokens(Integer outputTokens) {
       this.instance.outputTokens = outputTokens;
+      return this;
+    }
+    public MessagesUsage.Builder cacheCreationInputTokens(Integer cacheCreationInputTokens) {
+      this.instance.cacheCreationInputTokens = cacheCreationInputTokens;
       return this;
     }
     public MessagesUsage.Builder cacheReadInputTokens(Integer cacheReadInputTokens) {
@@ -302,6 +338,7 @@ public class MessagesUsage {
     return new MessagesUsage.Builder()
       .inputTokens(getInputTokens())
       .outputTokens(getOutputTokens())
+      .cacheCreationInputTokens(getCacheCreationInputTokens())
       .cacheReadInputTokens(getCacheReadInputTokens())
       .serverToolUse(getServerToolUse())
       .iterations(getIterations());

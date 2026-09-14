@@ -78,7 +78,7 @@ public class ManagedAgentsSessionEvent {
   }
 
   /**
-   * 事件 id（服务端在 ingest 阶段 stamp，形如 &#x60;sevt-&lt;ts&gt;-&lt;rand&gt;&#x60;）。
+   * 事件 id（服务端在 ingest 阶段 stamp，形如 &#x60;sevt-...&#x60;）。
    * @return id
    */
   @javax.annotation.Nullable

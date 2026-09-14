@@ -27,6 +27,8 @@ public enum ChatCompletionRequestMessageType {
 
   ASSISTANT("assistant"),
 
+  DEVELOPER("developer"),
+
   SYSTEM("system"),
 
   TOOL("tool"),

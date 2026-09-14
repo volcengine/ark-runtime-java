@@ -43,7 +43,7 @@ public class MessagesOutputConfig {
   }
 
   /**
-   * Requested reasoning effort.
+   * Get effort
    * @return effort
    */
   @javax.annotation.Nullable

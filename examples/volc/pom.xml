@@ -9,7 +9,7 @@
     <version>0.1.0</version>
 
     <properties>
-        <ark-runtime.version>0.4.0</ark-runtime.version>
+        <ark-runtime.version>0.8.0</ark-runtime.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

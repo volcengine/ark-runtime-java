@@ -30,6 +30,8 @@ import java.util.Objects;
   FileObject.JSON_PROPERTY_OBJECT,
   FileObject.JSON_PROPERTY_ID,
   FileObject.JSON_PROPERTY_PURPOSE,
+  FileObject.JSON_PROPERTY_MODEL,
+  FileObject.JSON_PROPERTY_DESCRIPTION,
   FileObject.JSON_PROPERTY_FILENAME,
   FileObject.JSON_PROPERTY_BYTES,
   FileObject.JSON_PROPERTY_MIME_TYPE,
@@ -86,6 +88,14 @@ public class FileObject {
   public static final String JSON_PROPERTY_PURPOSE = "purpose";
   @javax.annotation.Nonnull
   private Purpose purpose;
+
+  public static final String JSON_PROPERTY_MODEL = "model";
+  @javax.annotation.Nullable
+  private String model;
+
+  public static final String JSON_PROPERTY_DESCRIPTION = "description";
+  @javax.annotation.Nullable
+  private String description;
 
   public static final String JSON_PROPERTY_FILENAME = "filename";
   @javax.annotation.Nonnull
@@ -201,6 +211,56 @@ public class FileObject {
     this.purpose = purpose;
   }
 
+  public FileObject model(@javax.annotation.Nullable String model) {
+
+    this.model = model;
+    return this;
+  }
+
+  /**
+   * Model identifier used to preprocess the file, when one was provided.
+   * @return model
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getModel() {
+    return model;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setModel(@javax.annotation.Nullable String model) {
+    this.model = model;
+  }
+
+  public FileObject description(@javax.annotation.Nullable String description) {
+
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * User-provided description for the file, when one was provided.
+   * @return description
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getDescription() {
+    return description;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDescription(@javax.annotation.Nullable String description) {
+    this.description = description;
+  }
+
   public FileObject filename(@javax.annotation.Nonnull String filename) {
 
     this.filename = filename;
@@ -308,7 +368,7 @@ public class FileObject {
   }
 
   /**
-   * Unix timestamp (seconds) after which the file is purged.
+   * Unix timestamp (seconds) after which the file is purged; &#x60;-1&#x60; means permanent.
    * @return expireAt
    */
   @javax.annotation.Nonnull
@@ -439,6 +499,8 @@ public class FileObject {
     return Objects.equals(this._object, fileObject._object) &&
         Objects.equals(this.id, fileObject.id) &&
         Objects.equals(this.purpose, fileObject.purpose) &&
+        Objects.equals(this.model, fileObject.model) &&
+        Objects.equals(this.description, fileObject.description) &&
         Objects.equals(this.filename, fileObject.filename) &&
         Objects.equals(this.bytes, fileObject.bytes) &&
         Objects.equals(this.mimeType, fileObject.mimeType) &&
@@ -452,7 +514,7 @@ public class FileObject {
 
   @Override
   public int hashCode() {
-    return Objects.hash(_object, id, purpose, filename, bytes, mimeType, createdAt, expireAt, status, downloadUrl, error, preprocessConfigs);
+    return Objects.hash(_object, id, purpose, model, description, filename, bytes, mimeType, createdAt, expireAt, status, downloadUrl, error, preprocessConfigs);
   }
 
   @Override
@@ -462,6 +524,8 @@ public class FileObject {
     sb.append("    _object: ").append(toIndentedString(_object)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    purpose: ").append(toIndentedString(purpose)).append("\n");
+    sb.append("    model: ").append(toIndentedString(model)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    filename: ").append(toIndentedString(filename)).append("\n");
     sb.append("    bytes: ").append(toIndentedString(bytes)).append("\n");
     sb.append("    mimeType: ").append(toIndentedString(mimeType)).append("\n");
@@ -505,6 +569,14 @@ public class FileObject {
     }
     public FileObject.Builder purpose(Purpose purpose) {
       this.instance.purpose = purpose;
+      return this;
+    }
+    public FileObject.Builder model(String model) {
+      this.instance.model = model;
+      return this;
+    }
+    public FileObject.Builder description(String description) {
+      this.instance.description = description;
       return this;
     }
     public FileObject.Builder filename(String filename) {
@@ -580,6 +652,8 @@ public class FileObject {
       ._object(getObject())
       .id(getId())
       .purpose(getPurpose())
+      .model(getModel())
+      .description(getDescription())
       .filename(getFilename())
       .bytes(getBytes())
       .mimeType(getMimeType())

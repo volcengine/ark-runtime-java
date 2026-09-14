@@ -22,11 +22,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes({
-  @JsonSubTypes.Type(value = MessagesResponseContentPartServerToolUse.class, name = "server_tool_use"),
-  @JsonSubTypes.Type(value = MessagesResponseContentPartText.class, name = "text"),
-  @JsonSubTypes.Type(value = MessagesResponseContentPartThinking.class, name = "thinking"),
-  @JsonSubTypes.Type(value = MessagesResponseContentPartToolUse.class, name = "tool_use"),
-  @JsonSubTypes.Type(value = MessagesResponseContentPartWebSearchToolResult.class, name = "web_search_tool_result"),
+  @JsonSubTypes.Type(value = ContentBlockStartContentBlockServerToolUse.class, name = "server_tool_use"),
+  @JsonSubTypes.Type(value = ContentBlockStartContentBlockText.class, name = "text"),
+  @JsonSubTypes.Type(value = ContentBlockStartContentBlockThinking.class, name = "thinking"),
+  @JsonSubTypes.Type(value = ContentBlockStartContentBlockToolUse.class, name = "tool_use"),
+  @JsonSubTypes.Type(value = ContentBlockStartContentBlockWebSearchToolResult.class, name = "web_search_tool_result"),
 })
 
 public interface ContentBlockStartContentBlock {

@@ -47,7 +47,7 @@ public class ChatCompletionTokenLogprob {
   private List<Integer> bytes;
 
   public static final String JSON_PROPERTY_TOP_LOGPROBS = "top_logprobs";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private List<ChatCompletionTokenLogprobTopLogprob> topLogprobs;
 
   public ChatCompletionTokenLogprob() {
@@ -136,7 +136,7 @@ public class ChatCompletionTokenLogprob {
     this.bytes = bytes;
   }
 
-  public ChatCompletionTokenLogprob topLogprobs(@javax.annotation.Nonnull List<ChatCompletionTokenLogprobTopLogprob> topLogprobs) {
+  public ChatCompletionTokenLogprob topLogprobs(@javax.annotation.Nullable List<ChatCompletionTokenLogprobTopLogprob> topLogprobs) {
 
     this.topLogprobs = topLogprobs;
     return this;
@@ -154,8 +154,8 @@ public class ChatCompletionTokenLogprob {
    * Get topLogprobs
    * @return topLogprobs
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TOP_LOGPROBS, required = true)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOP_LOGPROBS, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
   public List<ChatCompletionTokenLogprobTopLogprob> getTopLogprobs() {
@@ -163,9 +163,9 @@ public class ChatCompletionTokenLogprob {
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_TOP_LOGPROBS, required = true)
+  @JsonProperty(value = JSON_PROPERTY_TOP_LOGPROBS, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setTopLogprobs(@javax.annotation.Nonnull List<ChatCompletionTokenLogprobTopLogprob> topLogprobs) {
+  public void setTopLogprobs(@javax.annotation.Nullable List<ChatCompletionTokenLogprobTopLogprob> topLogprobs) {
     this.topLogprobs = topLogprobs;
   }
 

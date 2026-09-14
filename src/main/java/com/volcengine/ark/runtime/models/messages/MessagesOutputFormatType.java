@@ -25,11 +25,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum MessagesOutputFormatType {
 
-  TEXT("text"),
-
   JSON_OBJECT("json_object"),
 
-  JSON_SCHEMA("json_schema");
+  JSON_SCHEMA("json_schema"),
+
+  TEXT("text");
 
   private String value;
 

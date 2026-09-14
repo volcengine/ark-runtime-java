@@ -78,7 +78,7 @@ public class MessagesContentPartThinking implements MessagesContentPart {
   }
 
   /**
-   * The model&#39;s thinking content.
+   * The model&#39;s thinking content. At least one of &#x60;thinking&#x60; or &#x60;signature&#x60; is required.
    * @return thinking
    */
   @javax.annotation.Nullable

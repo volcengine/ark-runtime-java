@@ -4,7 +4,6 @@
 package com.volcengine.ark.runtime.selfhosted.mcp;
 
 import com.volcengine.ark.runtime.selfhosted.ToolContext;
-
 import java.util.Map;
 
 /** Minimal MCP client contract required by a self-hosted worker. */

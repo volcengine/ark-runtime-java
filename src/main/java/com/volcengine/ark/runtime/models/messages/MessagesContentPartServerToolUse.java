@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * MessagesContentPartServerToolUse
+ * Replays a server-managed tool invocation in an assistant message.
  */
 @JsonPropertyOrder({
   MessagesContentPartServerToolUse.JSON_PROPERTY_TYPE,
@@ -84,7 +84,7 @@ public class MessagesContentPartServerToolUse implements MessagesContentPart {
   }
 
   /**
-   * The public id of the server-managed tool invocation.
+   * The non-empty public id of the server-managed tool invocation.
    * @return id
    */
   @javax.annotation.Nonnull

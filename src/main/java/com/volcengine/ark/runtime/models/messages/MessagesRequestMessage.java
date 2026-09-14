@@ -32,62 +32,62 @@ import java.util.Objects;
 public class MessagesRequestMessage {
   public static final String JSON_PROPERTY_ROLE = "role";
   @javax.annotation.Nonnull
-  private MessagesRole role;
+  private String role;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private MessagesMessageContent content;
 
   public MessagesRequestMessage() {
   }
 
-  public MessagesRequestMessage role(@javax.annotation.Nonnull MessagesRole role) {
+  public MessagesRequestMessage role(@javax.annotation.Nonnull String role) {
 
     this.role = role;
     return this;
   }
 
   /**
-   * The role of the message author.
+   * Any non-empty role. Roles other than &#x60;user&#x60; and &#x60;assistant&#x60; are interpreted as system messages.
    * @return role
    */
   @javax.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_ROLE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public MessagesRole getRole() {
+  public String getRole() {
     return role;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_ROLE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setRole(@javax.annotation.Nonnull MessagesRole role) {
+  public void setRole(@javax.annotation.Nonnull String role) {
     this.role = role;
   }
 
-  public MessagesRequestMessage content(@javax.annotation.Nonnull MessagesMessageContent content) {
+  public MessagesRequestMessage content(@javax.annotation.Nullable MessagesMessageContent content) {
 
     this.content = content;
     return this;
   }
 
   /**
-   * The contents of the message.
+   * Get content
    * @return content
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public MessagesMessageContent getContent() {
     return content;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setContent(@javax.annotation.Nonnull MessagesMessageContent content) {
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContent(@javax.annotation.Nullable MessagesMessageContent content) {
     this.content = content;
   }
 
@@ -140,7 +140,7 @@ public class MessagesRequestMessage {
       this.instance = instance;
     }
 
-    public MessagesRequestMessage.Builder role(MessagesRole role) {
+    public MessagesRequestMessage.Builder role(String role) {
       this.instance.role = role;
       return this;
     }

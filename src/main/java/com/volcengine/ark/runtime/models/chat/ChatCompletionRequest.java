@@ -170,7 +170,7 @@ public class ChatCompletionRequest {
   }
 
   /**
-   * A list of messages comprising the conversation so far.
+   * A non-empty list of messages comprising the conversation so far.
    * @return messages
    */
   @javax.annotation.Nonnull
@@ -353,7 +353,7 @@ public class ChatCompletionRequest {
   }
 
   /**
-   * Number of most-likely tokens to return at each position when &#x60;logprobs&#x60; is true. Range 0-20.
+   * Number of most-likely tokens to return at each position when &#x60;logprobs&#x60; is true. The allowed range is model-dependent (default 0-20).
    * @return topLogprobs
    */
   @javax.annotation.Nullable
@@ -378,7 +378,7 @@ public class ChatCompletionRequest {
   }
 
   /**
-   * The maximum number of tokens that can be generated in the completion.
+   * The non-negative maximum number of tokens that can be generated in the completion.
    * @return maxTokens
    */
   @javax.annotation.Nullable
@@ -403,7 +403,7 @@ public class ChatCompletionRequest {
   }
 
   /**
-   * Upper bound on completion tokens, including reasoning tokens.
+   * Non-negative upper bound on completion tokens, including reasoning tokens.
    * @return maxCompletionTokens
    */
   @javax.annotation.Nullable
@@ -478,7 +478,7 @@ public class ChatCompletionRequest {
   }
 
   /**
-   * Up to 4 sequences where the API will stop generating further tokens.
+   * Sequences where the API will stop generating further tokens. The count limit is model-dependent (default 4). Null means no stop sequences.
    * @return stop
    */
   @javax.annotation.Nullable

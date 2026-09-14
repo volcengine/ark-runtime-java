@@ -30,5 +30,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 
 public interface MessagesResponseContentPart {
-    public ContentBlockStartContentBlockType getType();
+    public MessagesResponseContentPartType getType();
 }

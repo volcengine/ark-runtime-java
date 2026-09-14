@@ -16,11 +16,9 @@
 
 package com.volcengine.ark.runtime.models.messages;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 
 /**
@@ -32,97 +30,64 @@ import java.util.Objects;
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class MessagesContextManagementClearToolUsesTrigger {
-  /**
-   * Gets or Sets type
-   */
-  public enum TypeEnum {
-    TOOL_USES(String.valueOf("tool_uses"));
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equalsIgnoreCase(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private TypeEnum type;
+  private String type;
 
   public static final String JSON_PROPERTY_VALUE = "value";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private Integer value;
 
   public MessagesContextManagementClearToolUsesTrigger() {
   }
 
-  public MessagesContextManagementClearToolUsesTrigger type(@javax.annotation.Nonnull TypeEnum type) {
+  public MessagesContextManagementClearToolUsesTrigger type(@javax.annotation.Nonnull String type) {
 
     this.type = type;
     return this;
   }
 
   /**
-   * Get type
+   * The trigger type. &#x60;tool_uses&#x60; and other values such as &#x60;input_tokens&#x60; are accepted.
    * @return type
    */
   @javax.annotation.Nonnull
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public TypeEnum getType() {
+  public String getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull TypeEnum type) {
+  public void setType(@javax.annotation.Nonnull String type) {
     this.type = type;
   }
 
-  public MessagesContextManagementClearToolUsesTrigger value(@javax.annotation.Nonnull Integer value) {
+  public MessagesContextManagementClearToolUsesTrigger value(@javax.annotation.Nullable Integer value) {
 
     this.value = value;
     return this;
   }
 
   /**
-   * Get value
+   * For &#x60;tool_uses&#x60;, the server requires a value of at least 1. Other trigger types accept an omitted value or any uint32 value, including 0. This type-specific constraint is validated by the server.
    * @return value
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_VALUE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public Integer getValue() {
     return value;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_VALUE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setValue(@javax.annotation.Nonnull Integer value) {
+  @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setValue(@javax.annotation.Nullable Integer value) {
     this.value = value;
   }
 
@@ -175,7 +140,7 @@ public class MessagesContextManagementClearToolUsesTrigger {
       this.instance = instance;
     }
 
-    public MessagesContextManagementClearToolUsesTrigger.Builder type(TypeEnum type) {
+    public MessagesContextManagementClearToolUsesTrigger.Builder type(String type) {
       this.instance.type = type;
       return this;
     }

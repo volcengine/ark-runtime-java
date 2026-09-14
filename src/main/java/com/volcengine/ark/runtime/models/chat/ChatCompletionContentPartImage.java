@@ -36,7 +36,7 @@ public class ChatCompletionContentPartImage implements ChatCompletionContentPart
 
   public static final String JSON_PROPERTY_IMAGE_URL = "image_url";
   @javax.annotation.Nonnull
-  private ChatCompletionContentPartImageImageUrl imageUrl;
+  private ChatCompletionContentPartImageImageUrl2 imageUrl;
 
   public ChatCompletionContentPartImage() {
   }
@@ -66,7 +66,7 @@ public class ChatCompletionContentPartImage implements ChatCompletionContentPart
     this.type = type;
   }
 
-  public ChatCompletionContentPartImage imageUrl(@javax.annotation.Nonnull ChatCompletionContentPartImageImageUrl imageUrl) {
+  public ChatCompletionContentPartImage imageUrl(@javax.annotation.Nonnull ChatCompletionContentPartImageImageUrl2 imageUrl) {
 
     this.imageUrl = imageUrl;
     return this;
@@ -80,14 +80,14 @@ public class ChatCompletionContentPartImage implements ChatCompletionContentPart
   @JsonProperty(value = JSON_PROPERTY_IMAGE_URL, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public ChatCompletionContentPartImageImageUrl getImageUrl() {
+  public ChatCompletionContentPartImageImageUrl2 getImageUrl() {
     return imageUrl;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_IMAGE_URL, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setImageUrl(@javax.annotation.Nonnull ChatCompletionContentPartImageImageUrl imageUrl) {
+  public void setImageUrl(@javax.annotation.Nonnull ChatCompletionContentPartImageImageUrl2 imageUrl) {
     this.imageUrl = imageUrl;
   }
 
@@ -144,7 +144,7 @@ public class ChatCompletionContentPartImage implements ChatCompletionContentPart
       this.instance.type = type;
       return this;
     }
-    public ChatCompletionContentPartImage.Builder imageUrl(ChatCompletionContentPartImageImageUrl imageUrl) {
+    public ChatCompletionContentPartImage.Builder imageUrl(ChatCompletionContentPartImageImageUrl2 imageUrl) {
       this.instance.imageUrl = imageUrl;
       return this;
     }

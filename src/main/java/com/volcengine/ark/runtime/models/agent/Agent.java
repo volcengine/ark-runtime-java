@@ -157,7 +157,7 @@ public class Agent {
   }
 
   /**
-   * Agent ID，格式 &#x60;agent_&lt;opaque&gt;&#x60;。对外暴露给 session 引用。
+   * Agent ID，形如 &#x60;agent-...&#x60;。对外暴露给 session 引用。
    * @return id
    */
   @javax.annotation.Nonnull

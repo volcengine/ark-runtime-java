@@ -25,9 +25,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum MessagesRequestServiceTier {
 
+  EMPTY(""),
+
   AUTO("auto"),
 
-  DEFAULT("default");
+  DEFAULT("default"),
+
+  FLEX("flex");
 
   private String value;
 

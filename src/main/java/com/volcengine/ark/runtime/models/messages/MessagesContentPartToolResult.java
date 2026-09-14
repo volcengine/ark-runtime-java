@@ -37,11 +37,11 @@ public class MessagesContentPartToolResult implements MessagesContentPart {
   private ContentPartType type = ContentPartType.TOOL_RESULT;
 
   public static final String JSON_PROPERTY_TOOL_USE_ID = "tool_use_id";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String toolUseId;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private MessagesToolResultContent content;
 
   public static final String JSON_PROPERTY_IS_ERROR = "is_error";
@@ -76,53 +76,53 @@ public class MessagesContentPartToolResult implements MessagesContentPart {
     this.type = type;
   }
 
-  public MessagesContentPartToolResult toolUseId(@javax.annotation.Nonnull String toolUseId) {
+  public MessagesContentPartToolResult toolUseId(@javax.annotation.Nullable String toolUseId) {
 
     this.toolUseId = toolUseId;
     return this;
   }
 
   /**
-   * The tool invocation this result answers.
+   * Get toolUseId
    * @return toolUseId
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TOOL_USE_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOOL_USE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getToolUseId() {
     return toolUseId;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_TOOL_USE_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setToolUseId(@javax.annotation.Nonnull String toolUseId) {
+  @JsonProperty(value = JSON_PROPERTY_TOOL_USE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setToolUseId(@javax.annotation.Nullable String toolUseId) {
     this.toolUseId = toolUseId;
   }
 
-  public MessagesContentPartToolResult content(@javax.annotation.Nonnull MessagesToolResultContent content) {
+  public MessagesContentPartToolResult content(@javax.annotation.Nullable MessagesToolResultContent content) {
 
     this.content = content;
     return this;
   }
 
   /**
-   * The content returned by the tool.
+   * Get content
    * @return content
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public MessagesToolResultContent getContent() {
     return content;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setContent(@javax.annotation.Nonnull MessagesToolResultContent content) {
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContent(@javax.annotation.Nullable MessagesToolResultContent content) {
     this.content = content;
   }
 

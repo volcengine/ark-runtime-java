@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * MessagesToolUserLocation
+ * Accepted for web-search compatibility; not currently forwarded to the search provider.
  */
 @JsonPropertyOrder({
   MessagesToolUserLocation.JSON_PROPERTY_TYPE,

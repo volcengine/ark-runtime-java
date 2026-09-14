@@ -16,16 +16,296 @@
 
 package com.volcengine.ark.runtime.models.messages;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = MessagesContextManagementClearThinking.class, name = "clear_thinking"),
-  @JsonSubTypes.Type(value = MessagesContextManagementClearToolUses.class, name = "clear_tool_uses"),
+/**
+ * MessagesContextManagementEdit
+ */
+@JsonPropertyOrder({
+  MessagesContextManagementEdit.JSON_PROPERTY_TYPE,
+  MessagesContextManagementEdit.JSON_PROPERTY_KEEP,
+  MessagesContextManagementEdit.JSON_PROPERTY_EXCLUDE_TOOLS,
+  MessagesContextManagementEdit.JSON_PROPERTY_CLEAR_TOOL_INPUTS,
+  MessagesContextManagementEdit.JSON_PROPERTY_TRIGGER
 })
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
+public class MessagesContextManagementEdit {
+  public static final String JSON_PROPERTY_TYPE = "type";
+  @javax.annotation.Nonnull
+  private String type;
 
-public interface MessagesContextManagementEdit {
-    public MessagesContextManagementEditType getType();
+  public static final String JSON_PROPERTY_KEEP = "keep";
+  @javax.annotation.Nullable
+  private MessagesContextManagementKeep keep;
+
+  public static final String JSON_PROPERTY_EXCLUDE_TOOLS = "exclude_tools";
+  @javax.annotation.Nullable
+  private List<String> excludeTools;
+
+  public static final String JSON_PROPERTY_CLEAR_TOOL_INPUTS = "clear_tool_inputs";
+  @javax.annotation.Nullable
+  private Boolean clearToolInputs;
+
+  public static final String JSON_PROPERTY_TRIGGER = "trigger";
+  @javax.annotation.Nullable
+  private MessagesContextManagementClearToolUsesTrigger trigger;
+
+  public MessagesContextManagementEdit() {
+  }
+
+  public MessagesContextManagementEdit type(@javax.annotation.Nonnull String type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Supports &#x60;clear_thinking&#x60;, &#x60;clear_tool_uses&#x60;, and version-suffixed forms.
+   * @return type
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public String getType() {
+    return type;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setType(@javax.annotation.Nonnull String type) {
+    this.type = type;
+  }
+
+  public MessagesContextManagementEdit keep(@javax.annotation.Nullable MessagesContextManagementKeep keep) {
+
+    this.keep = keep;
+    return this;
+  }
+
+  /**
+   * Get keep
+   * @return keep
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_KEEP, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public MessagesContextManagementKeep getKeep() {
+    return keep;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_KEEP, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setKeep(@javax.annotation.Nullable MessagesContextManagementKeep keep) {
+    this.keep = keep;
+  }
+
+  public MessagesContextManagementEdit excludeTools(@javax.annotation.Nullable List<String> excludeTools) {
+
+    this.excludeTools = excludeTools;
+    return this;
+  }
+
+  public MessagesContextManagementEdit addExcludeToolsItem(String excludeToolsItem) {
+    if (this.excludeTools == null) {
+      this.excludeTools = new ArrayList<>();
+    }
+    this.excludeTools.add(excludeToolsItem);
+    return this;
+  }
+
+  /**
+   * Get excludeTools
+   * @return excludeTools
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_EXCLUDE_TOOLS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<String> getExcludeTools() {
+    return excludeTools;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_EXCLUDE_TOOLS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setExcludeTools(@javax.annotation.Nullable List<String> excludeTools) {
+    this.excludeTools = excludeTools;
+  }
+
+  public MessagesContextManagementEdit clearToolInputs(@javax.annotation.Nullable Boolean clearToolInputs) {
+
+    this.clearToolInputs = clearToolInputs;
+    return this;
+  }
+
+  /**
+   * Get clearToolInputs
+   * @return clearToolInputs
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CLEAR_TOOL_INPUTS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getClearToolInputs() {
+    return clearToolInputs;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CLEAR_TOOL_INPUTS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setClearToolInputs(@javax.annotation.Nullable Boolean clearToolInputs) {
+    this.clearToolInputs = clearToolInputs;
+  }
+
+  public MessagesContextManagementEdit trigger(@javax.annotation.Nullable MessagesContextManagementClearToolUsesTrigger trigger) {
+
+    this.trigger = trigger;
+    return this;
+  }
+
+  /**
+   * Get trigger
+   * @return trigger
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TRIGGER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public MessagesContextManagementClearToolUsesTrigger getTrigger() {
+    return trigger;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TRIGGER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTrigger(@javax.annotation.Nullable MessagesContextManagementClearToolUsesTrigger trigger) {
+    this.trigger = trigger;
+  }
+
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MessagesContextManagementEdit messagesContextManagementEdit = (MessagesContextManagementEdit) o;
+    return Objects.equals(this.type, messagesContextManagementEdit.type) &&
+        Objects.equals(this.keep, messagesContextManagementEdit.keep) &&
+        Objects.equals(this.excludeTools, messagesContextManagementEdit.excludeTools) &&
+        Objects.equals(this.clearToolInputs, messagesContextManagementEdit.clearToolInputs) &&
+        Objects.equals(this.trigger, messagesContextManagementEdit.trigger);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, keep, excludeTools, clearToolInputs, trigger);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class MessagesContextManagementEdit {\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    keep: ").append(toIndentedString(keep)).append("\n");
+    sb.append("    excludeTools: ").append(toIndentedString(excludeTools)).append("\n");
+    sb.append("    clearToolInputs: ").append(toIndentedString(clearToolInputs)).append("\n");
+    sb.append("    trigger: ").append(toIndentedString(trigger)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    return o == null ? "null" : o.toString().replace("\n", "\n    ");
+  }
+
+  public static class Builder {
+
+    private MessagesContextManagementEdit instance;
+
+    public Builder() {
+      this(new MessagesContextManagementEdit());
+    }
+
+    protected Builder(MessagesContextManagementEdit instance) {
+      this.instance = instance;
+    }
+
+    public MessagesContextManagementEdit.Builder type(String type) {
+      this.instance.type = type;
+      return this;
+    }
+    public MessagesContextManagementEdit.Builder keep(MessagesContextManagementKeep keep) {
+      this.instance.keep = keep;
+      return this;
+    }
+    public MessagesContextManagementEdit.Builder excludeTools(List<String> excludeTools) {
+      this.instance.excludeTools = excludeTools;
+      return this;
+    }
+    public MessagesContextManagementEdit.Builder clearToolInputs(Boolean clearToolInputs) {
+      this.instance.clearToolInputs = clearToolInputs;
+      return this;
+    }
+    public MessagesContextManagementEdit.Builder trigger(MessagesContextManagementClearToolUsesTrigger trigger) {
+      this.instance.trigger = trigger;
+      return this;
+    }
+
+
+    /**
+    * returns a built MessagesContextManagementEdit instance.
+    *
+    * The builder is not reusable.
+    */
+    public MessagesContextManagementEdit build() {
+      try {
+        return this.instance;
+      } finally {
+        // ensure that this.instance is not reused
+        this.instance = null;
+      }
+    }
+
+    @Override
+    public String toString() {
+      return getClass() + "=(" + instance + ")";
+    }
+  }
+
+  /**
+  * Create a builder with no initialized field.
+  */
+  public static MessagesContextManagementEdit.Builder builder() {
+    return new MessagesContextManagementEdit.Builder();
+  }
+
+  /**
+  * Create a builder with a shallow copy of this instance.
+  */
+  public MessagesContextManagementEdit.Builder toBuilder() {
+    return new MessagesContextManagementEdit.Builder()
+      .type(getType())
+      .keep(getKeep())
+      .excludeTools(getExcludeTools())
+      .clearToolInputs(getClearToolInputs())
+      .trigger(getTrigger());
+  }
+
+
 }

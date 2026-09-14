@@ -93,7 +93,7 @@ public class SessionResource {
   }
 
   /**
-   * SessionResource ID。
+   * SessionResource ID，形如 &#x60;sesrsc-...&#x60;。
    * @return id
    */
   @javax.annotation.Nullable

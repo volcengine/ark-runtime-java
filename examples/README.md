@@ -24,3 +24,13 @@ The paired multimodal and sparse embedding examples default to `doubao-embedding
 MCP is available in both clouds and its calls explicitly send `ark-beta-mcp: true`. Other built-in tools are CN-only: Knowledge Search sends `ark-beta-knowledge-search: true`, and Doubao App sends `ark-beta-doubao-app: true`.
 
 [`self_hosted_mcp_worker/`](./self_hosted_mcp_worker) demonstrates how to discover tools from a local stdio MCP server, convert them into Agent custom tool declarations, and execute them through the self-hosted worker.
+
+To compile both cloud example modules without making API calls, run from the repository root:
+
+```bash
+mvn -q -DskipTests install
+mvn -q -f examples/volc/pom.xml clean compile
+mvn -q -f examples/byteplus/pom.xml clean compile
+```
+
+The cloud example POMs default to SDK 0.8.0. To check another locally installed SDK version, pass `-Dark-runtime.version=<version>` to each example Maven command.

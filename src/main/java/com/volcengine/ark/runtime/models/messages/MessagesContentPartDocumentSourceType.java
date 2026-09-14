@@ -21,17 +21,21 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets MessagesContextManagementEditType
+ * Gets or Sets MessagesContentPartDocumentSourceType
  */
-public enum MessagesContextManagementEditType {
+public enum MessagesContentPartDocumentSourceType {
 
-  CLEAR_THINKING("clear_thinking"),
+  BASE64("base64"),
 
-  CLEAR_TOOL_USES("clear_tool_uses");
+  CONTENT("content"),
+
+  TEXT("text"),
+
+  URL("url");
 
   private String value;
 
-  MessagesContextManagementEditType(String value) {
+  MessagesContentPartDocumentSourceType(String value) {
     this.value = value;
   }
 
@@ -46,8 +50,8 @@ public enum MessagesContextManagementEditType {
   }
 
   @JsonCreator
-  public static MessagesContextManagementEditType fromValue(String value) {
-    for (MessagesContextManagementEditType b : MessagesContextManagementEditType.values()) {
+  public static MessagesContentPartDocumentSourceType fromValue(String value) {
+    for (MessagesContentPartDocumentSourceType b : MessagesContentPartDocumentSourceType.values()) {
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

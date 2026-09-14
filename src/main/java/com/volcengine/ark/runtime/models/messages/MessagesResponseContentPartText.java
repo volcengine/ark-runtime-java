@@ -29,10 +29,10 @@ import java.util.Objects;
   MessagesResponseContentPartText.JSON_PROPERTY_TEXT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class MessagesResponseContentPartText implements ContentBlockStartContentBlock, MessagesResponseContentPart {
+public class MessagesResponseContentPartText implements MessagesResponseContentPart {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private ContentBlockStartContentBlockType type = ContentBlockStartContentBlockType.TEXT;
+  private MessagesResponseContentPartType type = MessagesResponseContentPartType.TEXT;
 
   public static final String JSON_PROPERTY_TEXT = "text";
   @javax.annotation.Nonnull
@@ -41,7 +41,7 @@ public class MessagesResponseContentPartText implements ContentBlockStartContent
   public MessagesResponseContentPartText() {
   }
 
-  public MessagesResponseContentPartText type(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
+  public MessagesResponseContentPartText type(@javax.annotation.Nonnull MessagesResponseContentPartType type) {
 
     this.type = type;
     return this;
@@ -55,14 +55,14 @@ public class MessagesResponseContentPartText implements ContentBlockStartContent
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public ContentBlockStartContentBlockType getType() {
+  public MessagesResponseContentPartType getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
+  public void setType(@javax.annotation.Nonnull MessagesResponseContentPartType type) {
     this.type = type;
   }
 
@@ -140,7 +140,7 @@ public class MessagesResponseContentPartText implements ContentBlockStartContent
       this.instance = instance;
     }
 
-    public MessagesResponseContentPartText.Builder type(ContentBlockStartContentBlockType type) {
+    public MessagesResponseContentPartText.Builder type(MessagesResponseContentPartType type) {
       this.instance.type = type;
       return this;
     }

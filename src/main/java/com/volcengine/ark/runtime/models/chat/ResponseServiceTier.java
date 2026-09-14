@@ -29,7 +29,9 @@ public enum ResponseServiceTier {
 
   SCALE("scale"),
 
-  FAST("fast");
+  FAST("fast"),
+
+  FLEX("flex");
 
   private String value;
 

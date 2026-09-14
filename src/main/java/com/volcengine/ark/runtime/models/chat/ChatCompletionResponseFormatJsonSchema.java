@@ -19,8 +19,6 @@ package com.volcengine.ark.runtime.models.chat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -44,7 +42,7 @@ public class ChatCompletionResponseFormatJsonSchema {
 
   public static final String JSON_PROPERTY_SCHEMA = "schema";
   @javax.annotation.Nullable
-  private Map<String, Object> schema;
+  private Object schema = null;
 
   public static final String JSON_PROPERTY_STRICT = "strict";
   @javax.annotation.Nullable
@@ -60,7 +58,7 @@ public class ChatCompletionResponseFormatJsonSchema {
   }
 
   /**
-   * The name of the response format.
+   * The non-empty name of the response format.
    * @return name
    */
   @javax.annotation.Nonnull
@@ -103,36 +101,28 @@ public class ChatCompletionResponseFormatJsonSchema {
     this.description = description;
   }
 
-  public ChatCompletionResponseFormatJsonSchema schema(@javax.annotation.Nullable Map<String, Object> schema) {
+  public ChatCompletionResponseFormatJsonSchema schema(@javax.annotation.Nullable Object schema) {
 
     this.schema = schema;
     return this;
   }
 
-  public ChatCompletionResponseFormatJsonSchema putSchemaItem(String key, Object schemaItem) {
-    if (this.schema == null) {
-      this.schema = new HashMap<>();
-    }
-    this.schema.put(key, schemaItem);
-    return this;
-  }
-
   /**
-   * The schema for the response format, described as a JSON Schema object.
+   * Get schema
    * @return schema
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_SCHEMA, required = false)
-  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public Map<String, Object> getSchema() {
+  public Object getSchema() {
     return schema;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_SCHEMA, required = false)
-  @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.NON_EMPTY)
-  public void setSchema(@javax.annotation.Nullable Map<String, Object> schema) {
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSchema(@javax.annotation.Nullable Object schema) {
     this.schema = schema;
   }
 
@@ -222,7 +212,7 @@ public class ChatCompletionResponseFormatJsonSchema {
       this.instance.description = description;
       return this;
     }
-    public ChatCompletionResponseFormatJsonSchema.Builder schema(Map<String, Object> schema) {
+    public ChatCompletionResponseFormatJsonSchema.Builder schema(Object schema) {
       this.instance.schema = schema;
       return this;
     }

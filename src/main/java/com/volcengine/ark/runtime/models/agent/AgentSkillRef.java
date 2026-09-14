@@ -83,7 +83,7 @@ public class AgentSkillRef {
   }
 
   /**
-   * Skill ID，形如 &#x60;skill_01XJ5...&#x60;。
+   * Skill ID，形如 &#x60;skill-...&#x60;。
    * @return skillId
    */
   @javax.annotation.Nullable

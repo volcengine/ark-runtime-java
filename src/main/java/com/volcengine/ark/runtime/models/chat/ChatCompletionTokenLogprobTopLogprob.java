@@ -42,7 +42,7 @@ public class ChatCompletionTokenLogprobTopLogprob {
   private Double logprob;
 
   public static final String JSON_PROPERTY_BYTES = "bytes";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private List<Integer> bytes;
 
   public ChatCompletionTokenLogprobTopLogprob() {
@@ -98,7 +98,7 @@ public class ChatCompletionTokenLogprobTopLogprob {
     this.logprob = logprob;
   }
 
-  public ChatCompletionTokenLogprobTopLogprob bytes(@javax.annotation.Nonnull List<Integer> bytes) {
+  public ChatCompletionTokenLogprobTopLogprob bytes(@javax.annotation.Nullable List<Integer> bytes) {
 
     this.bytes = bytes;
     return this;
@@ -116,8 +116,8 @@ public class ChatCompletionTokenLogprobTopLogprob {
    * Get bytes
    * @return bytes
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_BYTES, required = true)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_BYTES, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
   public List<Integer> getBytes() {
@@ -125,9 +125,9 @@ public class ChatCompletionTokenLogprobTopLogprob {
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_BYTES, required = true)
+  @JsonProperty(value = JSON_PROPERTY_BYTES, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setBytes(@javax.annotation.Nonnull List<Integer> bytes) {
+  public void setBytes(@javax.annotation.Nullable List<Integer> bytes) {
     this.bytes = bytes;
   }
 
