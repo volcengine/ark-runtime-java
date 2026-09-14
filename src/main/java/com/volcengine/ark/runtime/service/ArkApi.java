@@ -61,6 +61,7 @@ import com.volcengine.ark.runtime.models.session.SessionResource;
 import com.volcengine.ark.runtime.models.session.SessionThread;
 import com.volcengine.ark.runtime.models.session.UpdateSessionRequest;
 import com.volcengine.ark.runtime.models.skill.Skill;
+import com.volcengine.ark.runtime.models.skill.SkillVersion;
 import com.volcengine.ark.runtime.models.tokenization.TokenizationRequest;
 import com.volcengine.ark.runtime.models.tokenization.TokenizationResponse;
 import com.volcengine.ark.runtime.models.vault.CreateCredentialRequest;
@@ -339,6 +340,13 @@ public interface ArkApi {
     Single<Skill> createSkill(@Part MultipartBody.Part files,
                               @Part("display_title") RequestBody displayTitle,
                               @HeaderMap Map<String, String> customHeaders);
+
+    @Multipart
+    @POST("/api/v3/skills/{skillId}/versions")
+    Single<SkillVersion> createSkillVersion(@Path("skillId") String skillId,
+                                             @Part MultipartBody.Part files,
+                                             @Part("display_title") RequestBody displayTitle,
+                                             @HeaderMap Map<String, String> customHeaders);
 
     @GET("/api/v3/skills/{skillId}")
     Single<Skill> getSkill(@Path("skillId") String skillId, @HeaderMap Map<String, String> customHeaders);
