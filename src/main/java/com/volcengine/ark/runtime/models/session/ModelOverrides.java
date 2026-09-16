@@ -19,17 +19,27 @@ package com.volcengine.ark.runtime.models.session;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
- * Session 创建时允许临时覆写的模型运行参数。  内部字段省略表示继承 base Agent 的对应值。
+ * Session 创建时允许临时覆写的模型运行参数与接入配置。  内部字段省略表示继承 base Agent 的对应值。
  */
 @JsonPropertyOrder({
   ModelOverrides.JSON_PROPERTY_ID,
   ModelOverrides.JSON_PROPERTY_SPEED,
   ModelOverrides.JSON_PROPERTY_THINKING,
   ModelOverrides.JSON_PROPERTY_REASONING_EFFORT,
-  ModelOverrides.JSON_PROPERTY_SERVICE_TIER
+  ModelOverrides.JSON_PROPERTY_SERVICE_TIER,
+  ModelOverrides.JSON_PROPERTY_PROVIDER,
+  ModelOverrides.JSON_PROPERTY_PROTOCOL,
+  ModelOverrides.JSON_PROPERTY_BASE_URL,
+  ModelOverrides.JSON_PROPERTY_HEADERS,
+  ModelOverrides.JSON_PROPERTY_TOKEN_LIMITS,
+  ModelOverrides.JSON_PROPERTY_INPUT_MODALITIES
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ModelOverrides {
@@ -52,6 +62,30 @@ public class ModelOverrides {
   public static final String JSON_PROPERTY_SERVICE_TIER = "service_tier";
   @javax.annotation.Nullable
   private String serviceTier;
+
+  public static final String JSON_PROPERTY_PROVIDER = "provider";
+  @javax.annotation.Nullable
+  private String provider;
+
+  public static final String JSON_PROPERTY_PROTOCOL = "protocol";
+  @javax.annotation.Nullable
+  private String protocol;
+
+  public static final String JSON_PROPERTY_BASE_URL = "base_url";
+  @javax.annotation.Nullable
+  private String baseUrl;
+
+  public static final String JSON_PROPERTY_HEADERS = "headers";
+  @javax.annotation.Nullable
+  private Map<String, String> headers;
+
+  public static final String JSON_PROPERTY_TOKEN_LIMITS = "token_limits";
+  @javax.annotation.Nullable
+  private OverrideTokenLimits tokenLimits;
+
+  public static final String JSON_PROPERTY_INPUT_MODALITIES = "input_modalities";
+  @javax.annotation.Nullable
+  private List<String> inputModalities;
 
   public ModelOverrides() {
   }
@@ -181,6 +215,172 @@ public class ModelOverrides {
     this.serviceTier = serviceTier;
   }
 
+  public ModelOverrides provider(@javax.annotation.Nullable String provider) {
+
+    this.provider = provider;
+    return this;
+  }
+
+  /**
+   * 模型提供方覆写，例如 &#x60;\&quot;ark\&quot;&#x60; 或外接 provider 名。非空才生效，显式传空 串返回 400。切到非 ark provider 时，&#x60;base_url&#x60; 与 &#x60;token_limits&#x60; 为 必填（可继承快照中已有的值，否则返回 400）；ark provider 不允许指定 &#x60;token_limits&#x60;。
+   * @return provider
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getProvider() {
+    return provider;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProvider(@javax.annotation.Nullable String provider) {
+    this.provider = provider;
+  }
+
+  public ModelOverrides protocol(@javax.annotation.Nullable String protocol) {
+
+    this.protocol = protocol;
+    return this;
+  }
+
+  /**
+   * 模型接入协议覆写；取值须命中服务端维护的接入协议白名单，非法值返回 400。
+   * @return protocol
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROTOCOL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getProtocol() {
+    return protocol;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROTOCOL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProtocol(@javax.annotation.Nullable String protocol) {
+    this.protocol = protocol;
+  }
+
+  public ModelOverrides baseUrl(@javax.annotation.Nullable String baseUrl) {
+
+    this.baseUrl = baseUrl;
+    return this;
+  }
+
+  /**
+   * 自定义模型接入点 base URL。配合非 ark 的 &#x60;provider&#x60; 使用，把 Session 快照里冻结的上游替换成当前环境可达的接入点。
+   * @return baseUrl
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_BASE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getBaseUrl() {
+    return baseUrl;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_BASE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBaseUrl(@javax.annotation.Nullable String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
+
+  public ModelOverrides headers(@javax.annotation.Nullable Map<String, String> headers) {
+
+    this.headers = headers;
+    return this;
+  }
+
+  public ModelOverrides putHeadersItem(String key, String headersItem) {
+    if (this.headers == null) {
+      this.headers = new HashMap<>();
+    }
+    this.headers.put(key, headersItem);
+    return this;
+  }
+
+  /**
+   * 自定义模型请求 header（整组覆写），例如 &#x60;Authorization&#x60; 或 &#x60;X-Trial-Id&#x60;；key / value 均为字符串。
+   * @return headers
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_HEADERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public Map<String, String> getHeaders() {
+    return headers;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_HEADERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setHeaders(@javax.annotation.Nullable Map<String, String> headers) {
+    this.headers = headers;
+  }
+
+  public ModelOverrides tokenLimits(@javax.annotation.Nullable OverrideTokenLimits tokenLimits) {
+
+    this.tokenLimits = tokenLimits;
+    return this;
+  }
+
+  /**
+   * 模型 token 限制覆写（整体替换，提供时内部三字段必填且为正数）； 非 ark provider 可用，ark provider 指定返回 400。
+   * @return tokenLimits
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOKEN_LIMITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public OverrideTokenLimits getTokenLimits() {
+    return tokenLimits;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TOKEN_LIMITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTokenLimits(@javax.annotation.Nullable OverrideTokenLimits tokenLimits) {
+    this.tokenLimits = tokenLimits;
+  }
+
+  public ModelOverrides inputModalities(@javax.annotation.Nullable List<String> inputModalities) {
+
+    this.inputModalities = inputModalities;
+    return this;
+  }
+
+  public ModelOverrides addInputModalitiesItem(String inputModalitiesItem) {
+    if (this.inputModalities == null) {
+      this.inputModalities = new ArrayList<>();
+    }
+    this.inputModalities.add(inputModalitiesItem);
+    return this;
+  }
+
+  /**
+   * 底模支持的输入模态列表覆写。取值域：&#x60;text&#x60; / &#x60;image&#x60; / &#x60;audio&#x60; / &#x60;video&#x60;（无 &#x60;document&#x60;；文档在内部归入 image 通道）。  服务端会做归一化：去空白、转小写、元素去重、拒绝空元素，元素长度 上限 32，列表长度上限 16，超出返回 400。
+   * @return inputModalities
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_INPUT_MODALITIES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<String> getInputModalities() {
+    return inputModalities;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_INPUT_MODALITIES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setInputModalities(@javax.annotation.Nullable List<String> inputModalities) {
+    this.inputModalities = inputModalities;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -195,12 +395,18 @@ public class ModelOverrides {
         Objects.equals(this.speed, modelOverrides.speed) &&
         Objects.equals(this.thinking, modelOverrides.thinking) &&
         Objects.equals(this.reasoningEffort, modelOverrides.reasoningEffort) &&
-        Objects.equals(this.serviceTier, modelOverrides.serviceTier);
+        Objects.equals(this.serviceTier, modelOverrides.serviceTier) &&
+        Objects.equals(this.provider, modelOverrides.provider) &&
+        Objects.equals(this.protocol, modelOverrides.protocol) &&
+        Objects.equals(this.baseUrl, modelOverrides.baseUrl) &&
+        Objects.equals(this.headers, modelOverrides.headers) &&
+        Objects.equals(this.tokenLimits, modelOverrides.tokenLimits) &&
+        Objects.equals(this.inputModalities, modelOverrides.inputModalities);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, speed, thinking, reasoningEffort, serviceTier);
+    return Objects.hash(id, speed, thinking, reasoningEffort, serviceTier, provider, protocol, baseUrl, headers, tokenLimits, inputModalities);
   }
 
   @Override
@@ -212,6 +418,12 @@ public class ModelOverrides {
     sb.append("    thinking: ").append(toIndentedString(thinking)).append("\n");
     sb.append("    reasoningEffort: ").append(toIndentedString(reasoningEffort)).append("\n");
     sb.append("    serviceTier: ").append(toIndentedString(serviceTier)).append("\n");
+    sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
+    sb.append("    protocol: ").append(toIndentedString(protocol)).append("\n");
+    sb.append("    baseUrl: ").append(toIndentedString(baseUrl)).append("\n");
+    sb.append("    headers: ").append(toIndentedString(headers)).append("\n");
+    sb.append("    tokenLimits: ").append(toIndentedString(tokenLimits)).append("\n");
+    sb.append("    inputModalities: ").append(toIndentedString(inputModalities)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -256,6 +468,30 @@ public class ModelOverrides {
       this.instance.serviceTier = serviceTier;
       return this;
     }
+    public ModelOverrides.Builder provider(String provider) {
+      this.instance.provider = provider;
+      return this;
+    }
+    public ModelOverrides.Builder protocol(String protocol) {
+      this.instance.protocol = protocol;
+      return this;
+    }
+    public ModelOverrides.Builder baseUrl(String baseUrl) {
+      this.instance.baseUrl = baseUrl;
+      return this;
+    }
+    public ModelOverrides.Builder headers(Map<String, String> headers) {
+      this.instance.headers = headers;
+      return this;
+    }
+    public ModelOverrides.Builder tokenLimits(OverrideTokenLimits tokenLimits) {
+      this.instance.tokenLimits = tokenLimits;
+      return this;
+    }
+    public ModelOverrides.Builder inputModalities(List<String> inputModalities) {
+      this.instance.inputModalities = inputModalities;
+      return this;
+    }
 
 
     /**
@@ -294,7 +530,13 @@ public class ModelOverrides {
       .speed(getSpeed())
       .thinking(getThinking())
       .reasoningEffort(getReasoningEffort())
-      .serviceTier(getServiceTier());
+      .serviceTier(getServiceTier())
+      .provider(getProvider())
+      .protocol(getProtocol())
+      .baseUrl(getBaseUrl())
+      .headers(getHeaders())
+      .tokenLimits(getTokenLimits())
+      .inputModalities(getInputModalities());
   }
 
 
