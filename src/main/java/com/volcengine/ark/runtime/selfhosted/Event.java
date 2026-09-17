@@ -138,6 +138,25 @@ public class Event {
         return stopReason instanceof String ? (String) stopReason : "";
     }
 
+    @SuppressWarnings("unchecked")
+    public List<String> stopReasonEventIds() {
+        if (!(stopReason instanceof Map)) {
+            return new ArrayList<>();
+        }
+        Object rawIds = ((Map<String, Object>) stopReason).get("event_ids");
+        if (!(rawIds instanceof List)) {
+            return new ArrayList<>();
+        }
+        List<String> ids = new ArrayList<>();
+        for (Object rawId : (List<Object>) rawIds) {
+            String id = stringValue(rawId);
+            if (!id.isEmpty()) {
+                ids.add(id);
+            }
+        }
+        return ids;
+    }
+
     public String callId() {
         if (toolUseId != null && !toolUseId.isEmpty()) {
             return toolUseId;

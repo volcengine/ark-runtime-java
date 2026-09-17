@@ -66,6 +66,9 @@ public class SessionToolRunner {
         if (options.resultStore != null) {
             FileToolResultStore.RecoverResult recovered = options.resultStore.recover();
             state.pendingResults.putAll(recovered.getPending());
+            for (String callId : recovered.getPending().keySet()) {
+                state.recoveredResults.put(callId, Boolean.TRUE);
+            }
             state.processed.putAll(recovered.getProcessed());
             state.answered.putAll(recovered.getProcessed());
         }
@@ -202,8 +205,8 @@ public class SessionToolRunner {
 
     private void consumeList() throws IOException {
         while (!isClosed()) {
-            flushResults();
             reconcile(false);
+            flushResults();
             if (idleExpired()) {
                 throw new IdleTimeoutException();
             }
@@ -231,6 +234,7 @@ public class SessionToolRunner {
             if (!reconcile && !seenNow) {
                 continue;
             }
+            observeSessionState(event);
             if (seenNow && !SelfHostedConstants.EVENT_TYPE_USER_TOOL_CONFIRMATION.equals(event.getType())) {
                 touchedIdle = true;
                 lastWasEndTurn = SelfHostedConstants.EVENT_TYPE_SESSION_STATUS_IDLE.equals(event.getType())
@@ -254,11 +258,12 @@ public class SessionToolRunner {
                 throw new SessionTerminatedException();
             }
         }
+        reconcileRecoveredResults();
         if (touchedIdle) {
             disarmIdle();
         }
         for (Event event : pending) {
-            if (!isAnswered(event.callId())) {
+            if (!isAnswered(event.callId()) && shouldHandleToolUse(event.callId())) {
                 handleToolUse(event, SelfHostedConstants.EVENT_TYPE_AGENT_CUSTOM_TOOL_USE.equals(event.getType()));
             }
         }
@@ -288,6 +293,8 @@ public class SessionToolRunner {
         if (!markEventSeen(event)) {
             return;
         }
+        observeSessionState(event);
+        reconcileRecoveredResults();
         noteIdleEvent(event);
         handleEvent(event);
     }
@@ -316,6 +323,9 @@ public class SessionToolRunner {
         }
         Event pending = state.pendingResults.get(callId);
         if (pending != null) {
+            if (state.recoveredResults.containsKey(callId)) {
+                return;
+            }
             sendResult(callId, event, custom, "", pending);
             return;
         }
@@ -468,6 +478,9 @@ public class SessionToolRunner {
 
     private void flushResults() throws IOException {
         for (Map.Entry<String, Event> entry : new ArrayList<>(state.pendingResults.entrySet())) {
+            if (state.recoveredResults.containsKey(entry.getKey())) {
+                continue;
+            }
             if (retrySendEvent(entry.getValue())) {
                 markAnswered(entry.getKey());
                 if (options.resultStore != null) {
@@ -480,6 +493,69 @@ public class SessionToolRunner {
                                         + " event_id=" + entry.getValue().getId(),
                                 error);
                     }
+                }
+            }
+        }
+        maybeArmPendingIdle();
+    }
+
+    private void observeSessionState(Event event) {
+        String type = event.getType();
+        if (SelfHostedConstants.EVENT_TYPE_AGENT_TOOL_USE.equals(type)
+                || SelfHostedConstants.EVENT_TYPE_AGENT_CUSTOM_TOOL_USE.equals(type)) {
+            String callId = event.callId();
+            if (!callId.isEmpty()) {
+                state.sessionToolUses.put(callId, Boolean.TRUE);
+                state.toolUsesSinceStatus.put(callId, Boolean.TRUE);
+            }
+            return;
+        }
+        if (SelfHostedConstants.EVENT_TYPE_SESSION_STATUS_IDLE.equals(type)) {
+            state.blockingEventsKnown = true;
+            state.blockingEventIds.clear();
+            if (SelfHostedConstants.SESSION_STOP_REASON_REQUIRES_ACTION.equals(event.stopReasonType())) {
+                for (String eventId : event.stopReasonEventIds()) {
+                    state.blockingEventIds.put(eventId, Boolean.TRUE);
+                }
+            }
+            state.toolUsesSinceStatus.clear();
+            return;
+        }
+        if (SelfHostedConstants.EVENT_TYPE_SESSION_STATUS_RUNNING.equals(type)
+                || SelfHostedConstants.EVENT_TYPE_SESSION_STATUS_RESCHEDULED.equals(type)) {
+            state.blockingEventsKnown = true;
+            state.blockingEventIds.clear();
+            state.toolUsesSinceStatus.clear();
+        }
+    }
+
+    private boolean shouldHandleToolUse(String callId) {
+        if (!state.blockingEventsKnown) {
+            return true;
+        }
+        return state.blockingEventIds.containsKey(callId) || state.toolUsesSinceStatus.containsKey(callId);
+    }
+
+    private void reconcileRecoveredResults() {
+        if (!state.blockingEventsKnown) {
+            return;
+        }
+        for (String callId : new ArrayList<>(state.recoveredResults.keySet())) {
+            if (state.blockingEventIds.containsKey(callId) && state.sessionToolUses.containsKey(callId)) {
+                state.recoveredResults.remove(callId);
+                continue;
+            }
+            if (state.toolUsesSinceStatus.containsKey(callId)) {
+                continue;
+            }
+            state.recoveredResults.remove(callId);
+            state.pendingResults.remove(callId);
+            LOGGER.warning("discard stale recovered tool result tool_use_id=" + callId);
+            if (options.resultStore != null) {
+                try {
+                    options.resultStore.discard(callId);
+                } catch (IOException error) {
+                    LOGGER.log(Level.WARNING, "discard persisted tool result failed tool_use_id=" + callId, error);
                 }
             }
         }
@@ -537,6 +613,7 @@ public class SessionToolRunner {
         state.answered.put(callId, Boolean.TRUE);
         state.processed.put(callId, Boolean.TRUE);
         state.pendingResults.remove(callId);
+        state.recoveredResults.remove(callId);
         state.pendingAsk.remove(callId);
         state.externalTools.remove(callId);
         maybeArmPendingIdle();
@@ -565,7 +642,7 @@ public class SessionToolRunner {
     private boolean hasUnblockedOutstandingTool(List<Event> pending) {
         for (Event event : pending) {
             String callId = event.callId();
-            if (callId.isEmpty() || isAnswered(callId)) {
+            if (callId.isEmpty() || isAnswered(callId) || !shouldHandleToolUse(callId)) {
                 continue;
             }
             if (state.pendingAsk.containsKey(callId) || state.pendingResults.containsKey(callId)) {
@@ -661,9 +738,14 @@ public class SessionToolRunner {
         Map<String, Boolean> seen = new LinkedHashMap<>();
         Map<String, Boolean> answered = new LinkedHashMap<>();
         Map<String, Event> pendingResults = new LinkedHashMap<>();
+        Map<String, Boolean> recoveredResults = new LinkedHashMap<>();
         Map<String, Event> pendingAsk = new LinkedHashMap<>();
         Map<String, Event> confirmations = new LinkedHashMap<>();
         Map<String, Event> externalTools = new LinkedHashMap<>();
+        Map<String, Boolean> sessionToolUses = new LinkedHashMap<>();
+        Map<String, Boolean> toolUsesSinceStatus = new LinkedHashMap<>();
+        Map<String, Boolean> blockingEventIds = new LinkedHashMap<>();
+        boolean blockingEventsKnown;
         long idleArmedAt;
         boolean idleArmPending;
     }

@@ -73,4 +73,20 @@ public class FileToolResultStoreTest {
         }
         assertFalse(Files.exists(workdir.resolve("outside")));
     }
+
+    @Test
+    public void discardRemovesRecoveredRecord() throws Exception {
+        Path workdir = Files.createTempDirectory("ark-java-store-");
+        FileToolResultStore store = new FileToolResultStore(workdir.toString(), "session-a");
+        Map<String, Object> raw = new LinkedHashMap<>();
+        raw.put("id", "call-1");
+        raw.put("type", "agent.tool_use");
+        raw.put("name", "bash");
+        store.begin("call-1", Event.fromMap(raw));
+
+        store.discard("call-1");
+
+        assertTrue(store.recover().getPending().isEmpty());
+        assertTrue(store.recover().getProcessed().isEmpty());
+    }
 }
