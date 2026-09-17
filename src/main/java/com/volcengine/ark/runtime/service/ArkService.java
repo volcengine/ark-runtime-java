@@ -80,6 +80,7 @@ import com.volcengine.ark.runtime.models.session.SessionResource;
 import com.volcengine.ark.runtime.models.session.SessionThread;
 import com.volcengine.ark.runtime.models.session.UpdateSessionRequest;
 import com.volcengine.ark.runtime.models.skill.Skill;
+import com.volcengine.ark.runtime.models.skill.SkillVersion;
 import com.volcengine.ark.runtime.models.tokenization.TokenizationRequest;
 import com.volcengine.ark.runtime.models.tokenization.TokenizationResponse;
 import com.volcengine.ark.runtime.models.vault.CreateCredentialRequest;
@@ -788,6 +789,16 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
             ? null
             : RequestBody.create(MediaType.parse("text/plain"), displayTitle);
         return execute(api.createSkill(files, titlePart, new HashMap<>()));
+    }
+
+    public SkillVersion createSkillVersion(String skillId, MultipartBody.Part files, String displayTitle) {
+        if (skillId == null || skillId.isEmpty()) {
+            throw new IllegalArgumentException("skillId is required");
+        }
+        RequestBody titlePart = displayTitle == null
+            ? null
+            : RequestBody.create(MediaType.parse("text/plain"), displayTitle);
+        return execute(api.createSkillVersion(skillId, files, titlePart, new HashMap<>()));
     }
 
     public Skill getSkill(String skillId) {
