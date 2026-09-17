@@ -173,7 +173,7 @@ public class MessagesWebSearchResult {
   }
 
   /**
-   * Get encryptedContent
+   * Opaque signed search content. Replay this value unchanged.
    * @return encryptedContent
    */
   @javax.annotation.Nonnull

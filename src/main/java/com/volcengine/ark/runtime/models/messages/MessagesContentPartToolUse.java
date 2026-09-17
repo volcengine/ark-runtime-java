@@ -38,7 +38,7 @@ public class MessagesContentPartToolUse implements MessagesContentPart {
   private ContentPartType type = ContentPartType.TOOL_USE;
 
   public static final String JSON_PROPERTY_ID = "id";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String id;
 
   public static final String JSON_PROPERTY_NAME = "name";
@@ -77,28 +77,28 @@ public class MessagesContentPartToolUse implements MessagesContentPart {
     this.type = type;
   }
 
-  public MessagesContentPartToolUse id(@javax.annotation.Nonnull String id) {
+  public MessagesContentPartToolUse id(@javax.annotation.Nullable String id) {
 
     this.id = id;
     return this;
   }
 
   /**
-   * The id of the tool invocation.
+   * Get id
    * @return id
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getId() {
     return id;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setId(@javax.annotation.Nonnull String id) {
+  @JsonProperty(value = JSON_PROPERTY_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setId(@javax.annotation.Nullable String id) {
     this.id = id;
   }
 

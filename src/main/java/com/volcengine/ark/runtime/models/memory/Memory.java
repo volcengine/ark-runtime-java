@@ -128,7 +128,7 @@ public class Memory {
   }
 
   /**
-   * Memory ID。
+   * Memory ID，形如 &#x60;mem-...&#x60;。
    * @return id
    */
   @javax.annotation.Nonnull

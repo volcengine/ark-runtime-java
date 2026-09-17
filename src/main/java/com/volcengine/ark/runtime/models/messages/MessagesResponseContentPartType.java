@@ -21,21 +21,23 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets MessagesDocumentSourceType
+ * Gets or Sets MessagesResponseContentPartType
  */
-public enum MessagesDocumentSourceType {
+public enum MessagesResponseContentPartType {
 
-  BASE64("base64"),
+  SERVER_TOOL_USE("server_tool_use"),
 
   TEXT("text"),
 
-  URL("url"),
+  THINKING("thinking"),
 
-  CONTENT("content");
+  TOOL_USE("tool_use"),
+
+  WEB_SEARCH_TOOL_RESULT("web_search_tool_result");
 
   private String value;
 
-  MessagesDocumentSourceType(String value) {
+  MessagesResponseContentPartType(String value) {
     this.value = value;
   }
 
@@ -50,8 +52,8 @@ public enum MessagesDocumentSourceType {
   }
 
   @JsonCreator
-  public static MessagesDocumentSourceType fromValue(String value) {
-    for (MessagesDocumentSourceType b : MessagesDocumentSourceType.values()) {
+  public static MessagesResponseContentPartType fromValue(String value) {
+    for (MessagesResponseContentPartType b : MessagesResponseContentPartType.values()) {
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

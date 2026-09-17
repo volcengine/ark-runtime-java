@@ -28,6 +28,7 @@ import java.util.Objects;
   PromptTokensDetails.JSON_PROPERTY_CACHED_TOKENS,
   PromptTokensDetails.JSON_PROPERTY_TEXT_TOKENS,
   PromptTokensDetails.JSON_PROPERTY_IMAGE_TOKENS,
+  PromptTokensDetails.JSON_PROPERTY_PROVISIONED_TOKENS,
   PromptTokensDetails.JSON_PROPERTY_AUDIO_TOKENS,
   PromptTokensDetails.JSON_PROPERTY_AUDIO_CACHED_TOKENS
 })
@@ -44,6 +45,10 @@ public class PromptTokensDetails {
   public static final String JSON_PROPERTY_IMAGE_TOKENS = "image_tokens";
   @javax.annotation.Nullable
   private Integer imageTokens;
+
+  public static final String JSON_PROPERTY_PROVISIONED_TOKENS = "provisioned_tokens";
+  @javax.annotation.Nullable
+  private Integer provisionedTokens;
 
   public static final String JSON_PROPERTY_AUDIO_TOKENS = "audio_tokens";
   @javax.annotation.Nullable
@@ -131,6 +136,31 @@ public class PromptTokensDetails {
     this.imageTokens = imageTokens;
   }
 
+  public PromptTokensDetails provisionedTokens(@javax.annotation.Nullable Integer provisionedTokens) {
+
+    this.provisionedTokens = provisionedTokens;
+    return this;
+  }
+
+  /**
+   * Prompt tokens charged against provisioned throughput after conversion.
+   * @return provisionedTokens
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROVISIONED_TOKENS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Integer getProvisionedTokens() {
+    return provisionedTokens;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROVISIONED_TOKENS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProvisionedTokens(@javax.annotation.Nullable Integer provisionedTokens) {
+    this.provisionedTokens = provisionedTokens;
+  }
+
   public PromptTokensDetails audioTokens(@javax.annotation.Nullable Integer audioTokens) {
 
     this.audioTokens = audioTokens;
@@ -194,13 +224,14 @@ public class PromptTokensDetails {
     return Objects.equals(this.cachedTokens, promptTokensDetails.cachedTokens) &&
         Objects.equals(this.textTokens, promptTokensDetails.textTokens) &&
         Objects.equals(this.imageTokens, promptTokensDetails.imageTokens) &&
+        Objects.equals(this.provisionedTokens, promptTokensDetails.provisionedTokens) &&
         Objects.equals(this.audioTokens, promptTokensDetails.audioTokens) &&
         Objects.equals(this.audioCachedTokens, promptTokensDetails.audioCachedTokens);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cachedTokens, textTokens, imageTokens, audioTokens, audioCachedTokens);
+    return Objects.hash(cachedTokens, textTokens, imageTokens, provisionedTokens, audioTokens, audioCachedTokens);
   }
 
   @Override
@@ -210,6 +241,7 @@ public class PromptTokensDetails {
     sb.append("    cachedTokens: ").append(toIndentedString(cachedTokens)).append("\n");
     sb.append("    textTokens: ").append(toIndentedString(textTokens)).append("\n");
     sb.append("    imageTokens: ").append(toIndentedString(imageTokens)).append("\n");
+    sb.append("    provisionedTokens: ").append(toIndentedString(provisionedTokens)).append("\n");
     sb.append("    audioTokens: ").append(toIndentedString(audioTokens)).append("\n");
     sb.append("    audioCachedTokens: ").append(toIndentedString(audioCachedTokens)).append("\n");
     sb.append("}");
@@ -246,6 +278,10 @@ public class PromptTokensDetails {
     }
     public PromptTokensDetails.Builder imageTokens(Integer imageTokens) {
       this.instance.imageTokens = imageTokens;
+      return this;
+    }
+    public PromptTokensDetails.Builder provisionedTokens(Integer provisionedTokens) {
+      this.instance.provisionedTokens = provisionedTokens;
       return this;
     }
     public PromptTokensDetails.Builder audioTokens(Integer audioTokens) {
@@ -293,6 +329,7 @@ public class PromptTokensDetails {
       .cachedTokens(getCachedTokens())
       .textTokens(getTextTokens())
       .imageTokens(getImageTokens())
+      .provisionedTokens(getProvisionedTokens())
       .audioTokens(getAudioTokens())
       .audioCachedTokens(getAudioCachedTokens());
   }

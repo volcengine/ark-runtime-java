@@ -25,11 +25,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum SkillRefType {
 
-  ANTHROPIC("anthropic"),
-
   CUSTOM("custom"),
 
-  SKILL_HUB("skill_hub");
+  SKILL_HUB("skill_hub"),
+
+  ARK("ark");
 
   private String value;
 

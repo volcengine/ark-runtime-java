@@ -40,7 +40,7 @@ public class MessagesToolChoiceTool implements MessagesToolChoice {
   private Boolean disableParallelToolUse;
 
   public static final String JSON_PROPERTY_NAME = "name";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String name;
 
   public MessagesToolChoiceTool() {
@@ -96,18 +96,18 @@ public class MessagesToolChoiceTool implements MessagesToolChoice {
     this.disableParallelToolUse = disableParallelToolUse;
   }
 
-  public MessagesToolChoiceTool name(@javax.annotation.Nonnull String name) {
+  public MessagesToolChoiceTool name(@javax.annotation.Nullable String name) {
 
     this.name = name;
     return this;
   }
 
   /**
-   * The name of the tool the model must invoke.
+   * Get name
    * @return name
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
   public String getName() {
@@ -115,9 +115,9 @@ public class MessagesToolChoiceTool implements MessagesToolChoice {
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
+  @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setName(@javax.annotation.Nonnull String name) {
+  public void setName(@javax.annotation.Nullable String name) {
     this.name = name;
   }
 

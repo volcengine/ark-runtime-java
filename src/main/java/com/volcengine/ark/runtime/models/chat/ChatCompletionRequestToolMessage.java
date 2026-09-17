@@ -37,11 +37,11 @@ public class ChatCompletionRequestToolMessage implements ChatCompletionRequestMe
   private ChatCompletionRequestMessageType role = ChatCompletionRequestMessageType.TOOL;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private ChatCompletionMessageContent content;
 
   public static final String JSON_PROPERTY_TOOL_CALL_ID = "tool_call_id";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private String toolCallId;
 
   public static final String JSON_PROPERTY_NAME = "name";
@@ -76,53 +76,53 @@ public class ChatCompletionRequestToolMessage implements ChatCompletionRequestMe
     this.role = role;
   }
 
-  public ChatCompletionRequestToolMessage content(@javax.annotation.Nonnull ChatCompletionMessageContent content) {
+  public ChatCompletionRequestToolMessage content(@javax.annotation.Nullable ChatCompletionMessageContent content) {
 
     this.content = content;
     return this;
   }
 
   /**
-   * The contents of the tool message.
+   * Get content
    * @return content
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public ChatCompletionMessageContent getContent() {
     return content;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setContent(@javax.annotation.Nonnull ChatCompletionMessageContent content) {
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContent(@javax.annotation.Nullable ChatCompletionMessageContent content) {
     this.content = content;
   }
 
-  public ChatCompletionRequestToolMessage toolCallId(@javax.annotation.Nonnull String toolCallId) {
+  public ChatCompletionRequestToolMessage toolCallId(@javax.annotation.Nullable String toolCallId) {
 
     this.toolCallId = toolCallId;
     return this;
   }
 
   /**
-   * Tool call that this message is responding to.
+   * Get toolCallId
    * @return toolCallId
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TOOL_CALL_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOOL_CALL_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getToolCallId() {
     return toolCallId;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_TOOL_CALL_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setToolCallId(@javax.annotation.Nonnull String toolCallId) {
+  @JsonProperty(value = JSON_PROPERTY_TOOL_CALL_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setToolCallId(@javax.annotation.Nullable String toolCallId) {
     this.toolCallId = toolCallId;
   }
 

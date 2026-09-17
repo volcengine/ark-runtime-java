@@ -43,7 +43,7 @@ public class MessagesMetadata {
   }
 
   /**
-   * An external identifier for the user associated with the request.
+   * Get userId
    * @return userId
    */
   @javax.annotation.Nullable

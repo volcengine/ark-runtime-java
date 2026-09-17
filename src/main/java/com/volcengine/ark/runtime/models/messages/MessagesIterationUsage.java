@@ -58,7 +58,7 @@ public class MessagesIterationUsage {
   }
 
   /**
-   * The iteration usage record type.
+   * The iteration usage record type, currently &#x60;message&#x60;.
    * @return type
    */
   @javax.annotation.Nonnull
@@ -83,7 +83,7 @@ public class MessagesIterationUsage {
   }
 
   /**
-   * Number of input tokens consumed by this model iteration.
+   * Number of input tokens consumed by this iteration, excluding cache reads.
    * @return inputTokens
    */
   @javax.annotation.Nonnull

@@ -3,6 +3,7 @@ package com.volcengine.ark.runtime.examples.byteplus;
 import com.volcengine.ark.runtime.models.chat.ChatCompletionContentPart;
 import com.volcengine.ark.runtime.models.chat.ChatCompletionContentPartImage;
 import com.volcengine.ark.runtime.models.chat.ChatCompletionContentPartImageImageUrl;
+import com.volcengine.ark.runtime.models.chat.ChatCompletionContentPartImageImageUrl2;
 import com.volcengine.ark.runtime.models.chat.ChatCompletionContentPartText;
 import com.volcengine.ark.runtime.models.chat.ChatCompletionContentPartType;
 import com.volcengine.ark.runtime.models.chat.ChatCompletionMessageContent;
@@ -42,9 +43,10 @@ public class ChatCompletionsVisionExample {
                 .build());
         multiParts.add(ChatCompletionContentPartImage.builder()
                 .type(ChatCompletionContentPartType.IMAGE_URL)
-                .imageUrl(ChatCompletionContentPartImageImageUrl.builder()
-                        .url("https://ark-project.tos-cn-beijing.volces.com/images/view.jpeg")
-                        .build())
+                .imageUrl(ChatCompletionContentPartImageImageUrl2.ofChatCompletionContentPartImageImageUrl(
+                        ChatCompletionContentPartImageImageUrl.builder()
+                                .url("https://ark-project.tos-cn-beijing.volces.com/images/view.jpeg")
+                                .build()))
                 .build());
         messages.add(ChatCompletionRequestUserMessage.builder()
                 .role(ChatCompletionRequestMessageType.USER)

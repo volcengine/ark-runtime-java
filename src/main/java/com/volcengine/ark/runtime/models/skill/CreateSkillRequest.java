@@ -19,6 +19,8 @@ package com.volcengine.ark.runtime.models.skill;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,7 +28,9 @@ import java.util.Objects;
  */
 @JsonPropertyOrder({
   CreateSkillRequest.JSON_PROPERTY_DISPLAY_TITLE,
-  CreateSkillRequest.JSON_PROPERTY_PROTECTION_ENABLED
+  CreateSkillRequest.JSON_PROPERTY_PROTECTION_ENABLED,
+  CreateSkillRequest.JSON_PROPERTY_FILES,
+  CreateSkillRequest.JSON_PROPERTY_FILES_BRACKET
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CreateSkillRequest {
@@ -37,6 +41,14 @@ public class CreateSkillRequest {
   public static final String JSON_PROPERTY_PROTECTION_ENABLED = "protection_enabled";
   @javax.annotation.Nullable
   private Boolean protectionEnabled;
+
+  public static final String JSON_PROPERTY_FILES = "files";
+  @javax.annotation.Nullable
+  private List<Object> files;
+
+  public static final String JSON_PROPERTY_FILES_BRACKET = "files[]";
+  @javax.annotation.Nullable
+  private List<Object> filesBracket;
 
   public CreateSkillRequest() {
   }
@@ -91,6 +103,72 @@ public class CreateSkillRequest {
     this.protectionEnabled = protectionEnabled;
   }
 
+  public CreateSkillRequest files(@javax.annotation.Nullable List<Object> files) {
+
+    this.files = files;
+    return this;
+  }
+
+  public CreateSkillRequest addFilesItem(Object filesItem) {
+    if (this.files == null) {
+      this.files = new ArrayList<>();
+    }
+    this.files.add(filesItem);
+    return this;
+  }
+
+  /**
+   * 技能包内容。可以是单个 &#x60;.zip&#x60;，也可以是一组带相对路径的松散文件； 该字段名允许在同一次请求中重复出现以传多个文件。  与 &#x60;files[]&#x60; 语义等价，两者至少提供其一；同时提供时会被服务端合并。
+   * @return files
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FILES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<Object> getFiles() {
+    return files;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FILES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setFiles(@javax.annotation.Nullable List<Object> files) {
+    this.files = files;
+  }
+
+  public CreateSkillRequest filesBracket(@javax.annotation.Nullable List<Object> filesBracket) {
+
+    this.filesBracket = filesBracket;
+    return this;
+  }
+
+  public CreateSkillRequest addFilesBracketItem(Object filesBracketItem) {
+    if (this.filesBracket == null) {
+      this.filesBracket = new ArrayList<>();
+    }
+    this.filesBracket.add(filesBracketItem);
+    return this;
+  }
+
+  /**
+   * &#x60;files&#x60; 的可重复字段名别名，语义完全等价；便于用 &#x60;-F &#39;files[]&#x3D;@a&#39; -F &#39;files[]&#x3D;@b&#39;&#x60; 这种 jQuery/PHP 风格的 multipart 客户端直接使用。
+   * @return filesBracket
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FILES_BRACKET, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<Object> getFilesBracket() {
+    return filesBracket;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FILES_BRACKET, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setFilesBracket(@javax.annotation.Nullable List<Object> filesBracket) {
+    this.filesBracket = filesBracket;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -102,12 +180,14 @@ public class CreateSkillRequest {
     }
     CreateSkillRequest createSkillRequest = (CreateSkillRequest) o;
     return Objects.equals(this.displayTitle, createSkillRequest.displayTitle) &&
-        Objects.equals(this.protectionEnabled, createSkillRequest.protectionEnabled);
+        Objects.equals(this.protectionEnabled, createSkillRequest.protectionEnabled) &&
+        Objects.equals(this.files, createSkillRequest.files) &&
+        Objects.equals(this.filesBracket, createSkillRequest.filesBracket);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(displayTitle, protectionEnabled);
+    return Objects.hash(displayTitle, protectionEnabled, files, filesBracket);
   }
 
   @Override
@@ -116,6 +196,8 @@ public class CreateSkillRequest {
     sb.append("class CreateSkillRequest {\n");
     sb.append("    displayTitle: ").append(toIndentedString(displayTitle)).append("\n");
     sb.append("    protectionEnabled: ").append(toIndentedString(protectionEnabled)).append("\n");
+    sb.append("    files: ").append(toIndentedString(files)).append("\n");
+    sb.append("    filesBracket: ").append(toIndentedString(filesBracket)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -146,6 +228,14 @@ public class CreateSkillRequest {
     }
     public CreateSkillRequest.Builder protectionEnabled(Boolean protectionEnabled) {
       this.instance.protectionEnabled = protectionEnabled;
+      return this;
+    }
+    public CreateSkillRequest.Builder files(List<Object> files) {
+      this.instance.files = files;
+      return this;
+    }
+    public CreateSkillRequest.Builder filesBracket(List<Object> filesBracket) {
+      this.instance.filesBracket = filesBracket;
       return this;
     }
 
@@ -183,7 +273,9 @@ public class CreateSkillRequest {
   public CreateSkillRequest.Builder toBuilder() {
     return new CreateSkillRequest.Builder()
       .displayTitle(getDisplayTitle())
-      .protectionEnabled(getProtectionEnabled());
+      .protectionEnabled(getProtectionEnabled())
+      .files(getFiles())
+      .filesBracket(getFilesBracket());
   }
 
 

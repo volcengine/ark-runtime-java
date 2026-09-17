@@ -30,10 +30,10 @@ import java.util.Objects;
   MessagesResponseContentPartThinking.JSON_PROPERTY_SIGNATURE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class MessagesResponseContentPartThinking implements ContentBlockStartContentBlock, MessagesResponseContentPart {
+public class MessagesResponseContentPartThinking implements MessagesResponseContentPart {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private ContentBlockStartContentBlockType type = ContentBlockStartContentBlockType.THINKING;
+  private MessagesResponseContentPartType type = MessagesResponseContentPartType.THINKING;
 
   public static final String JSON_PROPERTY_THINKING = "thinking";
   @javax.annotation.Nonnull
@@ -46,7 +46,7 @@ public class MessagesResponseContentPartThinking implements ContentBlockStartCon
   public MessagesResponseContentPartThinking() {
   }
 
-  public MessagesResponseContentPartThinking type(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
+  public MessagesResponseContentPartThinking type(@javax.annotation.Nonnull MessagesResponseContentPartType type) {
 
     this.type = type;
     return this;
@@ -60,14 +60,14 @@ public class MessagesResponseContentPartThinking implements ContentBlockStartCon
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public ContentBlockStartContentBlockType getType() {
+  public MessagesResponseContentPartType getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
+  public void setType(@javax.annotation.Nonnull MessagesResponseContentPartType type) {
     this.type = type;
   }
 
@@ -172,7 +172,7 @@ public class MessagesResponseContentPartThinking implements ContentBlockStartCon
       this.instance = instance;
     }
 
-    public MessagesResponseContentPartThinking.Builder type(ContentBlockStartContentBlockType type) {
+    public MessagesResponseContentPartThinking.Builder type(MessagesResponseContentPartType type) {
       this.instance.type = type;
       return this;
     }

@@ -215,7 +215,7 @@ public class MessagesRequest {
   }
 
   /**
-   * A system prompt supplied separately from the conversation messages.
+   * Get system
    * @return system
    */
   @javax.annotation.Nullable
@@ -240,7 +240,9 @@ public class MessagesRequest {
   }
 
   /**
-   * Number between -2.0 and 2.0. Positive values penalize tokens based on their existing frequency in the generated text.
+   * Get frequencyPenalty
+   * minimum: -2
+   * maximum: 2
    * @return frequencyPenalty
    */
   @javax.annotation.Nullable
@@ -273,7 +275,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Modify the likelihood of token IDs appearing in the response. Values range from -100 to 100.
+   * Get logitBias
    * @return logitBias
    */
   @javax.annotation.Nullable
@@ -298,7 +300,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Whether to return log probabilities of output tokens.
+   * Get logprobs
    * @return logprobs
    */
   @javax.annotation.Nullable
@@ -323,7 +325,8 @@ public class MessagesRequest {
   }
 
   /**
-   * Maximum number of tokens that may be generated.
+   * Get maxTokens
+   * minimum: 0
    * @return maxTokens
    */
   @javax.annotation.Nullable
@@ -348,7 +351,9 @@ public class MessagesRequest {
   }
 
   /**
-   * Number between -2.0 and 2.0. Positive values penalize tokens based on whether they have appeared in the generated text.
+   * Get presencePenalty
+   * minimum: -2
+   * maximum: 2
    * @return presencePenalty
    */
   @javax.annotation.Nullable
@@ -373,7 +378,9 @@ public class MessagesRequest {
   }
 
   /**
-   * Number between 0.0 and 2.0 that penalizes repetition.
+   * Get repetitionPenalty
+   * minimum: 0
+   * maximum: 2
    * @return repetitionPenalty
    */
   @javax.annotation.Nullable
@@ -398,7 +405,7 @@ public class MessagesRequest {
   }
 
   /**
-   * The format the model must produce.
+   * Get outputFormat
    * @return outputFormat
    */
   @javax.annotation.Nullable
@@ -448,7 +455,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Whether to stream the response as server-sent events.
+   * Get stream
    * @return stream
    */
   @javax.annotation.Nullable
@@ -473,7 +480,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Options for streaming responses.
+   * Get streamOptions
    * @return streamOptions
    */
   @javax.annotation.Nullable
@@ -498,7 +505,9 @@ public class MessagesRequest {
   }
 
   /**
-   * Sampling temperature between 0 and 2.
+   * Get temperature
+   * minimum: 0
+   * maximum: 2
    * @return temperature
    */
   @javax.annotation.Nullable
@@ -523,7 +532,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Controls which tool, if any, the model calls.
+   * Get toolChoice
    * @return toolChoice
    */
   @javax.annotation.Nullable
@@ -556,7 +565,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Tools the model may call.
+   * Get tools
    * @return tools
    */
   @javax.annotation.Nullable
@@ -581,7 +590,9 @@ public class MessagesRequest {
   }
 
   /**
-   * Number of most-likely tokens returned at each position. Range 0-20.
+   * Get topLogprobs
+   * minimum: 0
+   * maximum: 20
    * @return topLogprobs
    */
   @javax.annotation.Nullable
@@ -606,7 +617,9 @@ public class MessagesRequest {
   }
 
   /**
-   * Nucleus sampling probability between 0 and 1.
+   * Get topP
+   * minimum: 0
+   * maximum: 1
    * @return topP
    */
   @javax.annotation.Nullable
@@ -631,7 +644,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Latency tier used to process the request.
+   * Get serviceTier
    * @return serviceTier
    */
   @javax.annotation.Nullable
@@ -656,7 +669,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Thinking-mode configuration.
+   * Get thinking
    * @return thinking
    */
   @javax.annotation.Nullable
@@ -681,7 +694,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Output configuration for reasoning models.
+   * Get outputConfig
    * @return outputConfig
    */
   @javax.annotation.Nullable
@@ -706,7 +719,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Metadata associated with the request.
+   * Get metadata
    * @return metadata
    */
   @javax.annotation.Nullable
@@ -731,7 +744,7 @@ public class MessagesRequest {
   }
 
   /**
-   * Context-editing rules applied before inference.
+   * Get contextManagement
    * @return contextManagement
    */
   @javax.annotation.Nullable

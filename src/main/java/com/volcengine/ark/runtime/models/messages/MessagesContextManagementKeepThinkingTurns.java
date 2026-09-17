@@ -35,7 +35,7 @@ public class MessagesContextManagementKeepThinkingTurns implements MessagesConte
   private MessagesContextManagementKeepParameterType type = MessagesContextManagementKeepParameterType.THINKING_TURNS;
 
   public static final String JSON_PROPERTY_VALUE = "value";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private Integer value;
 
   public MessagesContextManagementKeepThinkingTurns() {
@@ -66,7 +66,7 @@ public class MessagesContextManagementKeepThinkingTurns implements MessagesConte
     this.type = type;
   }
 
-  public MessagesContextManagementKeepThinkingTurns value(@javax.annotation.Nonnull Integer value) {
+  public MessagesContextManagementKeepThinkingTurns value(@javax.annotation.Nullable Integer value) {
 
     this.value = value;
     return this;
@@ -76,8 +76,8 @@ public class MessagesContextManagementKeepThinkingTurns implements MessagesConte
    * Get value
    * @return value
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_VALUE, required = true)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
   public Integer getValue() {
@@ -85,9 +85,9 @@ public class MessagesContextManagementKeepThinkingTurns implements MessagesConte
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_VALUE, required = true)
+  @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setValue(@javax.annotation.Nonnull Integer value) {
+  public void setValue(@javax.annotation.Nullable Integer value) {
     this.value = value;
   }
 

@@ -25,13 +25,18 @@ import java.util.Objects;
  * MessagesContextManagementKeepAll
  */
 @JsonPropertyOrder({
-  MessagesContextManagementKeepAll.JSON_PROPERTY_TYPE
+  MessagesContextManagementKeepAll.JSON_PROPERTY_TYPE,
+  MessagesContextManagementKeepAll.JSON_PROPERTY_VALUE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class MessagesContextManagementKeepAll implements MessagesContextManagementKeepParameter {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
   private MessagesContextManagementKeepParameterType type = MessagesContextManagementKeepParameterType.ALL;
+
+  public static final String JSON_PROPERTY_VALUE = "value";
+  @javax.annotation.Nullable
+  private Integer value;
 
   public MessagesContextManagementKeepAll() {
   }
@@ -61,6 +66,31 @@ public class MessagesContextManagementKeepAll implements MessagesContextManageme
     this.type = type;
   }
 
+  public MessagesContextManagementKeepAll value(@javax.annotation.Nullable Integer value) {
+
+    this.value = value;
+    return this;
+  }
+
+  /**
+   * Get value
+   * @return value
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Integer getValue() {
+    return value;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setValue(@javax.annotation.Nullable Integer value) {
+    this.value = value;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -71,12 +101,13 @@ public class MessagesContextManagementKeepAll implements MessagesContextManageme
       return false;
     }
     MessagesContextManagementKeepAll messagesContextManagementKeepAll = (MessagesContextManagementKeepAll) o;
-    return Objects.equals(this.type, messagesContextManagementKeepAll.type);
+    return Objects.equals(this.type, messagesContextManagementKeepAll.type) &&
+        Objects.equals(this.value, messagesContextManagementKeepAll.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type);
+    return Objects.hash(type, value);
   }
 
   @Override
@@ -84,6 +115,7 @@ public class MessagesContextManagementKeepAll implements MessagesContextManageme
     StringBuilder sb = new StringBuilder();
     sb.append("class MessagesContextManagementKeepAll {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -110,6 +142,10 @@ public class MessagesContextManagementKeepAll implements MessagesContextManageme
 
     public MessagesContextManagementKeepAll.Builder type(MessagesContextManagementKeepParameterType type) {
       this.instance.type = type;
+      return this;
+    }
+    public MessagesContextManagementKeepAll.Builder value(Integer value) {
+      this.instance.value = value;
       return this;
     }
 
@@ -146,7 +182,8 @@ public class MessagesContextManagementKeepAll implements MessagesContextManageme
   */
   public MessagesContextManagementKeepAll.Builder toBuilder() {
     return new MessagesContextManagementKeepAll.Builder()
-      .type(getType());
+      .type(getType())
+      .value(getValue());
   }
 
 

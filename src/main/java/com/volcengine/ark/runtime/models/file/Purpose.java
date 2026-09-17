@@ -27,7 +27,9 @@ public enum Purpose {
 
   USER_DATA("user_data"),
 
-  AGENT("agent");
+  AGENT("agent"),
+
+  VOICE("voice");
 
   private String value;
 

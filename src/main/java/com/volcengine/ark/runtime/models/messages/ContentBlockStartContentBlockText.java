@@ -22,26 +22,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * MessagesContextManagementClearThinking
+ * ContentBlockStartContentBlockText
  */
 @JsonPropertyOrder({
-  MessagesContextManagementClearThinking.JSON_PROPERTY_TYPE,
-  MessagesContextManagementClearThinking.JSON_PROPERTY_KEEP
+  ContentBlockStartContentBlockText.JSON_PROPERTY_TYPE,
+  ContentBlockStartContentBlockText.JSON_PROPERTY_TEXT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class MessagesContextManagementClearThinking implements MessagesContextManagementEdit {
+public class ContentBlockStartContentBlockText implements ContentBlockStartContentBlock {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private MessagesContextManagementEditType type = MessagesContextManagementEditType.CLEAR_THINKING;
+  private ContentBlockStartContentBlockType type = ContentBlockStartContentBlockType.TEXT;
 
-  public static final String JSON_PROPERTY_KEEP = "keep";
+  public static final String JSON_PROPERTY_TEXT = "text";
   @javax.annotation.Nullable
-  private MessagesContextManagementKeep keep;
+  private String text;
 
-  public MessagesContextManagementClearThinking() {
+  public ContentBlockStartContentBlockText() {
   }
 
-  public MessagesContextManagementClearThinking type(@javax.annotation.Nonnull MessagesContextManagementEditType type) {
+  public ContentBlockStartContentBlockText type(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
 
     this.type = type;
     return this;
@@ -55,40 +55,40 @@ public class MessagesContextManagementClearThinking implements MessagesContextMa
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public MessagesContextManagementEditType getType() {
+  public ContentBlockStartContentBlockType getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull MessagesContextManagementEditType type) {
+  public void setType(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
     this.type = type;
   }
 
-  public MessagesContextManagementClearThinking keep(@javax.annotation.Nullable MessagesContextManagementKeep keep) {
+  public ContentBlockStartContentBlockText text(@javax.annotation.Nullable String text) {
 
-    this.keep = keep;
+    this.text = text;
     return this;
   }
 
   /**
-   * Get keep
-   * @return keep
+   * Get text
+   * @return text
    */
   @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_KEEP, required = false)
+  @JsonProperty(value = JSON_PROPERTY_TEXT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public MessagesContextManagementKeep getKeep() {
-    return keep;
+  public String getText() {
+    return text;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_KEEP, required = false)
+  @JsonProperty(value = JSON_PROPERTY_TEXT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setKeep(@javax.annotation.Nullable MessagesContextManagementKeep keep) {
-    this.keep = keep;
+  public void setText(@javax.annotation.Nullable String text) {
+    this.text = text;
   }
 
 
@@ -100,22 +100,22 @@ public class MessagesContextManagementClearThinking implements MessagesContextMa
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    MessagesContextManagementClearThinking messagesContextManagementClearThinking = (MessagesContextManagementClearThinking) o;
-    return Objects.equals(this.type, messagesContextManagementClearThinking.type) &&
-        Objects.equals(this.keep, messagesContextManagementClearThinking.keep);
+    ContentBlockStartContentBlockText contentBlockStartContentBlockText = (ContentBlockStartContentBlockText) o;
+    return Objects.equals(this.type, contentBlockStartContentBlockText.type) &&
+        Objects.equals(this.text, contentBlockStartContentBlockText.text);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, keep);
+    return Objects.hash(type, text);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MessagesContextManagementClearThinking {\n");
+    sb.append("class ContentBlockStartContentBlockText {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    keep: ").append(toIndentedString(keep)).append("\n");
+    sb.append("    text: ").append(toIndentedString(text)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -130,32 +130,32 @@ public class MessagesContextManagementClearThinking implements MessagesContextMa
 
   public static class Builder {
 
-    private MessagesContextManagementClearThinking instance;
+    private ContentBlockStartContentBlockText instance;
 
     public Builder() {
-      this(new MessagesContextManagementClearThinking());
+      this(new ContentBlockStartContentBlockText());
     }
 
-    protected Builder(MessagesContextManagementClearThinking instance) {
+    protected Builder(ContentBlockStartContentBlockText instance) {
       this.instance = instance;
     }
 
-    public MessagesContextManagementClearThinking.Builder type(MessagesContextManagementEditType type) {
+    public ContentBlockStartContentBlockText.Builder type(ContentBlockStartContentBlockType type) {
       this.instance.type = type;
       return this;
     }
-    public MessagesContextManagementClearThinking.Builder keep(MessagesContextManagementKeep keep) {
-      this.instance.keep = keep;
+    public ContentBlockStartContentBlockText.Builder text(String text) {
+      this.instance.text = text;
       return this;
     }
 
 
     /**
-    * returns a built MessagesContextManagementClearThinking instance.
+    * returns a built ContentBlockStartContentBlockText instance.
     *
     * The builder is not reusable.
     */
-    public MessagesContextManagementClearThinking build() {
+    public ContentBlockStartContentBlockText build() {
       try {
         return this.instance;
       } finally {
@@ -173,17 +173,17 @@ public class MessagesContextManagementClearThinking implements MessagesContextMa
   /**
   * Create a builder with no initialized field.
   */
-  public static MessagesContextManagementClearThinking.Builder builder() {
-    return new MessagesContextManagementClearThinking.Builder();
+  public static ContentBlockStartContentBlockText.Builder builder() {
+    return new ContentBlockStartContentBlockText.Builder();
   }
 
   /**
   * Create a builder with a shallow copy of this instance.
   */
-  public MessagesContextManagementClearThinking.Builder toBuilder() {
-    return new MessagesContextManagementClearThinking.Builder()
+  public ContentBlockStartContentBlockText.Builder toBuilder() {
+    return new ContentBlockStartContentBlockText.Builder()
       .type(getType())
-      .keep(getKeep());
+      .text(getText());
   }
 
 

@@ -129,7 +129,7 @@ public class MemoryStore {
   }
 
   /**
-   * MemoryStore ID。
+   * MemoryStore ID，形如 &#x60;memstore-...&#x60;。
    * @return id
    */
   @javax.annotation.Nonnull

@@ -87,7 +87,7 @@ public class MessagesTool {
   }
 
   /**
-   * A description of what the tool does and when the model should use it.
+   * Get description
    * @return description
    */
   @javax.annotation.Nullable
@@ -145,7 +145,7 @@ public class MessagesTool {
   }
 
   /**
-   * The tool input, described as a JSON Schema object.
+   * Get inputSchema
    * @return inputSchema
    */
   @javax.annotation.Nullable
@@ -170,7 +170,7 @@ public class MessagesTool {
   }
 
   /**
-   * Whether strict schema adherence is enabled for this tool.
+   * Get strict
    * @return strict
    */
   @javax.annotation.Nullable
@@ -195,7 +195,7 @@ public class MessagesTool {
   }
 
   /**
-   * A server-managed tool version, such as &#x60;web_search_20250305&#x60;.
+   * A tool type. A non-empty type without a description denotes a server-managed tool; web search uses the name &#x60;web_search&#x60; and a &#x60;web_search_&#x60; type prefix.
    * @return type
    */
   @javax.annotation.Nullable
@@ -220,7 +220,8 @@ public class MessagesTool {
   }
 
   /**
-   * Maximum number of times a server-managed tool may be dispatched.
+   * Get maxUses
+   * minimum: 1
    * @return maxUses
    */
   @javax.annotation.Nullable
@@ -253,7 +254,7 @@ public class MessagesTool {
   }
 
   /**
-   * Domains that a server-managed web tool is allowed to access.
+   * Get allowedDomains
    * @return allowedDomains
    */
   @javax.annotation.Nullable
@@ -286,7 +287,7 @@ public class MessagesTool {
   }
 
   /**
-   * Domains that a server-managed web tool must not access.
+   * Get blockedDomains
    * @return blockedDomains
    */
   @javax.annotation.Nullable
@@ -311,7 +312,7 @@ public class MessagesTool {
   }
 
   /**
-   * Optional user location supplied to a server-managed web tool.
+   * Get userLocation
    * @return userLocation
    */
   @javax.annotation.Nullable

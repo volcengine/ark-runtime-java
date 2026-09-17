@@ -75,7 +75,7 @@ public class ModelConfig {
   }
 
   /**
-   * 模型 ID，例如 &#x60;claude-opus-4-7&#x60; / &#x60;claude-sonnet-4-6&#x60; / &#x60;claude-haiku-4-5&#x60;。
+   * 模型 ID，例如 &#x60;doubao-seed-2-1&#x60;。
    * @return id
    */
   @javax.annotation.Nonnull

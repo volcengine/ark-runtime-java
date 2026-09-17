@@ -115,7 +115,7 @@ public class Credential {
   }
 
   /**
-   * Credential ID。
+   * Credential ID，形如 &#x60;vcrd-...&#x60;。
    * @return id
    */
   @javax.annotation.Nonnull

@@ -236,7 +236,7 @@ public class MessagesResponseStreamMessageStartMessage {
   }
 
   /**
-   * Get content
+   * Content is initially empty; blocks arrive in subsequent stream events.
    * @return content
    */
   @javax.annotation.Nonnull

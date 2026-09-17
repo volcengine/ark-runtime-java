@@ -26,6 +26,8 @@ import java.util.Objects;
  */
 @JsonPropertyOrder({
   FileCreateRequest.JSON_PROPERTY_PURPOSE,
+  FileCreateRequest.JSON_PROPERTY_MODEL,
+  FileCreateRequest.JSON_PROPERTY_DESCRIPTION,
   FileCreateRequest.JSON_PROPERTY_PREPROCESS_CONFIGS,
   FileCreateRequest.JSON_PROPERTY_EXPIRE_AT,
   FileCreateRequest.JSON_PROPERTY_URL,
@@ -36,6 +38,14 @@ public class FileCreateRequest {
   public static final String JSON_PROPERTY_PURPOSE = "purpose";
   @javax.annotation.Nonnull
   private Purpose purpose;
+
+  public static final String JSON_PROPERTY_MODEL = "model";
+  @javax.annotation.Nullable
+  private String model;
+
+  public static final String JSON_PROPERTY_DESCRIPTION = "description";
+  @javax.annotation.Nullable
+  private String description;
 
   public static final String JSON_PROPERTY_PREPROCESS_CONFIGS = "preprocess_configs";
   @javax.annotation.Nullable
@@ -81,6 +91,56 @@ public class FileCreateRequest {
     this.purpose = purpose;
   }
 
+  public FileCreateRequest model(@javax.annotation.Nullable String model) {
+
+    this.model = model;
+    return this;
+  }
+
+  /**
+   * Model identifier used to preprocess the file. This top-level field is required and only takes effect when &#x60;purpose&#x60; is &#x60;voice&#x60;.
+   * @return model
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getModel() {
+    return model;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setModel(@javax.annotation.Nullable String model) {
+    this.model = model;
+  }
+
+  public FileCreateRequest description(@javax.annotation.Nullable String description) {
+
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Human-readable file description, limited to 500 characters.
+   * @return description
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getDescription() {
+    return description;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DESCRIPTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDescription(@javax.annotation.Nullable String description) {
+    this.description = description;
+  }
+
   public FileCreateRequest preprocessConfigs(@javax.annotation.Nullable PreprocessConfigs preprocessConfigs) {
 
     this.preprocessConfigs = preprocessConfigs;
@@ -113,7 +173,7 @@ public class FileCreateRequest {
   }
 
   /**
-   * Unix timestamp (seconds) after which the file should be purged. Defaults to 7 days from upload when omitted.
+   * Unix timestamp (seconds) after which the file should be purged. A value of &#x60;-1&#x60; keeps the file permanently. Defaults to 7 days from upload when omitted.
    * @return expireAt
    */
   @javax.annotation.Nullable
@@ -192,6 +252,8 @@ public class FileCreateRequest {
     }
     FileCreateRequest fileCreateRequest = (FileCreateRequest) o;
     return Objects.equals(this.purpose, fileCreateRequest.purpose) &&
+        Objects.equals(this.model, fileCreateRequest.model) &&
+        Objects.equals(this.description, fileCreateRequest.description) &&
         Objects.equals(this.preprocessConfigs, fileCreateRequest.preprocessConfigs) &&
         Objects.equals(this.expireAt, fileCreateRequest.expireAt) &&
         Objects.equals(this.url, fileCreateRequest.url) &&
@@ -200,7 +262,7 @@ public class FileCreateRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(purpose, preprocessConfigs, expireAt, url, tos);
+    return Objects.hash(purpose, model, description, preprocessConfigs, expireAt, url, tos);
   }
 
   @Override
@@ -208,6 +270,8 @@ public class FileCreateRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class FileCreateRequest {\n");
     sb.append("    purpose: ").append(toIndentedString(purpose)).append("\n");
+    sb.append("    model: ").append(toIndentedString(model)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    preprocessConfigs: ").append(toIndentedString(preprocessConfigs)).append("\n");
     sb.append("    expireAt: ").append(toIndentedString(expireAt)).append("\n");
     sb.append("    url: ").append(toIndentedString(url)).append("\n");
@@ -238,6 +302,14 @@ public class FileCreateRequest {
 
     public FileCreateRequest.Builder purpose(Purpose purpose) {
       this.instance.purpose = purpose;
+      return this;
+    }
+    public FileCreateRequest.Builder model(String model) {
+      this.instance.model = model;
+      return this;
+    }
+    public FileCreateRequest.Builder description(String description) {
+      this.instance.description = description;
       return this;
     }
     public FileCreateRequest.Builder preprocessConfigs(PreprocessConfigs preprocessConfigs) {
@@ -291,6 +363,8 @@ public class FileCreateRequest {
   public FileCreateRequest.Builder toBuilder() {
     return new FileCreateRequest.Builder()
       .purpose(getPurpose())
+      .model(getModel())
+      .description(getDescription())
       .preprocessConfigs(getPreprocessConfigs())
       .expireAt(getExpireAt())
       .url(getUrl())

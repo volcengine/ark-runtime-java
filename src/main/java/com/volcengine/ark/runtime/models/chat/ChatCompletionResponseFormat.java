@@ -73,7 +73,7 @@ public class ChatCompletionResponseFormat {
   }
 
   /**
-   * Structured Outputs configuration; required when &#x60;type&#x60; is &#x60;json_schema&#x60;.
+   * Structured Outputs configuration for &#x60;json_schema&#x60; responses.
    * @return jsonSchema
    */
   @javax.annotation.Nullable

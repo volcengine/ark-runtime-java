@@ -1,7 +1,6 @@
 name: Java Release
 
-# Publishes com.volcengine:ark-runtime and the optional ark-runtime-mcp adapter
-# to Maven Central. Tags are created
+# Publishes com.volcengine:ark-runtime to Maven Central. Tags are created
 # exclusively by ark-hand after a sync PR lands on main, so a pushed v* tag
 # is always a reviewed release snapshot whose tree matches the internal
 # source tree. Mirrors the proven setup from volcengine/volcengine-java-sdk:
@@ -59,7 +58,7 @@ jobs:
         with:
           ref: ${{ steps.tag.outputs.name }}
 
-      - name: Verify artifact versions match tag
+      - name: Verify pom version matches tag
         env:
           RELEASE_TAG: ${{ steps.tag.outputs.name }}
         run: |
@@ -73,22 +72,11 @@ jobs:
             echo "::error::pom.xml ark-runtime version ${actual} does not match tag ${RELEASE_TAG}"
             exit 1
           fi
-          mcp_actual=$(python3 -c "
-          import re
-          text = open('mcp/pom.xml').read()
-          artifact = re.search(r'<artifactId>ark-runtime-mcp</artifactId>\s*<version>([^<]+)</version>', text)
-          dependency = re.search(r'<ark-runtime.version>([^<]+)</ark-runtime.version>', text)
-          print((artifact.group(1) if artifact else 'missing') + ' ' + (dependency.group(1) if dependency else 'missing'))
-          ")
-          if [ "${mcp_actual}" != "${version} ${version}" ]; then
-            echo "::error::mcp artifact/core versions ${mcp_actual} do not match tag ${RELEASE_TAG}"
-            exit 1
-          fi
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: "17"
+          java-version: "8"
           distribution: "temurin"
           server-id: central
           server-username: MAVEN_CENTRAL_USERNAME
@@ -96,18 +84,15 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
 
-      - name: Check Maven Central versions
+      - name: Check Maven Central version
         id: maven_check
         env:
           RELEASE_TAG: ${{ steps.tag.outputs.name }}
         run: |
           version="${RELEASE_TAG#v}"
-          core_url="https://repo.maven.apache.org/maven2/com/volcengine/ark-runtime/${version}/ark-runtime-${version}.pom"
-          mcp_url="https://repo.maven.apache.org/maven2/com/volcengine/ark-runtime-mcp/${version}/ark-runtime-mcp-${version}.pom"
-          core_code=$(curl -sS -o /dev/null -w '%{http_code}' "${core_url}")
-          mcp_code=$(curl -sS -o /dev/null -w '%{http_code}' "${mcp_url}")
-          echo "core_publish_needed=$([ "${core_code}" = "200" ] && echo false || echo true)" >> "$GITHUB_OUTPUT"
-          echo "mcp_publish_needed=$([ "${mcp_code}" = "200" ] && echo false || echo true)" >> "$GITHUB_OUTPUT"
+          pom_url="https://repo.maven.apache.org/maven2/com/volcengine/ark-runtime/${version}/ark-runtime-${version}.pom"
+          code=$(curl -sS -o /dev/null -w '%{http_code}' "${pom_url}")
+          echo "publish_needed=$([ "${code}" = "200" ] && echo false || echo true)" >> "$GITHUB_OUTPUT"
 
       - name: Check publish credentials
         env:
@@ -126,21 +111,10 @@ jobs:
             exit 1
           fi
 
-      - name: Publish core to Maven Central
-        if: steps.maven_check.outputs.core_publish_needed == 'true'
+      - name: Publish to Maven Central
+        if: steps.maven_check.outputs.publish_needed == 'true'
         run: |
           mvn clean deploy -B -Ppublic -DskipTests \
-            -Dmaven.javadoc.failOnError=false \
-            -Dmaven.javadoc.quiet=true
-        env:
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Publish MCP adapter to Maven Central
-        if: steps.maven_check.outputs.mcp_publish_needed == 'true'
-        run: |
-          mvn clean deploy -B -f mcp/pom.xml -Ppublic -DskipTests \
             -Dmaven.javadoc.failOnError=false \
             -Dmaven.javadoc.quiet=true
         env:

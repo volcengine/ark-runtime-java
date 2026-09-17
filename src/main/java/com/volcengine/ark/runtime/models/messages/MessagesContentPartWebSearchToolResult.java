@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * MessagesContentPartWebSearchToolResult
+ * Replays a public search result in an assistant message after its &#x60;server_tool_use&#x60;.
  */
 @JsonPropertyOrder({
   MessagesContentPartWebSearchToolResult.JSON_PROPERTY_TYPE,
@@ -41,7 +41,7 @@ public class MessagesContentPartWebSearchToolResult implements MessagesContentPa
   private String toolUseId;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private MessagesWebSearchToolResultContent content;
 
   public static final String JSON_PROPERTY_CALLER = "caller";
@@ -101,7 +101,7 @@ public class MessagesContentPartWebSearchToolResult implements MessagesContentPa
     this.toolUseId = toolUseId;
   }
 
-  public MessagesContentPartWebSearchToolResult content(@javax.annotation.Nonnull MessagesWebSearchToolResultContent content) {
+  public MessagesContentPartWebSearchToolResult content(@javax.annotation.Nullable MessagesWebSearchToolResultContent content) {
 
     this.content = content;
     return this;
@@ -111,8 +111,8 @@ public class MessagesContentPartWebSearchToolResult implements MessagesContentPa
    * Get content
    * @return content
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
   public MessagesWebSearchToolResultContent getContent() {
@@ -120,9 +120,9 @@ public class MessagesContentPartWebSearchToolResult implements MessagesContentPa
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setContent(@javax.annotation.Nonnull MessagesWebSearchToolResultContent content) {
+  public void setContent(@javax.annotation.Nullable MessagesWebSearchToolResultContent content) {
     this.content = content;
   }
 

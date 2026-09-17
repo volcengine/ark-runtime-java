@@ -147,7 +147,7 @@ public class Session {
   }
 
   /**
-   * Session ID。
+   * Session ID，形如 &#x60;sesn-...&#x60;。
    * @return id
    */
   @javax.annotation.Nonnull

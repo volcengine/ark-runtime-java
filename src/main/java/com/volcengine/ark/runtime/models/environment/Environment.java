@@ -127,7 +127,7 @@ public class Environment {
   }
 
   /**
-   * Environment ID。
+   * Environment ID，形如 &#x60;env-...&#x60;。
    * @return id
    */
   @javax.annotation.Nonnull

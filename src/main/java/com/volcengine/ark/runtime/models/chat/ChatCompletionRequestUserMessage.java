@@ -36,7 +36,7 @@ public class ChatCompletionRequestUserMessage implements ChatCompletionRequestMe
   private ChatCompletionRequestMessageType role = ChatCompletionRequestMessageType.USER;
 
   public static final String JSON_PROPERTY_CONTENT = "content";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private ChatCompletionMessageContent content;
 
   public static final String JSON_PROPERTY_NAME = "name";
@@ -71,28 +71,28 @@ public class ChatCompletionRequestUserMessage implements ChatCompletionRequestMe
     this.role = role;
   }
 
-  public ChatCompletionRequestUserMessage content(@javax.annotation.Nonnull ChatCompletionMessageContent content) {
+  public ChatCompletionRequestUserMessage content(@javax.annotation.Nullable ChatCompletionMessageContent content) {
 
     this.content = content;
     return this;
   }
 
   /**
-   * The contents of the user message.
+   * Get content
    * @return content
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public ChatCompletionMessageContent getContent() {
     return content;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setContent(@javax.annotation.Nonnull ChatCompletionMessageContent content) {
+  @JsonProperty(value = JSON_PROPERTY_CONTENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setContent(@javax.annotation.Nullable ChatCompletionMessageContent content) {
     this.content = content;
   }
 

@@ -31,10 +31,10 @@ import java.util.Objects;
   MessagesResponseContentPartWebSearchToolResult.JSON_PROPERTY_CALLER
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class MessagesResponseContentPartWebSearchToolResult implements ContentBlockStartContentBlock, MessagesResponseContentPart {
+public class MessagesResponseContentPartWebSearchToolResult implements MessagesResponseContentPart {
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
-  private ContentBlockStartContentBlockType type = ContentBlockStartContentBlockType.WEB_SEARCH_TOOL_RESULT;
+  private MessagesResponseContentPartType type = MessagesResponseContentPartType.WEB_SEARCH_TOOL_RESULT;
 
   public static final String JSON_PROPERTY_TOOL_USE_ID = "tool_use_id";
   @javax.annotation.Nonnull
@@ -51,7 +51,7 @@ public class MessagesResponseContentPartWebSearchToolResult implements ContentBl
   public MessagesResponseContentPartWebSearchToolResult() {
   }
 
-  public MessagesResponseContentPartWebSearchToolResult type(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
+  public MessagesResponseContentPartWebSearchToolResult type(@javax.annotation.Nonnull MessagesResponseContentPartType type) {
 
     this.type = type;
     return this;
@@ -65,14 +65,14 @@ public class MessagesResponseContentPartWebSearchToolResult implements ContentBl
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public ContentBlockStartContentBlockType getType() {
+  public MessagesResponseContentPartType getType() {
     return type;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull ContentBlockStartContentBlockType type) {
+  public void setType(@javax.annotation.Nonnull MessagesResponseContentPartType type) {
     this.type = type;
   }
 
@@ -204,7 +204,7 @@ public class MessagesResponseContentPartWebSearchToolResult implements ContentBl
       this.instance = instance;
     }
 
-    public MessagesResponseContentPartWebSearchToolResult.Builder type(ContentBlockStartContentBlockType type) {
+    public MessagesResponseContentPartWebSearchToolResult.Builder type(MessagesResponseContentPartType type) {
       this.instance.type = type;
       return this;
     }

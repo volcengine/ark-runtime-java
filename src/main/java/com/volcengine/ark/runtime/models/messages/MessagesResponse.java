@@ -336,12 +336,12 @@ public class MessagesResponse {
   }
 
   /**
-   * The custom stop sequence that was generated, if any.
+   * Get stopSequence
    * @return stopSequence
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_STOP_SEQUENCE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
   public String getStopSequence() {
     return stopSequence;
@@ -349,7 +349,7 @@ public class MessagesResponse {
 
 
   @JsonProperty(value = JSON_PROPERTY_STOP_SEQUENCE, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setStopSequence(@javax.annotation.Nullable String stopSequence) {
     this.stopSequence = stopSequence;
   }

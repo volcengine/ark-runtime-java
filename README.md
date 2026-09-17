@@ -10,14 +10,14 @@ The official Java library for accessing ModelArk on Volcengine and BytePlus. It 
 <dependency>
     <groupId>com.volcengine</groupId>
     <artifactId>ark-runtime</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'com.volcengine:ark-runtime:0.7.0'
+implementation 'com.volcengine:ark-runtime:0.8.0'
 ```
 
 ## Choose Volcengine or BytePlus
