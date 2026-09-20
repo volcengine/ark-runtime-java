@@ -63,24 +63,29 @@ public class SessionToolRunner {
     }
 
     public List<ToolCallResult> run() throws IOException {
-        if (options.resultStore != null) {
-            FileToolResultStore.RecoverResult recovered = options.resultStore.recover();
-            state.pendingResults.putAll(recovered.getPending());
-            for (String callId : recovered.getPending().keySet()) {
-                state.recoveredResults.put(callId, Boolean.TRUE);
+        try {
+            if (options.resultStore != null) {
+                FileToolResultStore.RecoverResult recovered = options.resultStore.recover();
+                state.pendingResults.putAll(recovered.getPending());
+                for (String callId : recovered.getPending().keySet()) {
+                    state.recoveredResults.put(callId, Boolean.TRUE);
+                }
+                state.processed.putAll(recovered.getProcessed());
+                state.answered.putAll(recovered.getProcessed());
             }
-            state.processed.putAll(recovered.getProcessed());
-            state.answered.putAll(recovered.getProcessed());
-        }
-        if (options.preferStream) {
-            try {
-                consumeStreamLoop();
-                return results;
-            } catch (StreamUnsupportedException ignored) {
+            if (options.preferStream) {
+                try {
+                    consumeStreamLoop();
+                    return results;
+                } catch (StreamUnsupportedException ignored) {
+                }
             }
+            consumeList();
+            return results;
+        } finally {
+            cancelActiveExecution();
+            toolExecutor.shutdownNow();
         }
-        consumeList();
-        return results;
     }
 
     private void consumeStreamLoop() throws IOException {
@@ -94,6 +99,7 @@ public class SessionToolRunner {
             try {
                 reconcile(true);
                 while (!isClosed() && (pump.isAlive() || !events.isEmpty())) {
+                    drainExecutionDone();
                     flushResults();
                     if (idleExpired()) {
                         throw new IdleTimeoutException();
@@ -205,6 +211,7 @@ public class SessionToolRunner {
 
     private void consumeList() throws IOException {
         while (!isClosed()) {
+            drainExecutionDone();
             reconcile(false);
             flushResults();
             if (idleExpired()) {
@@ -216,6 +223,7 @@ public class SessionToolRunner {
 
     public void close() {
         closed = true;
+        cancelActiveExecution();
         closeStream(activeStream);
         toolExecutor.shutdownNow();
     }
@@ -227,6 +235,7 @@ public class SessionToolRunner {
     private void processListedEvents(List<Event> events, boolean reconcile) throws IOException {
         List<Event> pending = new ArrayList<>();
         Map<String, Boolean> pendingIds = new LinkedHashMap<>();
+        Map<String, Boolean> replayedToolUses = new LinkedHashMap<>();
         boolean touchedIdle = false;
         boolean lastWasEndTurn = false;
         for (Event event : events) {
@@ -243,12 +252,15 @@ public class SessionToolRunner {
             String type = event.getType();
             if (SelfHostedConstants.EVENT_TYPE_USER_TOOL_CONFIRMATION.equals(type)) {
                 recordConfirmation(event);
+            } else if (SelfHostedConstants.EVENT_TYPE_USER_INTERRUPT.equals(type)) {
+                handleInterrupt(event, reconcile ? replayedToolUses : null);
             } else if (SelfHostedConstants.EVENT_TYPE_USER_TOOL_RESULT.equals(type)
                     || SelfHostedConstants.EVENT_TYPE_USER_CUSTOM_TOOL_RESULT.equals(type)) {
                 markAnswered(event.resultCallId());
             } else if (SelfHostedConstants.EVENT_TYPE_AGENT_TOOL_USE.equals(type)
                     || SelfHostedConstants.EVENT_TYPE_AGENT_CUSTOM_TOOL_USE.equals(type)) {
                 String callId = event.callId();
+                replayedToolUses.put(callId, Boolean.TRUE);
                 if (!callId.isEmpty() && !pendingIds.containsKey(callId)) {
                     pending.add(event);
                     pendingIds.put(callId, Boolean.TRUE);
@@ -269,11 +281,7 @@ public class SessionToolRunner {
         }
         releaseConfirmedToolUses();
         if (touchedIdle && lastWasEndTurn) {
-            if (hasUnblockedOutstandingTool(pending)) {
-                disarmIdle();
-            } else {
-                armIdle();
-            }
+            armIdle();
         }
     }
 
@@ -304,6 +312,8 @@ public class SessionToolRunner {
         if (SelfHostedConstants.EVENT_TYPE_USER_TOOL_CONFIRMATION.equals(type)) {
             recordConfirmation(event);
             releaseConfirmedToolUses();
+        } else if (SelfHostedConstants.EVENT_TYPE_USER_INTERRUPT.equals(type)) {
+            handleInterrupt(event, null);
         } else if (SelfHostedConstants.EVENT_TYPE_USER_TOOL_RESULT.equals(type)
                 || SelfHostedConstants.EVENT_TYPE_USER_CUSTOM_TOOL_RESULT.equals(type)) {
             markAnswered(event.resultCallId());
@@ -318,7 +328,7 @@ public class SessionToolRunner {
 
     private void handleToolUse(Event event, boolean custom) throws IOException {
         String callId = event.callId();
-        if (callId.isEmpty() || isAnswered(callId)) {
+        if (callId.isEmpty() || isAnswered(callId) || state.scheduled.containsKey(callId)) {
             return;
         }
         Event pending = state.pendingResults.get(callId);
@@ -352,8 +362,59 @@ public class SessionToolRunner {
                 return;
             }
         }
-        ToolResult result = executeTool(event, custom);
-        Event out = custom
+        state.scheduled.put(callId, Boolean.TRUE);
+        state.executionQueue.add(new PendingToolEvent(event, custom, decision.confirmation));
+        startNextToolExecution();
+    }
+
+    private void startNextToolExecution() {
+        if (state.activeExecution != null) {
+            return;
+        }
+        while (!state.executionQueue.isEmpty()) {
+            PendingToolEvent pending = state.executionQueue.remove(0);
+            String callId = pending.event.callId();
+            if (isAnswered(callId)) {
+                state.scheduled.remove(callId);
+                continue;
+            }
+            AtomicBoolean cancelled = new AtomicBoolean();
+            state.activeExecution = new ActiveToolExecution(pending, cancelled);
+            try {
+                toolExecutor.submit(() -> {
+                    ToolResult result = executeTool(pending.event, pending.custom, cancelled);
+                    state.executionDone.offer(new ToolExecutionResult(pending, result));
+                });
+            } catch (RejectedExecutionException error) {
+                state.executionDone.offer(new ToolExecutionResult(pending, ToolResult.error("tool execution canceled")));
+            }
+            return;
+        }
+    }
+
+    private void drainExecutionDone() {
+        ToolExecutionResult completed;
+        while ((completed = state.executionDone.poll()) != null) {
+            finishToolExecution(completed);
+        }
+    }
+
+    private void finishToolExecution(ToolExecutionResult completed) {
+        String callId = completed.pending.event.callId();
+        if (state.activeExecution != null && state.activeExecution.pending.event.callId().equals(callId)) {
+            state.activeExecution = null;
+        }
+        state.scheduled.remove(callId);
+        if (!isAnswered(callId)) {
+            postResult(completed.pending, completed.result);
+        }
+        startNextToolExecution();
+    }
+
+    private void postResult(PendingToolEvent pending, ToolResult result) {
+        Event event = pending.event;
+        String callId = event.callId();
+        Event out = pending.custom
                 ? Event.newUserCustomToolResultEvent(callId, result.getContent(), result.isError(), event.getSessionThreadId())
                 : Event.newUserToolResultEvent(callId, result.getContent(), result.isError(), event.getSessionThreadId());
         if (options.resultStore != null) {
@@ -364,15 +425,67 @@ public class SessionToolRunner {
             }
             state.pendingResults.put(callId, out);
         }
-        sendResult(callId, event, custom, decision.confirmation, out);
+        sendResult(callId, event, pending.custom, pending.confirmation, out);
     }
 
-    private ToolResult executeTool(Event event, boolean custom) {
+    private void handleInterrupt(Event event, Map<String, Boolean> eligible) {
+        String threadId = event.getSessionThreadId();
+        ActiveToolExecution active = state.activeExecution;
+        if (active != null && interruptMatches(active.pending.event, threadId, eligible)) {
+            active.cancelled.set(true);
+            settleInterruptedToolUse(active.pending.event.callId());
+        }
+        List<PendingToolEvent> retained = new ArrayList<>();
+        for (PendingToolEvent pending : state.executionQueue) {
+            if (interruptMatches(pending.event, threadId, eligible)) {
+                settleInterruptedToolUse(pending.event.callId());
+            } else {
+                retained.add(pending);
+            }
+        }
+        state.executionQueue.clear();
+        state.executionQueue.addAll(retained);
+        for (Map.Entry<String, Event> entry : new ArrayList<>(state.toolUseEvents.entrySet())) {
+            if (!isAnswered(entry.getKey()) && interruptMatches(entry.getValue(), threadId, eligible)) {
+                settleInterruptedToolUse(entry.getKey());
+            }
+        }
+    }
+
+    private boolean interruptMatches(Event toolEvent, String threadId, Map<String, Boolean> eligible) {
+        String callId = toolEvent.callId();
+        if (eligible != null && !eligible.containsKey(callId)) {
+            return false;
+        }
+        return threadId == null || threadId.isEmpty() || threadId.equals(toolEvent.getSessionThreadId());
+    }
+
+    private void settleInterruptedToolUse(String callId) {
+        if (callId == null || callId.isEmpty() || isAnswered(callId)) {
+            return;
+        }
+        state.scheduled.remove(callId);
+        markAnswered(callId);
+        if (options.resultStore != null) {
+            try {
+                options.resultStore.discard(callId);
+            } catch (IOException error) {
+                LOGGER.log(Level.WARNING, "discard interrupted tool result failed tool_use_id=" + callId, error);
+            }
+        }
+    }
+
+    private void cancelActiveExecution() {
+        if (state.activeExecution != null) {
+            state.activeExecution.cancelled.set(true);
+        }
+    }
+
+    private ToolResult executeTool(Event event, boolean custom, AtomicBoolean executionCancelled) {
         long timeoutMillis = options.toolContext.getToolTimeoutMillis();
         if (timeoutMillis <= 0L) {
             timeoutMillis = SelfHostedConstants.DEFAULT_TOOL_TIMEOUT_MILLIS;
         }
-        AtomicBoolean executionCancelled = new AtomicBoolean();
         ToolContext context = toolContextForExecution(timeoutMillis, executionCancelled);
         Future<ToolResult> future;
         try {
@@ -431,6 +544,8 @@ public class SessionToolRunner {
         }
         context.setUnrestrictedPaths(source.isUnrestrictedPaths());
         context.setToolTimeoutMillis(timeoutMillis);
+        context.setMaxInputFileBytes(source.getMaxInputFileBytes());
+        context.setMaxMediaFileBytes(source.getMaxMediaFileBytes());
         context.setCancelled(() -> executionCancelled.get() || isClosed() || source.isCancelled());
         return context;
     }
@@ -439,7 +554,7 @@ public class SessionToolRunner {
         return error.getMessage() == null ? error.toString() : error.getMessage();
     }
 
-    private void sendResult(String callId, Event source, boolean custom, String confirmation, Event out) throws IOException {
+    private void sendResult(String callId, Event source, boolean custom, String confirmation, Event out) {
         boolean posted = retrySendEvent(out);
         if (posted) {
             markAnswered(callId);
@@ -506,6 +621,9 @@ public class SessionToolRunner {
             String callId = event.callId();
             if (!callId.isEmpty()) {
                 state.sessionToolUses.put(callId, Boolean.TRUE);
+                if (!isAnswered(callId)) {
+                    state.toolUseEvents.put(callId, event);
+                }
                 state.toolUsesSinceStatus.put(callId, Boolean.TRUE);
             }
             return;
@@ -596,6 +714,9 @@ public class SessionToolRunner {
 
     private boolean markEventSeen(Event event) {
         String key = event.getId().isEmpty() ? event.callId() : event.getId();
+        if (key.isEmpty() && SelfHostedConstants.EVENT_TYPE_USER_INTERRUPT.equals(event.getType())) {
+            key = "interrupt:" + event.getProcessedAt() + ":" + event.getSessionThreadId();
+        }
         if (key.isEmpty()) {
             return true;
         }
@@ -616,6 +737,7 @@ public class SessionToolRunner {
         state.recoveredResults.remove(callId);
         state.pendingAsk.remove(callId);
         state.externalTools.remove(callId);
+        state.toolUseEvents.remove(callId);
         maybeArmPendingIdle();
     }
 
@@ -637,20 +759,6 @@ public class SessionToolRunner {
                 handleToolUse(entry.getValue(), SelfHostedConstants.EVENT_TYPE_AGENT_CUSTOM_TOOL_USE.equals(entry.getValue().getType()));
             }
         }
-    }
-
-    private boolean hasUnblockedOutstandingTool(List<Event> pending) {
-        for (Event event : pending) {
-            String callId = event.callId();
-            if (callId.isEmpty() || isAnswered(callId) || !shouldHandleToolUse(callId)) {
-                continue;
-            }
-            if (state.pendingAsk.containsKey(callId) || state.pendingResults.containsKey(callId)) {
-                continue;
-            }
-            return true;
-        }
-        return false;
     }
 
     private void armIdle() {
@@ -679,7 +787,10 @@ public class SessionToolRunner {
     }
 
     private boolean hasIdleBlockers() {
-        return !state.pendingAsk.isEmpty() || !state.pendingResults.isEmpty() || !state.externalTools.isEmpty();
+        return !state.pendingAsk.isEmpty()
+                || !state.pendingResults.isEmpty()
+                || !state.externalTools.isEmpty()
+                || !state.scheduled.isEmpty();
     }
 
     private boolean idleExpired() {
@@ -691,6 +802,7 @@ public class SessionToolRunner {
     private void sleepOrIdle(long millis) {
         long deadline = System.currentTimeMillis() + Math.max(millis, 0L);
         while (!isClosed()) {
+            drainExecutionDone();
             if (idleExpired()) {
                 throw new IdleTimeoutException();
             }
@@ -742,12 +854,49 @@ public class SessionToolRunner {
         Map<String, Event> pendingAsk = new LinkedHashMap<>();
         Map<String, Event> confirmations = new LinkedHashMap<>();
         Map<String, Event> externalTools = new LinkedHashMap<>();
+        Map<String, Event> toolUseEvents = new LinkedHashMap<>();
+        Map<String, Boolean> scheduled = new LinkedHashMap<>();
+        List<PendingToolEvent> executionQueue = new ArrayList<>();
+        volatile ActiveToolExecution activeExecution;
+        LinkedBlockingQueue<ToolExecutionResult> executionDone = new LinkedBlockingQueue<>();
         Map<String, Boolean> sessionToolUses = new LinkedHashMap<>();
         Map<String, Boolean> toolUsesSinceStatus = new LinkedHashMap<>();
         Map<String, Boolean> blockingEventIds = new LinkedHashMap<>();
         boolean blockingEventsKnown;
         long idleArmedAt;
         boolean idleArmPending;
+    }
+
+    private static class PendingToolEvent {
+        final Event event;
+        final boolean custom;
+        final String confirmation;
+
+        PendingToolEvent(Event event, boolean custom, String confirmation) {
+            this.event = event;
+            this.custom = custom;
+            this.confirmation = confirmation;
+        }
+    }
+
+    private static class ActiveToolExecution {
+        final PendingToolEvent pending;
+        final AtomicBoolean cancelled;
+
+        ActiveToolExecution(PendingToolEvent pending, AtomicBoolean cancelled) {
+            this.pending = pending;
+            this.cancelled = cancelled;
+        }
+    }
+
+    private static class ToolExecutionResult {
+        final PendingToolEvent pending;
+        final ToolResult result;
+
+        ToolExecutionResult(PendingToolEvent pending, ToolResult result) {
+            this.pending = pending;
+            this.result = result;
+        }
     }
 
     private static class PermissionDecision {

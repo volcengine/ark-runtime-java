@@ -10,6 +10,7 @@ public final class SelfHostedConstants {
     public static final String EVENT_TYPE_AGENT_TOOL_USE = "agent.tool_use";
     public static final String EVENT_TYPE_AGENT_CUSTOM_TOOL_USE = "agent.custom_tool_use";
     public static final String EVENT_TYPE_USER_TOOL_CONFIRMATION = "user.tool_confirmation";
+    public static final String EVENT_TYPE_USER_INTERRUPT = "user.interrupt";
     public static final String EVENT_TYPE_USER_TOOL_RESULT = "user.tool_result";
     public static final String EVENT_TYPE_USER_CUSTOM_TOOL_RESULT = "user.custom_tool_result";
     public static final String EVENT_TYPE_SESSION_STATUS_IDLE = "session.status_idle";
@@ -31,6 +32,8 @@ public final class SelfHostedConstants {
 
     public static final long DEFAULT_MAX_IDLE_MILLIS = 60000L;
     public static final long DEFAULT_TOOL_TIMEOUT_MILLIS = 120000L;
+    public static final long DEFAULT_MAX_INPUT_FILE_BYTES = 100000L;
+    public static final long DEFAULT_MAX_MEDIA_FILE_BYTES = 7L << 20;
     public static final long DEFAULT_HEARTBEAT_MILLIS = 30000L;
     public static final int DEFAULT_POLL_BLOCK_MILLIS = 999;
 

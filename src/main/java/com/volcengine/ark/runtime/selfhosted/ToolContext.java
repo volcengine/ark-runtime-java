@@ -13,6 +13,8 @@ public class ToolContext {
     private boolean explicitEnv;
     private boolean unrestrictedPaths;
     private long toolTimeoutMillis = SelfHostedConstants.DEFAULT_TOOL_TIMEOUT_MILLIS;
+    private long maxInputFileBytes = SelfHostedConstants.DEFAULT_MAX_INPUT_FILE_BYTES;
+    private long maxMediaFileBytes = SelfHostedConstants.DEFAULT_MAX_MEDIA_FILE_BYTES;
     private BooleanSupplier cancelled = () -> false;
 
     public ToolContext(String workdir) {
@@ -54,6 +56,30 @@ public class ToolContext {
 
     public void setToolTimeoutMillis(long toolTimeoutMillis) {
         this.toolTimeoutMillis = toolTimeoutMillis;
+    }
+
+    public long getMaxInputFileBytes() {
+        return maxInputFileBytes;
+    }
+
+    /**
+     * Sets the text read limit. Non-positive values retain the legacy text cap; when used as the
+     * media fallback, zero combines with a zero media limit to disable the media size limit.
+     */
+    public void setMaxInputFileBytes(long maxInputFileBytes) {
+        this.maxInputFileBytes = maxInputFileBytes;
+    }
+
+    public long getMaxMediaFileBytes() {
+        return maxMediaFileBytes;
+    }
+
+    /**
+     * Sets the media read limit. Zero follows the input limit, so both limits set to zero disable
+     * the media size limit; a negative value also disables it.
+     */
+    public void setMaxMediaFileBytes(long maxMediaFileBytes) {
+        this.maxMediaFileBytes = maxMediaFileBytes;
     }
 
     public boolean isCancelled() {
