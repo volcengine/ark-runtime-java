@@ -33,12 +33,14 @@ import java.util.Objects;
   CreateSessionRequest.JSON_PROPERTY_TAGS,
   CreateSessionRequest.JSON_PROPERTY_RESOURCES,
   CreateSessionRequest.JSON_PROPERTY_TITLE,
-  CreateSessionRequest.JSON_PROPERTY_VAULT_IDS
+  CreateSessionRequest.JSON_PROPERTY_VAULT_IDS,
+  CreateSessionRequest.JSON_PROPERTY_CHECKPOINT_ID,
+  CreateSessionRequest.JSON_PROPERTY_CHECKPOINT_RESTORE_CONFIG
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CreateSessionRequest {
   public static final String JSON_PROPERTY_AGENT = "agent";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private AgentIdentifier agent;
 
   public static final String JSON_PROPERTY_ENVIRONMENT_ID = "environment_id";
@@ -65,31 +67,39 @@ public class CreateSessionRequest {
   @javax.annotation.Nullable
   private List<String> vaultIds;
 
+  public static final String JSON_PROPERTY_CHECKPOINT_ID = "checkpoint_id";
+  @javax.annotation.Nullable
+  private String checkpointId;
+
+  public static final String JSON_PROPERTY_CHECKPOINT_RESTORE_CONFIG = "checkpoint_restore_config";
+  @javax.annotation.Nullable
+  private CheckpointRestoreConfig checkpointRestoreConfig;
+
   public CreateSessionRequest() {
   }
 
-  public CreateSessionRequest agent(@javax.annotation.Nonnull AgentIdentifier agent) {
+  public CreateSessionRequest agent(@javax.annotation.Nullable AgentIdentifier agent) {
 
     this.agent = agent;
     return this;
   }
 
   /**
-   * Agent 标识。
+   * Agent 标识。普通创建必填；携带 &#x60;checkpoint_id&#x60; 恢复时可省略。  注意两种恢复基线的区别： - **省略 &#x60;agent&#x60;**：完整继承 Checkpoint 冻结的 Agent 快照（含其 system / tools / model 接入配置等全部字段）； - **显式提供 &#x60;agent&#x60;**：不是在 Checkpoint 快照上做局部修改，而是按 Agent 引用重新解析（指定 &#x60;version&#x60; 取该版本，省略取当前最新版； 源 Agent 在 Checkpoint 冻结后更新过就会拿到新配置），再在该基线 上应用 &#x60;agent_with_overrides&#x60; 覆写。
    * @return agent
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_AGENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_AGENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public AgentIdentifier getAgent() {
     return agent;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_AGENT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setAgent(@javax.annotation.Nonnull AgentIdentifier agent) {
+  @JsonProperty(value = JSON_PROPERTY_AGENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setAgent(@javax.annotation.Nullable AgentIdentifier agent) {
     this.agent = agent;
   }
 
@@ -100,7 +110,7 @@ public class CreateSessionRequest {
   }
 
   /**
-   * 关联的 Environment ID。与 &#x60;environment&#x60; 二选一。
+   * 关联的 Environment ID。与 &#x60;environment&#x60; 二选一；恢复时省略则继承快照。
    * @return environmentId
    */
   @javax.annotation.Nullable
@@ -191,7 +201,7 @@ public class CreateSessionRequest {
   }
 
   /**
-   * 挂载资源列表。
+   * 挂载资源列表。普通创建可指定；基于 Checkpoint 恢复时**必须省略** （同账号 / 跨账号都完整继承 Checkpoint 资源，显式传空数组也返回 400）。
    * @return resources
    */
   @javax.annotation.Nullable
@@ -249,7 +259,7 @@ public class CreateSessionRequest {
   }
 
   /**
-   * 会话可访问的 Vault ID 列表。
+   * 会话可访问的 Vault ID 列表。基于 Checkpoint 同账号恢复时必须省略并 继承快照；跨账号恢复允许显式提供完整替换列表（空数组同样属于覆盖）。
    * @return vaultIds
    */
   @javax.annotation.Nullable
@@ -265,6 +275,56 @@ public class CreateSessionRequest {
   @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
   public void setVaultIds(@javax.annotation.Nullable List<String> vaultIds) {
     this.vaultIds = vaultIds;
+  }
+
+  public CreateSessionRequest checkpointId(@javax.annotation.Nullable String checkpointId) {
+
+    this.checkpointId = checkpointId;
+    return this;
+  }
+
+  /**
+   * Session Checkpoint ID。省略时为普通创建；传入时以 ready 状态 Checkpoint 的冻结配置为默认值创建新 Session，未显式提供的字段均从 快照继承。Checkpoint 不存在 / 非 ready 返回对应 4xx。
+   * @return checkpointId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CHECKPOINT_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getCheckpointId() {
+    return checkpointId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CHECKPOINT_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setCheckpointId(@javax.annotation.Nullable String checkpointId) {
+    this.checkpointId = checkpointId;
+  }
+
+  public CreateSessionRequest checkpointRestoreConfig(@javax.annotation.Nullable CheckpointRestoreConfig checkpointRestoreConfig) {
+
+    this.checkpointRestoreConfig = checkpointRestoreConfig;
+    return this;
+  }
+
+  /**
+   * 跨账号 customer TOS 恢复配置。**不是所有跨账号恢复都需要**：仅当跨 账号恢复且 Checkpoint 含 customer TOS 数据时必填；同账号恢复、以及 跨账号但不含 customer TOS 时必须省略，否则返回 400。三分支细则见 &#x60;CheckpointRestoreConfig&#x60;。
+   * @return checkpointRestoreConfig
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CHECKPOINT_RESTORE_CONFIG, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public CheckpointRestoreConfig getCheckpointRestoreConfig() {
+    return checkpointRestoreConfig;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CHECKPOINT_RESTORE_CONFIG, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setCheckpointRestoreConfig(@javax.annotation.Nullable CheckpointRestoreConfig checkpointRestoreConfig) {
+    this.checkpointRestoreConfig = checkpointRestoreConfig;
   }
 
 
@@ -283,12 +343,14 @@ public class CreateSessionRequest {
         Objects.equals(this.tags, createSessionRequest.tags) &&
         Objects.equals(this.resources, createSessionRequest.resources) &&
         Objects.equals(this.title, createSessionRequest.title) &&
-        Objects.equals(this.vaultIds, createSessionRequest.vaultIds);
+        Objects.equals(this.vaultIds, createSessionRequest.vaultIds) &&
+        Objects.equals(this.checkpointId, createSessionRequest.checkpointId) &&
+        Objects.equals(this.checkpointRestoreConfig, createSessionRequest.checkpointRestoreConfig);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(agent, environmentId, environment, tags, resources, title, vaultIds);
+    return Objects.hash(agent, environmentId, environment, tags, resources, title, vaultIds, checkpointId, checkpointRestoreConfig);
   }
 
   @Override
@@ -302,6 +364,8 @@ public class CreateSessionRequest {
     sb.append("    resources: ").append(toIndentedString(resources)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    vaultIds: ").append(toIndentedString(vaultIds)).append("\n");
+    sb.append("    checkpointId: ").append(toIndentedString(checkpointId)).append("\n");
+    sb.append("    checkpointRestoreConfig: ").append(toIndentedString(checkpointRestoreConfig)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -354,6 +418,14 @@ public class CreateSessionRequest {
       this.instance.vaultIds = vaultIds;
       return this;
     }
+    public CreateSessionRequest.Builder checkpointId(String checkpointId) {
+      this.instance.checkpointId = checkpointId;
+      return this;
+    }
+    public CreateSessionRequest.Builder checkpointRestoreConfig(CheckpointRestoreConfig checkpointRestoreConfig) {
+      this.instance.checkpointRestoreConfig = checkpointRestoreConfig;
+      return this;
+    }
 
 
     /**
@@ -394,7 +466,9 @@ public class CreateSessionRequest {
       .tags(getTags())
       .resources(getResources())
       .title(getTitle())
-      .vaultIds(getVaultIds());
+      .vaultIds(getVaultIds())
+      .checkpointId(getCheckpointId())
+      .checkpointRestoreConfig(getCheckpointRestoreConfig());
   }
 
 
