@@ -18,7 +18,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import okhttp3.MediaType;
@@ -225,6 +227,7 @@ public class SessionToolRunnerTest {
                         toolUse("stale-call"),
                         toolUse("current-call"),
                         requiresAction("current-call")));
+        finishExecution(runner);
 
         assertEquals(1, executions.get());
         assertEquals(1, sent.size());
@@ -233,6 +236,157 @@ public class SessionToolRunnerTest {
         assertTrue(discarded.contains("stale-call"));
         assertTrue(stateMap(runner, "pendingResults").isEmpty());
         assertTrue(stateMap(runner, "recoveredResults").isEmpty());
+        runner.close();
+    }
+
+    @Test
+    public void interruptCancelsActiveToolWithoutPostingResult() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch canceled = new CountDownLatch(1);
+        Tool tool = blockingTool(started, canceled);
+        List<String> discarded = new ArrayList<>();
+        List<Event> sent = new ArrayList<>();
+        SessionToolRunner runner = runnerWithStore(recordingStore(discarded, new ArrayList<>()), tool, sent);
+
+        handleStreamEvent(runner, toolUse("call-1", "thread-1", "blocking"));
+        assertTrue(started.await(1L, TimeUnit.SECONDS));
+        handleStreamEvent(runner, interrupt("interrupt-1", "thread-1"));
+        assertTrue(canceled.await(1L, TimeUnit.SECONDS));
+        finishExecution(runner);
+
+        assertTrue(sent.isEmpty());
+        assertTrue(answered(runner).containsKey("call-1"));
+        assertEquals(Collections.singletonList("call-1"), discarded);
+        runner.close();
+    }
+
+    @Test
+    public void interruptOnlyCancelsTargetThread() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch canceled = new CountDownLatch(1);
+        Tool tool = blockingTool(started, canceled);
+        SessionToolRunner runner = runnerWithStore(null, tool, new ArrayList<>());
+
+        handleStreamEvent(runner, toolUse("call-1", "thread-a", "blocking"));
+        assertTrue(started.await(1L, TimeUnit.SECONDS));
+        handleStreamEvent(runner, interrupt("interrupt-other", "thread-b"));
+
+        assertFalse(answered(runner).containsKey("call-1"));
+        assertFalse(canceled.await(50L, TimeUnit.MILLISECONDS));
+
+        handleStreamEvent(runner, interrupt("interrupt-target", "thread-a"));
+        assertTrue(canceled.await(1L, TimeUnit.SECONDS));
+        finishExecution(runner);
+        runner.close();
+    }
+
+    @Test
+    public void listReplayOfAnonymousInterruptDoesNotRedispatchOrCancelLaterTool() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch canceled = new CountDownLatch(1);
+        AtomicInteger executions = new AtomicInteger();
+        Tool tool = new Tool() {
+            @Override
+            public String name() {
+                return "blocking";
+            }
+
+            @Override
+            public ToolResult execute(Object input, ToolContext context) {
+                executions.incrementAndGet();
+                started.countDown();
+                while (!context.isCancelled()) {
+                    try {
+                        Thread.sleep(5L);
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+                canceled.countDown();
+                return ToolResult.text("late");
+            }
+        };
+        SessionToolRunner runner = runnerWithStore(null, tool, new ArrayList<>());
+        List<Event> events = java.util.Arrays.asList(
+                toolUse("old-call", "thread-1", "blocking"),
+                interrupt("", "thread-1"),
+                toolUse("new-call", "thread-1", "blocking"));
+
+        processListedEvents(runner, events, false);
+        assertTrue(started.await(1L, TimeUnit.SECONDS));
+        processListedEvents(runner, events, false);
+        processListedEvents(runner, events, true);
+
+        assertTrue(answered(runner).containsKey("old-call"));
+        assertFalse(answered(runner).containsKey("new-call"));
+        assertEquals(1, executions.get());
+        assertFalse(canceled.await(50L, TimeUnit.MILLISECONDS));
+        assertFalse(stateMap(runner, "toolUseEvents").containsKey("old-call"));
+
+        handleStreamEvent(runner, interrupt("interrupt-all", ""));
+        assertTrue(canceled.await(1L, TimeUnit.SECONDS));
+        finishExecution(runner);
+        runner.close();
+    }
+
+    @Test
+    public void listInterruptCancelsToolFromEarlierPoll() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch canceled = new CountDownLatch(1);
+        SessionToolRunner runner = runnerWithStore(null, blockingTool(started, canceled), new ArrayList<>());
+        Event toolUse = toolUse("cross-poll-call", "thread-1", "blocking");
+
+        processListedEvents(runner, Collections.singletonList(toolUse), false);
+        assertTrue(started.await(1L, TimeUnit.SECONDS));
+        processListedEvents(
+                runner,
+                java.util.Arrays.asList(
+                        toolUse,
+                        interruptAt("", "2026-09-20T00:00:00Z", "thread-1")),
+                false);
+
+        assertTrue(canceled.await(1L, TimeUnit.SECONDS));
+        finishExecution(runner);
+        assertTrue(answered(runner).containsKey("cross-poll-call"));
+        runner.close();
+    }
+
+    @Test
+    public void interruptRemovesMatchingQueuedToolOnly() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch canceled = new CountDownLatch(1);
+        SessionToolRunner runner = runnerWithStore(null, blockingTool(started, canceled), new ArrayList<>());
+        Event active = toolUse("active-call", "thread-a", "blocking");
+        Event queued = toolUse("queued-call", "thread-b", "blocking");
+
+        processListedEvents(runner, java.util.Arrays.asList(active, queued), false);
+        assertTrue(started.await(1L, TimeUnit.SECONDS));
+        handleStreamEvent(runner, interrupt("interrupt-b", "thread-b"));
+
+        assertTrue(answered(runner).containsKey("queued-call"));
+        assertFalse(answered(runner).containsKey("active-call"));
+        assertFalse(canceled.await(50L, TimeUnit.MILLISECONDS));
+
+        handleStreamEvent(runner, interrupt("interrupt-all", ""));
+        assertTrue(canceled.await(1L, TimeUnit.SECONDS));
+        finishExecution(runner);
+        runner.close();
+    }
+
+    @Test
+    public void listEndTurnArmsIdleAfterToolCompletes() throws Exception {
+        SessionToolRunner runner = runnerWithStore(null, countingTool(new AtomicInteger()), new ArrayList<>());
+        Event toolUse = toolUse("idle-call");
+        processListedEvents(runner, Collections.singletonList(toolUse), false);
+        processListedEvents(
+                runner,
+                java.util.Arrays.asList(toolUse, idleEvent("idle-end-turn")),
+                false);
+
+        assertTrue(stateBoolean(runner, "idleArmPending"));
+        assertEquals(0L, idleArmedAt(runner));
+        finishExecution(runner);
+        assertFalse(stateBoolean(runner, "idleArmPending"));
+        assertTrue(idleArmedAt(runner) > 0L);
         runner.close();
     }
 
@@ -311,13 +465,14 @@ public class SessionToolRunnerTest {
         raw.put("name", tool.name());
         raw.put(custom ? "custom_tool_use_id" : "tool_use_id", "call-1");
         raw.put("input", Collections.emptyMap());
-        Method execute = SessionToolRunner.class.getDeclaredMethod("executeTool", Event.class, boolean.class);
+        Method execute = SessionToolRunner.class.getDeclaredMethod(
+                "executeTool", Event.class, boolean.class, AtomicBoolean.class);
         execute.setAccessible(true);
 
         long startedAt = System.nanoTime();
         ToolResult result;
         try {
-            result = (ToolResult) execute.invoke(runner, Event.fromMap(raw), custom);
+            result = (ToolResult) execute.invoke(runner, Event.fromMap(raw), custom, new AtomicBoolean());
             assertTrue(started.await(1L, TimeUnit.SECONDS));
         } finally {
             release.countDown();
@@ -379,6 +534,28 @@ public class SessionToolRunnerTest {
         };
     }
 
+    private static Tool blockingTool(CountDownLatch started, CountDownLatch canceled) {
+        return new Tool() {
+            @Override
+            public String name() {
+                return "blocking";
+            }
+
+            @Override
+            public ToolResult execute(Object input, ToolContext context) {
+                started.countDown();
+                while (!context.isCancelled()) {
+                    try {
+                        Thread.sleep(5L);
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+                canceled.countDown();
+                return ToolResult.text("late");
+            }
+        };
+    }
+
     private static SessionToolRunner runnerWithStore(FileToolResultStore store, Tool tool, List<Event> sent)
             throws IOException {
         SelfHostedClient client = new SelfHostedClient("test-key") {
@@ -394,16 +571,35 @@ public class SessionToolRunnerTest {
                         .tools(new ToolSet())
                         .toolContext(new ToolContext(
                                 Files.createTempDirectory("ark-java-recovery-runner-").toString()))
-                        .customTools(Collections.singletonMap("custom", tool))
+                        .customTools(Collections.singletonMap(tool.name(), tool))
                         .resultStore(store));
     }
 
     private static Event toolUse(String callId) {
+        return toolUse(callId, "", "custom");
+    }
+
+    private static Event toolUse(String callId, String threadId, String name) {
         Map<String, Object> raw = new LinkedHashMap<>();
         raw.put("id", callId);
         raw.put("type", "agent.custom_tool_use");
-        raw.put("name", "custom");
+        raw.put("name", name);
+        raw.put("custom_tool_use_id", callId);
+        raw.put("session_thread_id", threadId);
         raw.put("input", Collections.emptyMap());
+        return Event.fromMap(raw);
+    }
+
+    private static Event interrupt(String eventId, String threadId) {
+        return interruptAt(eventId, "", threadId);
+    }
+
+    private static Event interruptAt(String eventId, String processedAt, String threadId) {
+        Map<String, Object> raw = new LinkedHashMap<>();
+        raw.put("id", eventId);
+        raw.put("type", "user.interrupt");
+        raw.put("processed_at", processedAt);
+        raw.put("session_thread_id", threadId);
         return Event.fromMap(raw);
     }
 
@@ -419,16 +615,44 @@ public class SessionToolRunnerTest {
     }
 
     private static void processListedEvents(SessionToolRunner runner, List<Event> events) throws Exception {
+        processListedEvents(runner, events, true);
+    }
+
+    private static void processListedEvents(SessionToolRunner runner, List<Event> events, boolean reconcile)
+            throws Exception {
         Method process = SessionToolRunner.class.getDeclaredMethod("processListedEvents", List.class, boolean.class);
         process.setAccessible(true);
-        process.invoke(runner, events, true);
+        process.invoke(runner, events, reconcile);
+    }
+
+    private static void handleStreamEvent(SessionToolRunner runner, Event event) throws Exception {
+        Method handle = SessionToolRunner.class.getDeclaredMethod("handleStreamEvent", Event.class);
+        handle.setAccessible(true);
+        handle.invoke(runner, event);
+    }
+
+    private static void finishExecution(SessionToolRunner runner) throws Exception {
+        Field stateField = SessionToolRunner.class.getDeclaredField("state");
+        stateField.setAccessible(true);
+        Object state = stateField.get(runner);
+        Field doneField = state.getClass().getDeclaredField("executionDone");
+        doneField.setAccessible(true);
+        Object completed = ((BlockingQueue<?>) doneField.get(state)).poll(1L, TimeUnit.SECONDS);
+        assertTrue("tool execution did not finish", completed != null);
+        Method finish = SessionToolRunner.class.getDeclaredMethod("finishToolExecution", completed.getClass());
+        finish.setAccessible(true);
+        finish.invoke(runner, completed);
     }
 
     private static Event idleEvent() {
+        return idleEvent("idle-1");
+    }
+
+    private static Event idleEvent(String eventId) {
         Map<String, Object> stopReason = new LinkedHashMap<>();
         stopReason.put("type", "end_turn");
         Map<String, Object> raw = new LinkedHashMap<>();
-        raw.put("id", "idle-1");
+        raw.put("id", eventId);
         raw.put("type", "session.status_idle");
         raw.put("stop_reason", stopReason);
         return Event.fromMap(raw);
@@ -441,6 +665,15 @@ public class SessionToolRunnerTest {
         Field idleField = state.getClass().getDeclaredField("idleArmedAt");
         idleField.setAccessible(true);
         return idleField.getLong(state);
+    }
+
+    private static boolean stateBoolean(SessionToolRunner runner, String fieldName) throws Exception {
+        Field stateField = SessionToolRunner.class.getDeclaredField("state");
+        stateField.setAccessible(true);
+        Object state = stateField.get(runner);
+        Field field = state.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.getBoolean(state);
     }
 
     @SuppressWarnings("unchecked")

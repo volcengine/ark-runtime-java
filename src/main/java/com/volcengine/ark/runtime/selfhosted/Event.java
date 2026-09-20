@@ -221,6 +221,10 @@ public class Event {
         return input;
     }
 
+    public String getProcessedAt() {
+        return processedAt;
+    }
+
     public String getEvaluatedPermission() {
         return evaluatedPermission;
     }

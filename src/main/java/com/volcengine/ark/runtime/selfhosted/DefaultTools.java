@@ -11,6 +11,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
@@ -19,9 +22,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.PosixFilePermission;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +39,8 @@ import java.util.stream.Stream;
 public final class DefaultTools {
     private static final ObjectMapper MAPPER = ArkService.defaultObjectMapper();
     private static final int MAX_OUTPUT_BYTES = 100000;
+    private static final int DEFAULT_READ_LINES = 2000;
+    private static final int MAX_READ_LINE_CHARS = 2000;
     private static final int MAX_SEARCH_MATCHES = 1000;
     private static final long PROCESS_TERMINATION_GRACE_MILLIS = 1000L;
 
@@ -125,9 +133,68 @@ public final class DefaultTools {
         public ToolResult execute(Object input, ToolContext context) {
             try {
                 Map<String, Object> args = asMap(input);
-                Path path = safePath(context, firstNonEmpty(stringValue(args.get("path")), stringValue(args.get("file"))));
-                byte[] data = readBounded(path, MAX_OUTPUT_BYTES);
-                return ToolResult.text(new String(data, StandardCharsets.UTF_8));
+                Path path = safePath(context, readFilePath(args));
+                List<Long> viewRange = readViewRange(args.get("view_range"));
+                boolean hasViewRange = viewRange != null && !viewRange.isEmpty();
+                Long offset = optionalLong(args, "offset");
+                Long lineLimit = optionalLong(args, "limit");
+                if (hasViewRange && (offset != null || lineLimit != null)) {
+                    return ToolResult.error("view_range cannot be combined with offset or limit");
+                }
+                MediaInfo media = detectReadMedia(path);
+                if (media != null) {
+                    if (hasViewRange || offset != null || lineLimit != null) {
+                        return ToolResult.error(
+                                "view_range, offset, and limit are only supported for text files");
+                    }
+                    long size = Files.size(path);
+                    long mediaLimit = context.getMaxMediaFileBytes();
+                    if (mediaLimit == 0L) {
+                        mediaLimit = context.getMaxInputFileBytes();
+                    }
+                    if (mediaLimit > 0L && size > mediaLimit) {
+                        return ToolResult.error("media file too large: " + size + " bytes");
+                    }
+                    int readLimit = mediaLimit > 0L
+                            ? (int) Math.min(mediaLimit + 1L, Integer.MAX_VALUE)
+                            : Integer.MAX_VALUE;
+                    byte[] data = mediaLimit > 0L
+                            ? readBounded(path, readLimit)
+                            : Files.readAllBytes(path);
+                    if (mediaLimit > 0L && data.length > mediaLimit) {
+                        return ToolResult.error("media file too large: " + Math.max(size, data.length) + " bytes");
+                    }
+                    ContentBlock block = new ContentBlock();
+                    block.setType(media.blockType);
+                    Map<String, Object> source = new LinkedHashMap<>();
+                    source.put("type", "base64");
+                    source.put("media_type", media.mediaType);
+                    source.put("data", Base64.getEncoder().encodeToString(data));
+                    block.setSource(source);
+                    return new ToolResult(Collections.singletonList(block), false);
+                }
+                long configuredLimit = context.getMaxInputFileBytes();
+                int byteLimit = configuredLimit > 0L
+                        ? (int) Math.min(configuredLimit, Integer.MAX_VALUE)
+                        : MAX_OUTPUT_BYTES;
+                long size = Files.size(path);
+                if (byteLimit > 0 && size > byteLimit) {
+                    return ToolResult.error("file too large: " + size + " bytes");
+                }
+                String text;
+                try {
+                    text = decodeUTF8(readBounded(path, byteLimit));
+                } catch (CharacterCodingException e) {
+                    return ToolResult.error("binary file cannot be read directly");
+                }
+                if (hasViewRange) {
+                    return ToolResult.text(renderViewRange(text, viewRange));
+                }
+                if (offset != null && offset < 1L) {
+                    return ToolResult.error(
+                            "offset is the 1-based start line and must be >= 1, got " + offset);
+                }
+                return ToolResult.text(renderReadLines(text, offset, lineLimit));
             } catch (Exception e) {
                 return ToolResult.error(e.getMessage());
             }
@@ -296,6 +363,218 @@ public final class DefaultTools {
             }
         }
         return Collections.emptyMap();
+    }
+
+    private static MediaInfo detectReadMedia(Path path) throws IOException {
+        byte[] header = readBounded(path, 512);
+        if (startsWith(header, new byte[] {(byte) 0xff, (byte) 0xd8, (byte) 0xff})) {
+            return new MediaInfo("image", "image/jpeg");
+        }
+        if (startsWith(header, new byte[] {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', (byte) 0x1a, '\n'})) {
+            return new MediaInfo("image", "image/png");
+        }
+        if (startsWith(header, "GIF87a".getBytes(StandardCharsets.US_ASCII))
+                || startsWith(header, "GIF89a".getBytes(StandardCharsets.US_ASCII))) {
+            return new MediaInfo("image", "image/gif");
+        }
+        if (header.length >= 12
+                && startsWith(header, "RIFF".getBytes(StandardCharsets.US_ASCII))
+                && matchesAt(header, 8, "WEBP".getBytes(StandardCharsets.US_ASCII))) {
+            return new MediaInfo("image", "image/webp");
+        }
+        if (startsWith(header, "%PDF-".getBytes(StandardCharsets.US_ASCII))) {
+            return new MediaInfo("document", "application/pdf");
+        }
+        if (!looksBinary(header)) {
+            return null;
+        }
+        String name = path.getFileName().toString().toLowerCase(Locale.ROOT);
+        if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+            return new MediaInfo("image", "image/jpeg");
+        }
+        if (name.endsWith(".png")) {
+            return new MediaInfo("image", "image/png");
+        }
+        if (name.endsWith(".gif")) {
+            return new MediaInfo("image", "image/gif");
+        }
+        if (name.endsWith(".webp")) {
+            return new MediaInfo("image", "image/webp");
+        }
+        if (name.endsWith(".pdf")) {
+            return new MediaInfo("document", "application/pdf");
+        }
+        return null;
+    }
+
+    private static boolean startsWith(byte[] value, byte[] prefix) {
+        return matchesAt(value, 0, prefix);
+    }
+
+    private static boolean matchesAt(byte[] value, int offset, byte[] expected) {
+        if (value.length - offset < expected.length) {
+            return false;
+        }
+        for (int index = 0; index < expected.length; index++) {
+            if (value[offset + index] != expected[index]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean looksBinary(byte[] value) {
+        for (byte item : value) {
+            if (item == 0) {
+                return true;
+            }
+        }
+        try {
+            StandardCharsets.UTF_8
+                    .newDecoder()
+                    .onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT)
+                    .decode(ByteBuffer.wrap(value));
+            return false;
+        } catch (CharacterCodingException error) {
+            return true;
+        }
+    }
+
+    private static long longValue(Object value, String name) {
+        if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long) {
+            return ((Number) value).longValue();
+        }
+        if (value == null || value.toString().isEmpty()) {
+            return 0L;
+        }
+        try {
+            return Long.parseLong(value.toString());
+        } catch (NumberFormatException error) {
+            throw new IllegalArgumentException(name + " must be an integer", error);
+        }
+    }
+
+    private static String readFilePath(Map<String, Object> args) {
+        String path = "";
+        for (String name : new String[] {"file_path", "path", "file"}) {
+            Object value = args.get(name);
+            if (value != null && !(value instanceof String)) {
+                throw new IllegalArgumentException(name + " must be a string");
+            }
+            String candidate = stringValue(value);
+            if (candidate.isEmpty()) {
+                continue;
+            }
+            if (!path.isEmpty() && !path.equals(candidate)) {
+                throw new IllegalArgumentException("file_path, path, and file must not conflict");
+            }
+            path = candidate;
+        }
+        if (path.isEmpty()) {
+            throw new IllegalArgumentException("file_path is required");
+        }
+        return path;
+    }
+
+    private static Long optionalLong(Map<String, Object> args, String name) {
+        return args.containsKey(name) && args.get(name) != null ? longValue(args.get(name), name) : null;
+    }
+
+    private static List<Long> readViewRange(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (!(value instanceof List)) {
+            throw new IllegalArgumentException("view_range must be [start_line, end_line]");
+        }
+        List<?> raw = (List<?>) value;
+        if (raw.isEmpty()) {
+            return Collections.emptyList();
+        }
+        if (raw.size() != 2) {
+            throw new IllegalArgumentException("view_range must be [start_line, end_line]");
+        }
+        List<Long> result = new ArrayList<>(2);
+        result.add(longValue(raw.get(0), "view_range"));
+        result.add(longValue(raw.get(1), "view_range"));
+        return result;
+    }
+
+    private static String decodeUTF8(byte[] data) throws CharacterCodingException {
+        return StandardCharsets.UTF_8
+                .newDecoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .decode(ByteBuffer.wrap(data))
+                .toString();
+    }
+
+    private static String renderViewRange(String text, List<Long> viewRange) {
+        String[] lines = text.split("\n", -1);
+        long startLine = viewRange.get(0);
+        long zeroBasedStart = startLine <= 1L ? 0L : startLine - 1L;
+        int start = (int) Math.min(zeroBasedStart, lines.length);
+        int end = lines.length;
+        if (viewRange.get(1) > 0L) {
+            end = (int) Math.min(viewRange.get(1), lines.length);
+        }
+        if (end < start) {
+            throw new IllegalArgumentException(
+                    "view_range end line " + viewRange.get(1)
+                            + " is before start line " + viewRange.get(0));
+        }
+        StringBuilder output = new StringBuilder();
+        for (int index = start; index < end; index++) {
+            if (index > start) {
+                output.append('\n');
+            }
+            output.append(lines[index]);
+        }
+        return output.toString();
+    }
+
+    private static String renderReadLines(String text, Long offset, Long limit) {
+        String[] lines = text.split("\n", -1);
+        int total = lines.length;
+        if (total > 0 && lines[total - 1].isEmpty() && text.endsWith("\n")) {
+            total--;
+        }
+        long startValue = offset == null ? 0L : offset - 1L;
+        int start = (int) Math.min(startValue, total);
+        long count = limit != null && limit > 0L ? limit : DEFAULT_READ_LINES;
+        int end = count >= total - start ? total : start + (int) count;
+        StringBuilder output = new StringBuilder();
+        for (int index = start; index < end; index++) {
+            output.append(String.format(Locale.ROOT, "%6d\t%s\n", index + 1, truncateLine(lines[index])));
+        }
+        if (end < total) {
+            output.append(String.format(
+                    Locale.ROOT,
+                    "\n[truncated: showing lines %d-%d of %d]\n",
+                    start + 1,
+                    end,
+                    total));
+        }
+        return output.toString();
+    }
+
+    private static String truncateLine(String line) {
+        if (line.codePointCount(0, line.length()) <= MAX_READ_LINE_CHARS) {
+            return line;
+        }
+        return line.substring(0, line.offsetByCodePoints(0, MAX_READ_LINE_CHARS))
+                + " [line truncated]";
+    }
+
+    private static class MediaInfo {
+        final String blockType;
+        final String mediaType;
+
+        MediaInfo(String blockType, String mediaType) {
+            this.blockType = blockType;
+            this.mediaType = mediaType;
+        }
     }
 
     private static int appendMatches(
