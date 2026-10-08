@@ -32,6 +32,7 @@ import java.util.Objects;
   EnvConfig.JSON_PROPERTY_PACKAGES,
   EnvConfig.JSON_PROPERTY_ENV,
   EnvConfig.JSON_PROPERTY_SETUP_SCRIPT,
+  EnvConfig.JSON_PROPERTY_ACTIVE_RECOVERY,
   EnvConfig.JSON_PROPERTY_TOS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
@@ -55,6 +56,10 @@ public class EnvConfig {
   public static final String JSON_PROPERTY_SETUP_SCRIPT = "setup_script";
   @javax.annotation.Nullable
   private String setupScript;
+
+  public static final String JSON_PROPERTY_ACTIVE_RECOVERY = "active_recovery";
+  @javax.annotation.Nullable
+  private Boolean activeRecovery;
 
   public static final String JSON_PROPERTY_TOS = "tos";
   @javax.annotation.Nullable
@@ -196,6 +201,31 @@ public class EnvConfig {
     this.setupScript = setupScript;
   }
 
+  public EnvConfig activeRecovery(@javax.annotation.Nullable Boolean activeRecovery) {
+
+    this.activeRecovery = activeRecovery;
+    return this;
+  }
+
+  /**
+   * 是否启用 Work 积极恢复；仅 self_hosted Environment 支持，省略时等同于 false。该配置 仅允许在 Environment 级设置，不允许通过 Session override/upgrade 覆盖。开启后，平台在 Work 已 stopped、仍有未闭合 agent.tool_use 且 recovery_count 少于 5 次时将 Work 重新排队， 不按 stop_reason 排除。只有 Worker 上报 completed 且全部 tool_use 已闭合后才会清零计数。
+   * @return activeRecovery
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ACTIVE_RECOVERY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getActiveRecovery() {
+    return activeRecovery;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_ACTIVE_RECOVERY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setActiveRecovery(@javax.annotation.Nullable Boolean activeRecovery) {
+    this.activeRecovery = activeRecovery;
+  }
+
   public EnvConfig tos(@javax.annotation.Nullable TosConfig tos) {
 
     this.tos = tos;
@@ -236,12 +266,13 @@ public class EnvConfig {
         Objects.equals(this.packages, envConfig.packages) &&
         Objects.equals(this.env, envConfig.env) &&
         Objects.equals(this.setupScript, envConfig.setupScript) &&
+        Objects.equals(this.activeRecovery, envConfig.activeRecovery) &&
         Objects.equals(this.tos, envConfig.tos);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, networking, packages, env, setupScript, tos);
+    return Objects.hash(type, networking, packages, env, setupScript, activeRecovery, tos);
   }
 
   @Override
@@ -253,6 +284,7 @@ public class EnvConfig {
     sb.append("    packages: ").append(toIndentedString(packages)).append("\n");
     sb.append("    env: ").append(toIndentedString(env)).append("\n");
     sb.append("    setupScript: ").append(toIndentedString(setupScript)).append("\n");
+    sb.append("    activeRecovery: ").append(toIndentedString(activeRecovery)).append("\n");
     sb.append("    tos: ").append(toIndentedString(tos)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -298,6 +330,10 @@ public class EnvConfig {
       this.instance.setupScript = setupScript;
       return this;
     }
+    public EnvConfig.Builder activeRecovery(Boolean activeRecovery) {
+      this.instance.activeRecovery = activeRecovery;
+      return this;
+    }
     public EnvConfig.Builder tos(TosConfig tos) {
       this.instance.tos = tos;
       return this;
@@ -341,6 +377,7 @@ public class EnvConfig {
       .packages(getPackages())
       .env(getEnv())
       .setupScript(getSetupScript())
+      .activeRecovery(getActiveRecovery())
       .tos(getTos());
   }
 

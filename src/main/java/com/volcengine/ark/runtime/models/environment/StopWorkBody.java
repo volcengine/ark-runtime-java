@@ -25,13 +25,18 @@ import java.util.Objects;
  * Stop work 的请求体。
  */
 @JsonPropertyOrder({
-  StopWorkBody.JSON_PROPERTY_FORCE
+  StopWorkBody.JSON_PROPERTY_FORCE,
+  StopWorkBody.JSON_PROPERTY_REASON
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class StopWorkBody {
   public static final String JSON_PROPERTY_FORCE = "force";
   @javax.annotation.Nullable
   private Boolean force;
+
+  public static final String JSON_PROPERTY_REASON = "reason";
+  @javax.annotation.Nullable
+  private WorkStopReason reason;
 
   public StopWorkBody() {
   }
@@ -61,6 +66,31 @@ public class StopWorkBody {
     this.force = force;
   }
 
+  public StopWorkBody reason(@javax.annotation.Nullable WorkStopReason reason) {
+
+    this.reason = reason;
+    return this;
+  }
+
+  /**
+   * 强制停止原因；仅允许与 &#x60;force&#x3D;true&#x60; 一起提交，省略时按 &#x60;others&#x60; 记录。 Worker 正常完成时传 &#x60;completed&#x60;，异常退出时传 &#x60;worker_abnormal&#x60;；用户或管理员操作分别传 &#x60;user_cancelled&#x60; 或 &#x60;admin_stopped&#x60;，无法归类时传 &#x60;others&#x60;。&#x60;lease_expired&#x60; 仅由平台在租约 过期时写入，不应通过 StopWork 上报。该字段用于停止诊断，并在 Worker 上报 &#x60;completed&#x60; 且全部 tool_use 已闭合时作为清零恢复次数的信号；平台不会按停止原因排除积极恢复。
+   * @return reason
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_REASON, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public WorkStopReason getReason() {
+    return reason;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_REASON, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setReason(@javax.annotation.Nullable WorkStopReason reason) {
+    this.reason = reason;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -71,12 +101,13 @@ public class StopWorkBody {
       return false;
     }
     StopWorkBody stopWorkBody = (StopWorkBody) o;
-    return Objects.equals(this.force, stopWorkBody.force);
+    return Objects.equals(this.force, stopWorkBody.force) &&
+        Objects.equals(this.reason, stopWorkBody.reason);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(force);
+    return Objects.hash(force, reason);
   }
 
   @Override
@@ -84,6 +115,7 @@ public class StopWorkBody {
     StringBuilder sb = new StringBuilder();
     sb.append("class StopWorkBody {\n");
     sb.append("    force: ").append(toIndentedString(force)).append("\n");
+    sb.append("    reason: ").append(toIndentedString(reason)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -110,6 +142,10 @@ public class StopWorkBody {
 
     public StopWorkBody.Builder force(Boolean force) {
       this.instance.force = force;
+      return this;
+    }
+    public StopWorkBody.Builder reason(WorkStopReason reason) {
+      this.instance.reason = reason;
       return this;
     }
 
@@ -146,7 +182,8 @@ public class StopWorkBody {
   */
   public StopWorkBody.Builder toBuilder() {
     return new StopWorkBody.Builder()
-      .force(getForce());
+      .force(getForce())
+      .reason(getReason());
   }
 
 

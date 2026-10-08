@@ -4,6 +4,7 @@
 package com.volcengine.ark.runtime.selfhosted;
 
 import com.volcengine.ark.runtime.models.environment.WorkItem;
+import com.volcengine.ark.runtime.models.environment.WorkStopReason;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,7 +96,7 @@ public class WorkPoller implements AutoCloseable {
             }
             current = item;
             if (options.autoStop) {
-                pendingStop = () -> stopItem(item, false);
+                pendingStop = () -> stopItem(item, false, null);
             }
             discards = 0;
             options.logger.info("claimed work work_id=" + item.getId() + " session_id=" + WorkItems.sessionId(item));
@@ -134,13 +135,13 @@ public class WorkPoller implements AutoCloseable {
             options.logger.log(Level.WARNING, "ack invalid work failed", e);
             return;
         }
-        stopItem(item, true);
+        stopItem(item, true, WorkStopReason.OTHERS);
         backoffDiscard();
     }
 
-    private void stopItem(WorkItem item, boolean force) {
+    private void stopItem(WorkItem item, boolean force, WorkStopReason reason) {
         try {
-            api.stopWork(item.getEnvironmentId(), item.getId(), force);
+            api.stopWork(item.getEnvironmentId(), item.getId(), force, reason);
         } catch (RuntimeException e) {
             if (!isResolvedStatus(e)) {
                 options.logger.log(Level.WARNING, "stop work failed", e);

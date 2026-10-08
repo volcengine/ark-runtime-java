@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpServer;
 import com.volcengine.ark.runtime.interceptor.RetryInterceptor;
 import com.volcengine.ark.runtime.models.environment.WorkItem;
 import com.volcengine.ark.runtime.models.environment.WorkState;
+import com.volcengine.ark.runtime.models.environment.WorkStopReason;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
@@ -47,7 +48,9 @@ public class SelfHostedClientTest {
         String body = "{"
                 + "\"id\":\"work-1\","
                 + "\"environment_id\":\"env-1\","
-                + "\"data\":{\"id\":\"session-1\",\"type\":\"session\"}"
+                + "\"data\":{\"id\":\"session-1\",\"type\":\"session\"},"
+                + "\"stop_reason\":\"worker_abnormal\","
+                + "\"recovery_count\":5"
                 + "}";
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(chain -> response(chain.request(), new AtomicReference<>(), body))
@@ -63,6 +66,8 @@ public class SelfHostedClientTest {
         assertEquals("work-1", item.getId());
         assertEquals("env-1", item.getEnvironmentId());
         assertEquals("session-1", item.getData().getId());
+        assertEquals(WorkStopReason.WORKER_ABNORMAL, item.getStopReason());
+        assertEquals(Integer.valueOf(5), item.getRecoveryCount());
         assertEquals("session-1", WorkItems.sessionId(item));
     }
 
@@ -178,6 +183,50 @@ public class SelfHostedClientTest {
         client.stopWork("env-1", "work-1", false);
 
         assertEquals("{}", body.get());
+    }
+
+    @Test
+    public void stopWorkSerializesReason() throws Exception {
+        AtomicReference<String> body = new AtomicReference<>();
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Buffer buffer = new Buffer();
+                    chain.request().body().writeTo(buffer);
+                    body.set(buffer.readUtf8());
+                    return response(chain.request(), new AtomicReference<>());
+                })
+                .build();
+        SelfHostedClient client = new SelfHostedClient.Builder()
+                .apiKey("test-api-key")
+                .httpClient(httpClient)
+                .build();
+
+        client.stopWork("env-1", "work-1", true, WorkStopReason.WORKER_ABNORMAL);
+
+        assertEquals("{\"force\":true,\"reason\":\"worker_abnormal\"}", body.get());
+    }
+
+    @Test
+    public void stopWorkRejectsReasonWithoutForceBeforeSendingRequest() {
+        AtomicInteger calls = new AtomicInteger();
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    calls.incrementAndGet();
+                    return response(chain.request(), new AtomicReference<>());
+                })
+                .build();
+        SelfHostedClient client = new SelfHostedClient.Builder()
+                .apiKey("test-api-key")
+                .httpClient(httpClient)
+                .build();
+
+        try {
+            client.stopWork("env-1", "work-1", false, WorkStopReason.WORKER_ABNORMAL);
+            throw new AssertionError("expected invalid stop reason to be rejected");
+        } catch (IllegalArgumentException error) {
+            assertEquals("reason requires force=true", error.getMessage());
+        }
+        assertEquals(0, calls.get());
     }
 
     @Test
