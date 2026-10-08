@@ -11,6 +11,7 @@ import com.volcengine.ark.runtime.models.environment.EnvironmentWorkPoll200Respo
 import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.StopWorkBody;
 import com.volcengine.ark.runtime.models.environment.WorkItem;
+import com.volcengine.ark.runtime.models.environment.WorkStopReason;
 import com.volcengine.ark.runtime.models.session.ManagedAgentsEventParams;
 import com.volcengine.ark.runtime.models.session.SendSessionEventsRequest;
 import com.volcengine.ark.runtime.models.skill.Skill;
@@ -132,11 +133,21 @@ public class SelfHostedClient {
     }
 
     public void stopWork(String environmentId, String workId, boolean force) {
+        stopWork(environmentId, workId, force, null);
+    }
+
+    public void stopWork(String environmentId, String workId, boolean force, WorkStopReason reason) {
         require(environmentId, "environmentId");
         require(workId, "workId");
+        if (reason != null && !force) {
+            throw new IllegalArgumentException("reason requires force=true");
+        }
         StopWorkBody body = new StopWorkBody();
         if (force) {
             body.setForce(Boolean.TRUE);
+        }
+        if (reason != null) {
+            body.setReason(reason);
         }
         execute(lifecycleApi.stopEnvironmentWork(
                 environmentId, workId, body, Collections.<String, String>emptyMap()));

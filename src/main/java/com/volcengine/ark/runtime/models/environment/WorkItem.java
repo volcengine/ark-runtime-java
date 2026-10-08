@@ -41,6 +41,8 @@ import java.util.Objects;
   WorkItem.JSON_PROPERTY_STATE,
   WorkItem.JSON_PROPERTY_STOP_REQUESTED_AT,
   WorkItem.JSON_PROPERTY_STOPPED_AT,
+  WorkItem.JSON_PROPERTY_STOP_REASON,
+  WorkItem.JSON_PROPERTY_RECOVERY_COUNT,
   WorkItem.JSON_PROPERTY_TYPE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
@@ -92,6 +94,14 @@ public class WorkItem {
   public static final String JSON_PROPERTY_STOPPED_AT = "stopped_at";
   @javax.annotation.Nullable
   private String stoppedAt;
+
+  public static final String JSON_PROPERTY_STOP_REASON = "stop_reason";
+  @javax.annotation.Nullable
+  private WorkStopReason stopReason;
+
+  public static final String JSON_PROPERTY_RECOVERY_COUNT = "recovery_count";
+  @javax.annotation.Nullable
+  private Integer recoveryCount;
 
   /**
    * 对象类型，固定为 &#x60;work&#x60;。
@@ -441,6 +451,56 @@ public class WorkItem {
     this.stoppedAt = stoppedAt;
   }
 
+  public WorkItem stopReason(@javax.annotation.Nullable WorkStopReason stopReason) {
+
+    this.stopReason = stopReason;
+    return this;
+  }
+
+  /**
+   * 最近一次停止原因。首次停止前省略；state 为 stopping / stopped 时返回本次停止原因； 自动恢复到 queued / starting / active 后仍保留上一次停止原因，当前生命周期状态以 &#x60;state&#x60; 为准。
+   * @return stopReason
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_STOP_REASON, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public WorkStopReason getStopReason() {
+    return stopReason;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_STOP_REASON, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setStopReason(@javax.annotation.Nullable WorkStopReason stopReason) {
+    this.stopReason = stopReason;
+  }
+
+  public WorkItem recoveryCount(@javax.annotation.Nullable Integer recoveryCount) {
+
+    this.recoveryCount = recoveryCount;
+    return this;
+  }
+
+  /**
+   * 自上次成功完成且全部 tool_use 已闭合后，平台已自动将本 Work 重新排队的次数； 首次执行或字段省略时按 0 处理。手动 Ensure 不会清零该计数。
+   * @return recoveryCount
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_RECOVERY_COUNT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Integer getRecoveryCount() {
+    return recoveryCount;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_RECOVERY_COUNT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setRecoveryCount(@javax.annotation.Nullable Integer recoveryCount) {
+    this.recoveryCount = recoveryCount;
+  }
+
   public WorkItem type(@javax.annotation.Nonnull TypeEnum type) {
 
     this.type = type;
@@ -488,12 +548,14 @@ public class WorkItem {
         Objects.equals(this.state, workItem.state) &&
         Objects.equals(this.stopRequestedAt, workItem.stopRequestedAt) &&
         Objects.equals(this.stoppedAt, workItem.stoppedAt) &&
+        Objects.equals(this.stopReason, workItem.stopReason) &&
+        Objects.equals(this.recoveryCount, workItem.recoveryCount) &&
         Objects.equals(this.type, workItem.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, acknowledgedAt, createdAt, data, environmentId, latestHeartbeatAt, tags, secret, startedAt, state, stopRequestedAt, stoppedAt, type);
+    return Objects.hash(id, acknowledgedAt, createdAt, data, environmentId, latestHeartbeatAt, tags, secret, startedAt, state, stopRequestedAt, stoppedAt, stopReason, recoveryCount, type);
   }
 
   @Override
@@ -512,6 +574,8 @@ public class WorkItem {
     sb.append("    state: ").append(toIndentedString(state)).append("\n");
     sb.append("    stopRequestedAt: ").append(toIndentedString(stopRequestedAt)).append("\n");
     sb.append("    stoppedAt: ").append(toIndentedString(stoppedAt)).append("\n");
+    sb.append("    stopReason: ").append(toIndentedString(stopReason)).append("\n");
+    sb.append("    recoveryCount: ").append(toIndentedString(recoveryCount)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -585,6 +649,14 @@ public class WorkItem {
       this.instance.stoppedAt = stoppedAt;
       return this;
     }
+    public WorkItem.Builder stopReason(WorkStopReason stopReason) {
+      this.instance.stopReason = stopReason;
+      return this;
+    }
+    public WorkItem.Builder recoveryCount(Integer recoveryCount) {
+      this.instance.recoveryCount = recoveryCount;
+      return this;
+    }
     public WorkItem.Builder type(TypeEnum type) {
       this.instance.type = type;
       return this;
@@ -635,6 +707,8 @@ public class WorkItem {
       .state(getState())
       .stopRequestedAt(getStopRequestedAt())
       .stoppedAt(getStoppedAt())
+      .stopReason(getStopReason())
+      .recoveryCount(getRecoveryCount())
       .type(getType());
   }
 

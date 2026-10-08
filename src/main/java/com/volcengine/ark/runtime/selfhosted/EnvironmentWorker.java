@@ -6,6 +6,7 @@ package com.volcengine.ark.runtime.selfhosted;
 import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.WorkItem;
 import com.volcengine.ark.runtime.models.environment.WorkState;
+import com.volcengine.ark.runtime.models.environment.WorkStopReason;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.file.Files;
@@ -90,6 +91,7 @@ public class EnvironmentWorker implements AutoCloseable {
         AtomicReference<String> heartbeatCause = new AtomicReference<>("");
         Thread heartbeat = null;
         Initializer initializer = null;
+        WorkStopReason stopReason = WorkStopReason.COMPLETED;
         try {
             String workdir = workdir();
             Thread heartbeatThread = new Thread(
@@ -129,6 +131,12 @@ public class EnvironmentWorker implements AutoCloseable {
                 runner.close();
                 activeRunner = null;
             }
+        } catch (SessionToolRunner.IdleTimeoutException | SessionToolRunner.SessionTerminatedException e) {
+            // 预期的 session 生命周期结束保持 completed，避免落入异常退出分支。
+            throw e;
+        } catch (IOException | RuntimeException | Error e) {
+            stopReason = WorkStopReason.WORKER_ABNORMAL;
+            throw e;
         } finally {
             if (initializer != null) {
                 try {
@@ -147,8 +155,12 @@ public class EnvironmentWorker implements AutoCloseable {
             }
             String cause = heartbeatCause.get();
             if (shouldStopItem(cause)) {
+                WorkStopReason reason = "stop_requested".equals(cause) ? null : stopReason;
+                if (closed.get() && cause.isEmpty()) {
+                    reason = WorkStopReason.WORKER_ABNORMAL;
+                }
                 try {
-                    api.stopWork(work.environmentId, work.id, true);
+                    api.stopWork(work.environmentId, work.id, true, reason);
                 } catch (RuntimeException e) {
                     if (!isResolvedStatus(e)) {
                         options.logger.log(Level.WARNING, "stop work failed", e);

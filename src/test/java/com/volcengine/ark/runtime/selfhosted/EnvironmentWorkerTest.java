@@ -4,25 +4,32 @@
 package com.volcengine.ark.runtime.selfhosted;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.volcengine.ark.runtime.models.environment.HeartbeatWorkResponse;
 import com.volcengine.ark.runtime.models.environment.WorkState;
+import com.volcengine.ark.runtime.models.environment.WorkStopReason;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 import org.junit.Test;
 
 public class EnvironmentWorkerTest {
@@ -64,6 +71,7 @@ public class EnvironmentWorkerTest {
         }
 
         assertEquals(1, client.heartbeats.get());
+        assertEquals(WorkStopReason.WORKER_ABNORMAL, client.stopReason.get());
     }
 
     @Test
@@ -71,6 +79,7 @@ public class EnvironmentWorkerTest {
         CountDownLatch heartbeat = new CountDownLatch(1);
         AtomicInteger lists = new AtomicInteger();
         AtomicInteger stops = new AtomicInteger();
+        AtomicReference<String> stopBody = new AtomicReference<>();
         OkHttpClient http = new OkHttpClient.Builder().addInterceptor(chain -> {
             Request request = chain.request();
             String path = request.url().encodedPath();
@@ -93,6 +102,9 @@ public class EnvironmentWorkerTest {
             }
             if (path.endsWith("/stop")) {
                 stops.incrementAndGet();
+                Buffer buffer = new Buffer();
+                request.body().writeTo(buffer);
+                stopBody.set(buffer.readUtf8());
             }
             return response(request, "{}");
         }).build();
@@ -114,6 +126,35 @@ public class EnvironmentWorkerTest {
         assertTrue(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started) < 1000L);
         assertEquals(0, lists.get());
         assertEquals(1, stops.get());
+        assertEquals("{\"force\":true}", stopBody.get());
+    }
+
+    @Test
+    public void externalCloseReportsWorkerAbnormal() throws Exception {
+        CloseClient client = new CloseClient();
+        EnvironmentWorker worker = new EnvironmentWorker(
+                client,
+                new EnvironmentWorker.Options().workdir(Files.createTempDirectory("ark-java-worker-").toString()));
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+        Thread handling = new Thread(() -> {
+            try {
+                worker.handleItem(new EnvironmentWorker.HandleItemOptions()
+                        .environmentId("env-1")
+                        .workId("work-1")
+                        .sessionId("session-1"));
+            } catch (Throwable error) {
+                failure.set(error);
+            }
+        });
+
+        handling.start();
+        assertTrue(client.eventPolling.await(2, TimeUnit.SECONDS));
+        worker.close();
+        handling.join(2000L);
+
+        assertFalse(handling.isAlive());
+        assertNull(failure.get());
+        assertEquals(WorkStopReason.WORKER_ABNORMAL, client.stopReason.get());
     }
 
     @Test
@@ -213,6 +254,7 @@ public class EnvironmentWorkerTest {
     private static class NullHeartbeatClient extends SelfHostedClient {
         private final CountDownLatch firstHeartbeat = new CountDownLatch(1);
         private final AtomicInteger heartbeats = new AtomicInteger();
+        private final AtomicReference<WorkStopReason> stopReason = new AtomicReference<>();
 
         NullHeartbeatClient() {
             super("test-key");
@@ -239,7 +281,51 @@ public class EnvironmentWorkerTest {
         }
 
         @Override
-        public void stopWork(String environmentId, String workId, boolean force) {
+        public void stopWork(String environmentId, String workId, boolean force, WorkStopReason reason) {
+            stopReason.set(reason);
+        }
+    }
+
+    private static class CloseClient extends SelfHostedClient {
+        private final CountDownLatch eventPolling = new CountDownLatch(1);
+        private final AtomicReference<WorkStopReason> stopReason = new AtomicReference<>();
+
+        CloseClient() {
+            super("test-key");
+        }
+
+        @Override
+        public HeartbeatWorkResponse heartbeatWork(
+                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
+            return new HeartbeatWorkResponse()
+                    .state(WorkState.ACTIVE)
+                    .leaseExtended(Boolean.TRUE)
+                    .lastHeartbeat("2026-09-20T00:00:00Z")
+                    .ttlSeconds(30L);
+        }
+
+        @Override
+        public SessionSnapshot getSession(String sessionId) {
+            SessionSnapshot session = new SessionSnapshot();
+            session.setId(sessionId);
+            return session;
+        }
+
+        @Override
+        public EventStream openEventStream(String sessionId) {
+            throw new SessionToolRunner.StreamUnsupportedException();
+        }
+
+        @Override
+        public ListEventsResponse listEvents(
+                String sessionId, String createdAtGt, String page, int limit, String order, List<String> types) {
+            eventPolling.countDown();
+            return new ListEventsResponse(Collections.<Event>emptyList(), "");
+        }
+
+        @Override
+        public void stopWork(String environmentId, String workId, boolean force, WorkStopReason reason) {
+            stopReason.set(reason);
         }
     }
 
@@ -272,7 +358,7 @@ public class EnvironmentWorkerTest {
         }
 
         @Override
-        public void stopWork(String environmentId, String workId, boolean force) {
+        public void stopWork(String environmentId, String workId, boolean force, WorkStopReason reason) {
             stops.incrementAndGet();
         }
     }
@@ -308,7 +394,7 @@ public class EnvironmentWorkerTest {
         }
 
         @Override
-        public void stopWork(String environmentId, String workId, boolean force) {
+        public void stopWork(String environmentId, String workId, boolean force, WorkStopReason reason) {
             stops.incrementAndGet();
         }
     }
