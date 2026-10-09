@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ResponseStreamEventType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   ERROR("error"),
 
   RESPONSE_AGENT_TOOL_CALL_COMPLETED("response.agent_tool_call.completed"),
@@ -170,6 +173,7 @@ public enum ResponseStreamEventType {
   @JsonCreator
   public static ResponseStreamEventType fromValue(String value) {
     for (ResponseStreamEventType b : ResponseStreamEventType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

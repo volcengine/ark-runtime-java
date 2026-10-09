@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = MessagesResponseContentPartWebSearchToolResult.class, name = "web_search_tool_result"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownMessagesResponseContentPart.class)
 public interface MessagesResponseContentPart {
     public MessagesResponseContentPartType getType();
 }

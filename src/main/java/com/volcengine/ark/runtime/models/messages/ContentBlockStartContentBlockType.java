@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ContentBlockStartContentBlockType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   SERVER_TOOL_USE("server_tool_use"),
 
   TEXT("text"),
@@ -54,6 +57,7 @@ public enum ContentBlockStartContentBlockType {
   @JsonCreator
   public static ContentBlockStartContentBlockType fromValue(String value) {
     for (ContentBlockStartContentBlockType b : ContentBlockStartContentBlockType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

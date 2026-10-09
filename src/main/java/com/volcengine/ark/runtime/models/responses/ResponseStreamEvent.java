@@ -87,6 +87,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = ResponseWebSearchCallSearchingEvent.class, name = "response.web_search_call.searching"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownResponseStreamEvent.class)
 public interface ResponseStreamEvent {
     public ResponseStreamEventType getType();
 }

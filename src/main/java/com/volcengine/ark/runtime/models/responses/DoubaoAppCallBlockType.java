@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum DoubaoAppCallBlockType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   OUTPUT_TEXT("output_text"),
 
   REASONING_SEARCH("reasoning_search"),
@@ -52,6 +55,7 @@ public enum DoubaoAppCallBlockType {
   @JsonCreator
   public static DoubaoAppCallBlockType fromValue(String value) {
     for (DoubaoAppCallBlockType b : DoubaoAppCallBlockType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

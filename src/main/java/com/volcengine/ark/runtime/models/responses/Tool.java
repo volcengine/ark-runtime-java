@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = WebSearchTool.class, name = "web_search"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownTool.class)
 public interface Tool {
     public ToolType getType();
 }

@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum MessagesStreamEventType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   CONTENT_BLOCK_DELTA("content_block_delta"),
 
   CONTENT_BLOCK_START("content_block_start"),
@@ -58,6 +61,7 @@ public enum MessagesStreamEventType {
   @JsonCreator
   public static MessagesStreamEventType fromValue(String value) {
     for (MessagesStreamEventType b : MessagesStreamEventType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }
