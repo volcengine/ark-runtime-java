@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = DoubaoAppCallBlockSearch.class, name = "search"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownDoubaoAppCallBlock.class)
 public interface DoubaoAppCallBlock {
     public DoubaoAppCallBlockType getType();
 }

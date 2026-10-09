@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum AnnotationType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   DOC_CITATION("doc_citation"),
 
   URL_CITATION("url_citation");
@@ -48,6 +51,7 @@ public enum AnnotationType {
   @JsonCreator
   public static AnnotationType fromValue(String value) {
     for (AnnotationType b : AnnotationType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = OutputContentItemReasoningText.class, name = "reasoning_text"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownContentItem.class)
 public interface ContentItem {
     public ContentItemType getType();
 }

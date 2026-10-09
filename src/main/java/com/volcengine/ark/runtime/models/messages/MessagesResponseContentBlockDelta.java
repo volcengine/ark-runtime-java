@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = MessagesResponseContentBlockDeltaThinking.class, name = "thinking_delta"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownMessagesResponseContentBlockDelta.class)
 public interface MessagesResponseContentBlockDelta {
     public MessagesResponseContentBlockDeltaType getType();
 }

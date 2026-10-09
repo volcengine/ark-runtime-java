@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ContentItemType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   INPUT_AUDIO("input_audio"),
 
   INPUT_FILE("input_file"),
@@ -58,6 +61,7 @@ public enum ContentItemType {
   @JsonCreator
   public static ContentItemType fromValue(String value) {
     for (ContentItemType b : ContentItemType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

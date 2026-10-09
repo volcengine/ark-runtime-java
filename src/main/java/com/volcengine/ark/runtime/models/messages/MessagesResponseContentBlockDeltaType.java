@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum MessagesResponseContentBlockDeltaType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   INPUT_JSON_DELTA("input_json_delta"),
 
   SIGNATURE_DELTA("signature_delta"),
@@ -52,6 +55,7 @@ public enum MessagesResponseContentBlockDeltaType {
   @JsonCreator
   public static MessagesResponseContentBlockDeltaType fromValue(String value) {
     for (MessagesResponseContentBlockDeltaType b : MessagesResponseContentBlockDeltaType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

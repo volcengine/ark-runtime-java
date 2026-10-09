@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = ClearToolUsesResponse.class, name = "clear_tool_uses"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownAppliedEdit.class)
 public interface AppliedEdit {
     public AppliedEditType getType();
 }

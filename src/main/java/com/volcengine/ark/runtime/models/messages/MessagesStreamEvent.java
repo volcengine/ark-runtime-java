@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = MessagesResponseStreamMessageStop.class, name = "message_stop"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownMessagesStreamEvent.class)
 public interface MessagesStreamEvent {
     public MessagesStreamEventType getType();
 }

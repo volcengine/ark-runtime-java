@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = UrlCitation.class, name = "url_citation"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownAnnotation.class)
 public interface Annotation {
     public AnnotationType getType();
 }

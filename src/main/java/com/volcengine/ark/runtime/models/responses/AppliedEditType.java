@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum AppliedEditType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   CLEAR_THINKING("clear_thinking"),
 
   CLEAR_TOOL_USES("clear_tool_uses");
@@ -48,6 +51,7 @@ public enum AppliedEditType {
   @JsonCreator
   public static AppliedEditType fromValue(String value) {
     for (AppliedEditType b : AppliedEditType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

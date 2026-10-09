@@ -36,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = ItemFunctionWebSearch.class, name = "web_search_call"),
 })
 
+@com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownOutputItem.class)
 public interface OutputItem {
     public ItemType getType();
 }

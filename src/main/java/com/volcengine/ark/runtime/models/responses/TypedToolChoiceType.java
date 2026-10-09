@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum TypedToolChoiceType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   FUNCTION("function"),
 
   KNOWLEDGE_SEARCH("knowledge_search"),
@@ -52,6 +55,7 @@ public enum TypedToolChoiceType {
   @JsonCreator
   public static TypedToolChoiceType fromValue(String value) {
     for (TypedToolChoiceType b : TypedToolChoiceType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }

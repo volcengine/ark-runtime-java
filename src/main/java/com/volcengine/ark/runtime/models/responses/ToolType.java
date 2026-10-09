@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ToolType {
 
+  // SDK-only sentinel; original unknown wire value lives on UnknownVariant.
+  UNKNOWN("__ark_unknown_variant__"),
+
   DOUBAO_APP("doubao_app"),
 
   FUNCTION("function"),
@@ -56,6 +59,7 @@ public enum ToolType {
   @JsonCreator
   public static ToolType fromValue(String value) {
     for (ToolType b : ToolType.values()) {
+      if (b == UNKNOWN) continue;
       if (b.value.equalsIgnoreCase(value)) {
         return b;
       }
