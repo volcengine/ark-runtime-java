@@ -49,6 +49,7 @@ import com.volcengine.ark.runtime.models.responses.Response;
 import com.volcengine.ark.runtime.models.responses.ResponsesRequest;
 import com.volcengine.ark.runtime.models.session.CreateSessionRequest;
 import com.volcengine.ark.runtime.models.session.CreateSessionResourceRequest;
+import com.volcengine.ark.runtime.models.session.CreateSessionUpgradeRequest;
 import com.volcengine.ark.runtime.models.session.DeleteSessionResponse;
 import com.volcengine.ark.runtime.models.session.ListSessionEventsResponse;
 import com.volcengine.ark.runtime.models.session.ListSessionResourcesResponse;
@@ -381,6 +382,9 @@ public interface ArkApi {
 
     @POST("/api/v3/sessions/{sessionId}")
     Single<Session> updateSession(@Path("sessionId") String sessionId, @Body UpdateSessionRequest request, @HeaderMap Map<String, String> customHeaders);
+
+    @POST("/api/v3/sessions/{sessionId}/upgrades")
+    Single<Session> upgradeSession(@Path("sessionId") String sessionId, @Body CreateSessionUpgradeRequest request, @HeaderMap Map<String, String> customHeaders);
 
     @DELETE("/api/v3/sessions/{sessionId}")
     Single<DeleteSessionResponse> deleteSession(@Path("sessionId") String sessionId, @HeaderMap Map<String, String> customHeaders);

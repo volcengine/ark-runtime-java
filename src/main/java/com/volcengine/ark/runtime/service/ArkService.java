@@ -68,6 +68,7 @@ import com.volcengine.ark.runtime.models.responses.ResponseStreamEvent;
 import com.volcengine.ark.runtime.models.responses.ResponsesRequest;
 import com.volcengine.ark.runtime.models.session.CreateSessionRequest;
 import com.volcengine.ark.runtime.models.session.CreateSessionResourceRequest;
+import com.volcengine.ark.runtime.models.session.CreateSessionUpgradeRequest;
 import com.volcengine.ark.runtime.models.session.DeleteSessionResponse;
 import com.volcengine.ark.runtime.models.session.ListSessionEventsResponse;
 import com.volcengine.ark.runtime.models.session.ListSessionResourcesResponse;
@@ -828,6 +829,10 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
 
     public Session updateSession(String sessionId, UpdateSessionRequest request) {
         return execute(api.updateSession(sessionId, request, new HashMap<>()));
+    }
+
+    public Session upgradeSession(String sessionId, CreateSessionUpgradeRequest request) {
+        return execute(api.upgradeSession(sessionId, request, new HashMap<>()));
     }
 
     public DeleteSessionResponse deleteSession(String sessionId) {
