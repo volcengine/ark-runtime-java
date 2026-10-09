@@ -265,7 +265,7 @@ public class AgentWithUpgrades {
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_TOOLS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public List<Map<String, Object>> getTools() {
     return tools;
@@ -273,7 +273,7 @@ public class AgentWithUpgrades {
 
 
   @JsonProperty(value = JSON_PROPERTY_TOOLS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setTools(@javax.annotation.Nullable List<Map<String, Object>> tools) {
     this.tools = tools;
   }
@@ -298,7 +298,7 @@ public class AgentWithUpgrades {
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_MCP_SERVERS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public List<Map<String, Object>> getMcpServers() {
     return mcpServers;
@@ -306,7 +306,7 @@ public class AgentWithUpgrades {
 
 
   @JsonProperty(value = JSON_PROPERTY_MCP_SERVERS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setMcpServers(@javax.annotation.Nullable List<Map<String, Object>> mcpServers) {
     this.mcpServers = mcpServers;
   }
@@ -331,7 +331,7 @@ public class AgentWithUpgrades {
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_SKILLS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public List<Map<String, Object>> getSkills() {
     return skills;
@@ -339,7 +339,7 @@ public class AgentWithUpgrades {
 
 
   @JsonProperty(value = JSON_PROPERTY_SKILLS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setSkills(@javax.annotation.Nullable List<Map<String, Object>> skills) {
     this.skills = skills;
   }

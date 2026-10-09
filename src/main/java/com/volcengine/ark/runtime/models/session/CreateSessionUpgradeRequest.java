@@ -123,7 +123,7 @@ public class CreateSessionUpgradeRequest {
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_VAULT_IDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public List<String> getVaultIds() {
     return vaultIds;
@@ -131,7 +131,7 @@ public class CreateSessionUpgradeRequest {
 
 
   @JsonProperty(value = JSON_PROPERTY_VAULT_IDS, required = false)
-  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setVaultIds(@javax.annotation.Nullable List<String> vaultIds) {
     this.vaultIds = vaultIds;
   }
