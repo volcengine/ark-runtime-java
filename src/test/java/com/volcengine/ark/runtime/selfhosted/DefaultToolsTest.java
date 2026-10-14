@@ -173,6 +173,69 @@ public class DefaultToolsTest {
     }
 
     @Test
+    public void fileToolsAcceptPathAliases() throws Exception {
+        Path workdir = Files.createTempDirectory("ark-java-file-aliases-");
+        ToolContext context = new ToolContext(workdir.toString());
+
+        for (String key : new String[] {"file_path", "path", "file"}) {
+            String name = key + ".txt";
+            Map<String, Object> writeInput = new LinkedHashMap<>();
+            writeInput.put(key, name);
+            writeInput.put("content", "old");
+            assertFalse(new DefaultTools.WriteTool().execute(writeInput, context).isError());
+
+            assertFalse(new DefaultTools.ReadTool()
+                    .execute(Collections.singletonMap(key, name), context)
+                    .isError());
+
+            Map<String, Object> editInput = new LinkedHashMap<>();
+            editInput.put(key, name);
+            editInput.put("old_string", "old");
+            editInput.put("new_string", "new");
+            assertFalse(new DefaultTools.EditTool().execute(editInput, context).isError());
+            assertEquals(
+                    "new",
+                    new String(Files.readAllBytes(workdir.resolve(name)), java.nio.charset.StandardCharsets.UTF_8));
+        }
+    }
+
+    @Test
+    public void fileToolsValidatePathAliases() throws Exception {
+        Path workdir = Files.createTempDirectory("ark-java-file-alias-validation-");
+        Files.write(workdir.resolve("example.txt"), "old".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        ToolContext context = new ToolContext(workdir.toString());
+        Map<String, Object> common = new LinkedHashMap<>();
+        common.put("file_path", "example.txt");
+        common.put("path", "example.txt");
+        common.put("file", "example.txt");
+        common.put("content", "old");
+        common.put("old_string", "old");
+        common.put("new_string", "new");
+
+        for (Tool tool : new Tool[] {
+                new DefaultTools.ReadTool(), new DefaultTools.WriteTool(), new DefaultTools.EditTool()
+        }) {
+            assertFalse(tool.execute(common, context).isError());
+
+            Map<String, Object> conflictInput = new LinkedHashMap<>(common);
+            conflictInput.put("path", "other.txt");
+            ToolResult conflict = tool.execute(conflictInput, context);
+            assertTrue(conflict.isError());
+            assertEquals(
+                    "file_path, path, and file must not conflict",
+                    conflict.getContent().get(0).getText());
+
+            Map<String, Object> missingInput = new LinkedHashMap<>();
+            missingInput.put("content", "new");
+            missingInput.put("old_string", "old");
+            missingInput.put("new_string", "new");
+            ToolResult missing = tool.execute(missingInput, context);
+            assertTrue(missing.isError());
+            assertEquals("file_path is required", missing.getContent().get(0).getText());
+        }
+    }
+
+    @Test
     public void bashScrubsSensitiveExplicitEnvironment() throws Exception {
         Path workdir = Files.createTempDirectory("ark-java-tools-");
         ToolContext context = new ToolContext(workdir.toString());
