@@ -172,7 +172,7 @@ public final class DefaultTools {
         public ToolResult execute(Object input, ToolContext context) {
             try {
                 Map<String, Object> args = asMap(input);
-                Path path = safePath(context, readFilePath(args));
+                Path path = safePath(context, filePath(args));
                 List<Long> viewRange = readViewRange(args.get("view_range"));
                 boolean hasViewRange = viewRange != null && !viewRange.isEmpty();
                 Long offset = optionalLong(args, "offset");
@@ -250,7 +250,7 @@ public final class DefaultTools {
         public ToolResult execute(Object input, ToolContext context) {
             try {
                 Map<String, Object> args = asMap(input);
-                String rawPath = firstNonEmpty(stringValue(args.get("path")), stringValue(args.get("file")));
+                String rawPath = filePath(args);
                 Path path = safePath(context, rawPath);
                 String content = stringValue(args.get("content"));
                 Files.createDirectories(path.getParent());
@@ -276,7 +276,7 @@ public final class DefaultTools {
         public ToolResult execute(Object input, ToolContext context) {
             try {
                 Map<String, Object> args = asMap(input);
-                String rawPath = firstNonEmpty(stringValue(args.get("path")), stringValue(args.get("file")));
+                String rawPath = filePath(args);
                 Path path = safePath(context, rawPath);
                 String oldString = firstNonEmpty(stringValue(args.get("old_string")), stringValue(args.get("old")));
                 String newString = firstNonEmpty(stringValue(args.get("new_string")), stringValue(args.get("new")));
@@ -494,7 +494,7 @@ public final class DefaultTools {
         }
     }
 
-    private static String readFilePath(Map<String, Object> args) {
+    private static String filePath(Map<String, Object> args) {
         String path = "";
         for (String name : new String[] {"file_path", "path", "file"}) {
             Object value = args.get(name);
