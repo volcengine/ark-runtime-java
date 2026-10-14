@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Test;
 
 public class DefaultToolsTest {
@@ -212,6 +214,38 @@ public class DefaultToolsTest {
         assertTrue(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started) < 3000L);
         assertTrue(result.isError());
         assertTrue(result.getContent().get(0).getText().contains("timed out"));
+    }
+
+    @Test
+    public void bashInterruptionTerminatesCompoundCommand() throws Exception {
+        Path workdir = Files.createTempDirectory("ark-java-cancel-");
+        Path started = workdir.resolve("started");
+        Path completed = workdir.resolve("completed");
+        AtomicBoolean canceled = new AtomicBoolean();
+        ToolContext context = new ToolContext(workdir.toString());
+        context.setCancelled(canceled::get);
+        Map<String, Object> input = new LinkedHashMap<>();
+        input.put("command", "printf started > started; sleep 1; printf completed > completed");
+        AtomicReference<ToolResult> result = new AtomicReference<>();
+        Thread execution = new Thread(
+                () -> result.set(new DefaultTools.BashTool().execute(input, context)),
+                "bash-cancellation-test");
+
+        execution.start();
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2L);
+        while (!Files.exists(started) && System.nanoTime() < deadline) {
+            Thread.sleep(10L);
+        }
+        assertTrue("bash command did not start", Files.exists(started));
+        canceled.set(true);
+        execution.interrupt();
+        execution.join(3000L);
+
+        assertFalse("bash execution did not return after cancellation", execution.isAlive());
+        assertTrue(result.get().isError());
+        assertTrue(result.get().getContent().get(0).getText().contains("canceled"));
+        Thread.sleep(1200L);
+        assertFalse("compound command continued after interruption", Files.exists(completed));
     }
 
     @Test
