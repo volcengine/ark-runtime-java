@@ -187,7 +187,8 @@ public class EnvironmentWorker implements AutoCloseable {
                         work.environmentId,
                         work.id,
                         last,
-                        (int) (ttl / 1000L));
+                        (int) (ttl / 1000L),
+                        options.workerId);
                 if (response == null) {
                     if (System.currentTimeMillis() - lastSuccess > ttl) {
                         cause.set("heartbeat_lost");

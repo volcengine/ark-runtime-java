@@ -84,6 +84,7 @@ public class EnvironmentWorkerTest {
             Request request = chain.request();
             String path = request.url().encodedPath();
             if (path.endsWith("/heartbeat")) {
+                assertEquals("worker-1", request.header("Ark-Worker-ID"));
                 heartbeat.countDown();
                 return response(request, "{\"state\":\"stopping\",\"lease_extended\":true}");
             }
@@ -115,7 +116,9 @@ public class EnvironmentWorkerTest {
                 .build();
         EnvironmentWorker worker = new EnvironmentWorker(
                 client,
-                new EnvironmentWorker.Options().workdir(Files.createTempDirectory("ark-java-worker-").toString()));
+                new EnvironmentWorker.Options()
+                        .workerId("worker-1")
+                        .workdir(Files.createTempDirectory("ark-java-worker-").toString()));
 
         long started = System.nanoTime();
         worker.handleItem(new EnvironmentWorker.HandleItemOptions()
@@ -262,7 +265,7 @@ public class EnvironmentWorkerTest {
 
         @Override
         public HeartbeatWorkResponse heartbeatWork(
-                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
+                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds, String workerId) {
             heartbeats.incrementAndGet();
             firstHeartbeat.countDown();
             return null;
@@ -296,7 +299,7 @@ public class EnvironmentWorkerTest {
 
         @Override
         public HeartbeatWorkResponse heartbeatWork(
-                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
+                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds, String workerId) {
             return new HeartbeatWorkResponse()
                     .state(WorkState.ACTIVE)
                     .leaseExtended(Boolean.TRUE)
@@ -339,7 +342,7 @@ public class EnvironmentWorkerTest {
 
         @Override
         public HeartbeatWorkResponse heartbeatWork(
-                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
+                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds, String workerId) {
             heartbeat.countDown();
             throw new WorkerAPIException(412, "lease lost", "");
         }
@@ -373,7 +376,7 @@ public class EnvironmentWorkerTest {
 
         @Override
         public HeartbeatWorkResponse heartbeatWork(
-                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
+                String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds, String workerId) {
             heartbeat.countDown();
             return new HeartbeatWorkResponse()
                     .state(WorkState.ACTIVE)

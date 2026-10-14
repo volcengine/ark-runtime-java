@@ -650,8 +650,21 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
 
     public HeartbeatWorkResponse heartbeatEnvironmentWork(
             String environmentId, String workId, String expectedLastHeartbeat, Integer desiredTTLSeconds) {
+        return heartbeatEnvironmentWork(environmentId, workId, expectedLastHeartbeat, desiredTTLSeconds, null);
+    }
+
+    public HeartbeatWorkResponse heartbeatEnvironmentWork(
+            String environmentId,
+            String workId,
+            String expectedLastHeartbeat,
+            Integer desiredTTLSeconds,
+            String workerId) {
+        Map<String, String> headers = new HashMap<>();
+        if (workerId != null && !workerId.isEmpty()) {
+            headers.put("Ark-Worker-ID", workerId);
+        }
         return execute(api.heartbeatEnvironmentWork(
-                environmentId, workId, expectedLastHeartbeat, desiredTTLSeconds, new HashMap<>()));
+                environmentId, workId, expectedLastHeartbeat, desiredTTLSeconds, headers));
     }
 
     public WorkItem stopEnvironmentWork(String environmentId, String workId, StopWorkBody body) {
