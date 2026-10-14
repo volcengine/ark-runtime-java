@@ -81,10 +81,15 @@ public final class DefaultTools {
                     : new LinkedHashMap<>(System.getenv());
             builder.environment().putAll(scrubbedEnv(environment));
             builder.redirectErrorStream(true);
+            Process process = null;
+            Thread reader = null;
             try {
-                Process process = builder.start();
+                process = builder.start();
                 BoundedOutput output = new BoundedOutput(MAX_OUTPUT_BYTES);
-                Thread reader = new Thread(() -> drainOutput(process.getInputStream(), output), "ma-self-host-bash-output");
+                Process runningProcess = process;
+                reader = new Thread(
+                        () -> drainOutput(runningProcess.getInputStream(), output),
+                        "ma-self-host-bash-output");
                 reader.setDaemon(true);
                 reader.start();
                 long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(Math.max(0L, context.getToolTimeoutMillis()));
@@ -117,9 +122,43 @@ public final class DefaultTools {
                     return ToolResult.error("exit code " + process.exitValue() + "\n" + text);
                 }
                 return ToolResult.text(text);
+            } catch (InterruptedException e) {
+                // SessionToolRunner interrupts the execution future when user.interrupt
+                // arrives. Do not let that interruption orphan the shell: the shell may
+                // otherwise resume the remaining compound command and mutate the workdir
+                // after the call has already been marked interrupted.
+                terminateProcess(process);
+                joinReader(reader);
+                Thread.currentThread().interrupt();
+                return ToolResult.error("tool execution canceled");
             } catch (Exception e) {
+                terminateProcess(process);
+                joinReader(reader);
                 return ToolResult.error(e.getMessage());
             }
+        }
+    }
+
+    private static void terminateProcess(Process process) {
+        if (process == null || !process.isAlive()) {
+            return;
+        }
+        process.destroyForcibly();
+        try {
+            process.waitFor(PROCESS_TERMINATION_GRACE_MILLIS, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private static void joinReader(Thread reader) {
+        if (reader == null) {
+            return;
+        }
+        try {
+            reader.join(PROCESS_TERMINATION_GRACE_MILLIS);
+        } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
         }
     }
 
