@@ -49,8 +49,7 @@ public class SelfHostedClientTest {
                 + "\"id\":\"work-1\","
                 + "\"environment_id\":\"env-1\","
                 + "\"data\":{\"id\":\"session-1\",\"type\":\"session\"},"
-                + "\"stop_reason\":\"worker_abnormal\","
-                + "\"recovery_count\":5"
+                + "\"stop_reason\":\"worker_abnormal\""
                 + "}";
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(chain -> response(chain.request(), new AtomicReference<>(), body))
@@ -67,7 +66,6 @@ public class SelfHostedClientTest {
         assertEquals("env-1", item.getEnvironmentId());
         assertEquals("session-1", item.getData().getId());
         assertEquals(WorkStopReason.WORKER_ABNORMAL, item.getStopReason());
-        assertEquals(Integer.valueOf(5), item.getRecoveryCount());
         assertEquals("session-1", WorkItems.sessionId(item));
     }
 
@@ -336,6 +334,7 @@ public class SelfHostedClientTest {
                                 request.url().encodedPath());
                         assertEquals("NO_HEARTBEAT", request.url().queryParameter("expected_last_heartbeat"));
                         assertEquals("30", request.url().queryParameter("desired_ttl_seconds"));
+                        assertEquals("worker-1", request.header("Ark-Worker-ID"));
                         return response(request, new AtomicReference<>(), heartbeat);
                     }
                     assertEquals("POST", request.method());
@@ -360,7 +359,7 @@ public class SelfHostedClientTest {
         client.ackWork("env-1", "work-1", "worker-1");
         assertEquals(
                 "2026-08-24T10:00:01Z",
-                client.heartbeatWork("env-1", "work-1", "NO_HEARTBEAT", 30).getLastHeartbeat());
+                client.heartbeatWork("env-1", "work-1", "NO_HEARTBEAT", 30, "worker-1").getLastHeartbeat());
         client.stopWork("env-1", "work-1", false);
 
         assertEquals(4, calls.get());

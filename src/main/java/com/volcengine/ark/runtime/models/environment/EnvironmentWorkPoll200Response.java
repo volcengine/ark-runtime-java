@@ -43,7 +43,6 @@ import java.util.Objects;
   EnvironmentWorkPoll200Response.JSON_PROPERTY_STOP_REQUESTED_AT,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_STOPPED_AT,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_STOP_REASON,
-  EnvironmentWorkPoll200Response.JSON_PROPERTY_RECOVERY_COUNT,
   EnvironmentWorkPoll200Response.JSON_PROPERTY_TYPE
 })
 @JsonTypeName("EnvironmentWork_poll_200_response")
@@ -100,10 +99,6 @@ public class EnvironmentWorkPoll200Response {
   public static final String JSON_PROPERTY_STOP_REASON = "stop_reason";
   @javax.annotation.Nullable
   private WorkStopReason stopReason;
-
-  public static final String JSON_PROPERTY_RECOVERY_COUNT = "recovery_count";
-  @javax.annotation.Nullable
-  private Integer recoveryCount;
 
   /**
    * 对象类型，固定为 &#x60;work&#x60;。
@@ -460,7 +455,7 @@ public class EnvironmentWorkPoll200Response {
   }
 
   /**
-   * 最近一次停止原因。首次停止前省略；state 为 stopping / stopped 时返回本次停止原因； 自动恢复到 queued / starting / active 后仍保留上一次停止原因，当前生命周期状态以 &#x60;state&#x60; 为准。
+   * 最近一次停止原因。首次停止前省略；state 为 stopping / stopped 时返回本次停止原因。原 owner 通过 Heartbeat 将 &#x60;stopped + lease_expired&#x60; 恢复为 active 时清除此字段。
    * @return stopReason
    */
   @javax.annotation.Nullable
@@ -476,31 +471,6 @@ public class EnvironmentWorkPoll200Response {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setStopReason(@javax.annotation.Nullable WorkStopReason stopReason) {
     this.stopReason = stopReason;
-  }
-
-  public EnvironmentWorkPoll200Response recoveryCount(@javax.annotation.Nullable Integer recoveryCount) {
-
-    this.recoveryCount = recoveryCount;
-    return this;
-  }
-
-  /**
-   * 自上次成功完成且全部 tool_use 已闭合后，平台已自动将本 Work 重新排队的次数； 首次执行或字段省略时按 0 处理。手动 Ensure 不会清零该计数。
-   * @return recoveryCount
-   */
-  @javax.annotation.Nullable
-  @JsonProperty(value = JSON_PROPERTY_RECOVERY_COUNT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-
-  public Integer getRecoveryCount() {
-    return recoveryCount;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_RECOVERY_COUNT, required = false)
-  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setRecoveryCount(@javax.annotation.Nullable Integer recoveryCount) {
-    this.recoveryCount = recoveryCount;
   }
 
   public EnvironmentWorkPoll200Response type(@javax.annotation.Nonnull TypeEnum type) {
@@ -551,13 +521,12 @@ public class EnvironmentWorkPoll200Response {
         Objects.equals(this.stopRequestedAt, environmentWorkPoll200Response.stopRequestedAt) &&
         Objects.equals(this.stoppedAt, environmentWorkPoll200Response.stoppedAt) &&
         Objects.equals(this.stopReason, environmentWorkPoll200Response.stopReason) &&
-        Objects.equals(this.recoveryCount, environmentWorkPoll200Response.recoveryCount) &&
         Objects.equals(this.type, environmentWorkPoll200Response.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, acknowledgedAt, createdAt, data, environmentId, latestHeartbeatAt, tags, secret, startedAt, state, stopRequestedAt, stoppedAt, stopReason, recoveryCount, type);
+    return Objects.hash(id, acknowledgedAt, createdAt, data, environmentId, latestHeartbeatAt, tags, secret, startedAt, state, stopRequestedAt, stoppedAt, stopReason, type);
   }
 
   @Override
@@ -577,7 +546,6 @@ public class EnvironmentWorkPoll200Response {
     sb.append("    stopRequestedAt: ").append(toIndentedString(stopRequestedAt)).append("\n");
     sb.append("    stoppedAt: ").append(toIndentedString(stoppedAt)).append("\n");
     sb.append("    stopReason: ").append(toIndentedString(stopReason)).append("\n");
-    sb.append("    recoveryCount: ").append(toIndentedString(recoveryCount)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -655,10 +623,6 @@ public class EnvironmentWorkPoll200Response {
       this.instance.stopReason = stopReason;
       return this;
     }
-    public EnvironmentWorkPoll200Response.Builder recoveryCount(Integer recoveryCount) {
-      this.instance.recoveryCount = recoveryCount;
-      return this;
-    }
     public EnvironmentWorkPoll200Response.Builder type(TypeEnum type) {
       this.instance.type = type;
       return this;
@@ -710,7 +674,6 @@ public class EnvironmentWorkPoll200Response {
       .stopRequestedAt(getStopRequestedAt())
       .stoppedAt(getStoppedAt())
       .stopReason(getStopReason())
-      .recoveryCount(getRecoveryCount())
       .type(getType());
   }
 

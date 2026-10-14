@@ -28,7 +28,8 @@ import java.util.Objects;
   HeartbeatRequest.JSON_PROPERTY_ENVIRONMENT_ID,
   HeartbeatRequest.JSON_PROPERTY_WORK_ID,
   HeartbeatRequest.JSON_PROPERTY_DESIRED_TTL_SECONDS,
-  HeartbeatRequest.JSON_PROPERTY_EXPECTED_LAST_HEARTBEAT
+  HeartbeatRequest.JSON_PROPERTY_EXPECTED_LAST_HEARTBEAT,
+  HeartbeatRequest.JSON_PROPERTY_ARK_WORKER_I_D
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class HeartbeatRequest {
@@ -47,6 +48,10 @@ public class HeartbeatRequest {
   public static final String JSON_PROPERTY_EXPECTED_LAST_HEARTBEAT = "expected_last_heartbeat";
   @javax.annotation.Nullable
   private String expectedLastHeartbeat;
+
+  public static final String JSON_PROPERTY_ARK_WORKER_I_D = "Ark-Worker-ID";
+  @javax.annotation.Nullable
+  private String arkWorkerID;
 
   public HeartbeatRequest() {
   }
@@ -151,6 +156,28 @@ public class HeartbeatRequest {
     this.expectedLastHeartbeat = expectedLastHeartbeat;
   }
 
+  public HeartbeatRequest arkWorkerID(@javax.annotation.Nullable String arkWorkerID) {
+    this.arkWorkerID = arkWorkerID;
+    return this;
+  }
+
+  /**
+   * Worker identity used by Poll, Ack, and Heartbeat for ownership checks.
+   * @return arkWorkerID
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ARK_WORKER_I_D, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public String getArkWorkerID() {
+    return arkWorkerID;
+  }
+
+  @JsonProperty(value = JSON_PROPERTY_ARK_WORKER_I_D, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setArkWorkerID(@javax.annotation.Nullable String arkWorkerID) {
+    this.arkWorkerID = arkWorkerID;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -164,12 +191,13 @@ public class HeartbeatRequest {
     return Objects.equals(this.environmentId, heartbeatRequest.environmentId) &&
         Objects.equals(this.workId, heartbeatRequest.workId) &&
         Objects.equals(this.desiredTtlSeconds, heartbeatRequest.desiredTtlSeconds) &&
-        Objects.equals(this.expectedLastHeartbeat, heartbeatRequest.expectedLastHeartbeat);
+        Objects.equals(this.expectedLastHeartbeat, heartbeatRequest.expectedLastHeartbeat) &&
+        Objects.equals(this.arkWorkerID, heartbeatRequest.arkWorkerID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(environmentId, workId, desiredTtlSeconds, expectedLastHeartbeat);
+    return Objects.hash(environmentId, workId, desiredTtlSeconds, expectedLastHeartbeat, arkWorkerID);
   }
 
   @Override
@@ -180,6 +208,7 @@ public class HeartbeatRequest {
     sb.append("    workId: ").append(toIndentedString(workId)).append("\n");
     sb.append("    desiredTtlSeconds: ").append(toIndentedString(desiredTtlSeconds)).append("\n");
     sb.append("    expectedLastHeartbeat: ").append(toIndentedString(expectedLastHeartbeat)).append("\n");
+    sb.append("    arkWorkerID: ").append(toIndentedString(arkWorkerID)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -220,6 +249,10 @@ public class HeartbeatRequest {
       this.instance.expectedLastHeartbeat = expectedLastHeartbeat;
       return this;
     }
+    public HeartbeatRequest.Builder arkWorkerID(String arkWorkerID) {
+      this.instance.arkWorkerID = arkWorkerID;
+      return this;
+    }
 
 
     /**
@@ -257,7 +290,8 @@ public class HeartbeatRequest {
       .environmentId(getEnvironmentId())
       .workId(getWorkId())
       .desiredTtlSeconds(getDesiredTtlSeconds())
-      .expectedLastHeartbeat(getExpectedLastHeartbeat());
+      .expectedLastHeartbeat(getExpectedLastHeartbeat())
+      .arkWorkerID(getArkWorkerID());
   }
 
 

@@ -122,6 +122,15 @@ public class SelfHostedClient {
 
     public HeartbeatWorkResponse heartbeatWork(
             String environmentId, String workId, String expectedLastHeartbeat, int desiredTTLSeconds) {
+        return heartbeatWork(environmentId, workId, expectedLastHeartbeat, desiredTTLSeconds, "");
+    }
+
+    public HeartbeatWorkResponse heartbeatWork(
+            String environmentId,
+            String workId,
+            String expectedLastHeartbeat,
+            int desiredTTLSeconds,
+            String workerId) {
         require(environmentId, "environmentId");
         require(workId, "workId");
         String expected = expectedLastHeartbeat == null || expectedLastHeartbeat.isEmpty()
@@ -129,7 +138,7 @@ public class SelfHostedClient {
                 : expectedLastHeartbeat;
         Integer ttl = desiredTTLSeconds > 0 ? desiredTTLSeconds : null;
         return execute(heartbeatApi.heartbeatEnvironmentWork(
-                environmentId, workId, expected, ttl, Collections.<String, String>emptyMap()));
+                environmentId, workId, expected, ttl, workerHeader(workerId)));
     }
 
     public void stopWork(String environmentId, String workId, boolean force) {
