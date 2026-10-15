@@ -157,20 +157,23 @@ public class HeartbeatRequest {
   }
 
   public HeartbeatRequest arkWorkerID(@javax.annotation.Nullable String arkWorkerID) {
+
     this.arkWorkerID = arkWorkerID;
     return this;
   }
 
   /**
-   * Worker identity used by Poll, Ack, and Heartbeat for ownership checks.
+   * Worker 实例 ID。Poll/Ack 用于记录 work owner；Heartbeat 携带非空值时必须与 Ack 保存的 owner 精确一致，否则返回 412。匹配 owner 的 Heartbeat 可将 &#x60;stopped + lease_expired&#x60; 直接恢复为 &#x60;active&#x60;。
    * @return arkWorkerID
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_ARK_WORKER_I_D, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
   public String getArkWorkerID() {
     return arkWorkerID;
   }
+
 
   @JsonProperty(value = JSON_PROPERTY_ARK_WORKER_I_D, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)

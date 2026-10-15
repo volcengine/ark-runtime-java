@@ -455,7 +455,7 @@ public class EnvironmentWorkPoll200Response {
   }
 
   /**
-   * 最近一次停止原因。首次停止前省略；state 为 stopping / stopped 时返回本次停止原因。原 owner 通过 Heartbeat 将 &#x60;stopped + lease_expired&#x60; 恢复为 active 时清除此字段。
+   * 最近一次停止原因。首次停止前省略；state 为 stopping / stopped 时返回本次停止原因。 原 owner 通过 Heartbeat 将 &#x60;stopped + lease_expired&#x60; 恢复为 active 时清除此字段。
    * @return stopReason
    */
   @javax.annotation.Nullable
