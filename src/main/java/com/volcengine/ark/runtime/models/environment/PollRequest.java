@@ -133,7 +133,7 @@ public class PollRequest {
   }
 
   /**
-   * Worker 实例 ID，用于控制面记录 work 归属和排障。
+   * Worker 实例 ID。Poll/Ack 用于记录 work owner；Heartbeat 携带非空值时必须与 Ack 保存的 owner 精确一致，否则返回 412。匹配 owner 的 Heartbeat 可将 &#x60;stopped + lease_expired&#x60; 直接恢复为 &#x60;active&#x60;。
    * @return arkWorkerID
    */
   @javax.annotation.Nullable

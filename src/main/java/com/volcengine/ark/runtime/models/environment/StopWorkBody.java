@@ -73,7 +73,7 @@ public class StopWorkBody {
   }
 
   /**
-   * 强制停止原因；仅允许与 &#x60;force&#x3D;true&#x60; 一起提交，省略时按 &#x60;others&#x60; 记录。 Worker 正常完成时传 &#x60;completed&#x60;，异常退出时传 &#x60;worker_abnormal&#x60;；用户或管理员操作分别传 &#x60;user_cancelled&#x60; 或 &#x60;admin_stopped&#x60;，无法归类时传 &#x60;others&#x60;。&#x60;lease_expired&#x60; 仅由平台在租约过期时写入，不应通过 StopWork 上报。该字段仅用于停止诊断；强停不会自动重新排队。
+   * 强制停止原因；仅允许与 &#x60;force&#x3D;true&#x60; 一起提交，省略时按 &#x60;others&#x60; 记录。 Worker 正常完成时传 &#x60;completed&#x60;，异常退出时传 &#x60;worker_abnormal&#x60;；用户或管理员操作分别传 &#x60;user_cancelled&#x60; 或 &#x60;admin_stopped&#x60;，无法归类时传 &#x60;others&#x60;。&#x60;lease_expired&#x60; 仅由平台在租约 过期时写入，不应通过 StopWork 上报。该字段仅用于停止诊断；强停不会自动重新排队。
    * @return reason
    */
   @javax.annotation.Nullable
