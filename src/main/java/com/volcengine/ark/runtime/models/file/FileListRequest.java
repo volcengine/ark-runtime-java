@@ -25,6 +25,7 @@ import java.util.Objects;
  * FileListRequest
  */
 @JsonPropertyOrder({
+  FileListRequest.JSON_PROPERTY_SCOPE_ID,
   FileListRequest.JSON_PROPERTY_PURPOSE,
   FileListRequest.JSON_PROPERTY_AFTER,
   FileListRequest.JSON_PROPERTY_LIMIT,
@@ -32,6 +33,10 @@ import java.util.Objects;
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class FileListRequest {
+  public static final String JSON_PROPERTY_SCOPE_ID = "scope_id";
+  @javax.annotation.Nullable
+  private String scopeId;
+
   public static final String JSON_PROPERTY_PURPOSE = "purpose";
   @javax.annotation.Nullable
   private Purpose purpose;
@@ -49,6 +54,31 @@ public class FileListRequest {
   private Order order;
 
   public FileListRequest() {
+  }
+
+  public FileListRequest scopeId(@javax.annotation.Nullable String scopeId) {
+
+    this.scopeId = scopeId;
+    return this;
+  }
+
+  /**
+   * Filter files by scope ID. For session-owned files, use the session ID.
+   * @return scopeId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SCOPE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getScopeId() {
+    return scopeId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SCOPE_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setScopeId(@javax.annotation.Nullable String scopeId) {
+    this.scopeId = scopeId;
   }
 
   public FileListRequest purpose(@javax.annotation.Nullable Purpose purpose) {
@@ -161,7 +191,8 @@ public class FileListRequest {
       return false;
     }
     FileListRequest fileListRequest = (FileListRequest) o;
-    return Objects.equals(this.purpose, fileListRequest.purpose) &&
+    return Objects.equals(this.scopeId, fileListRequest.scopeId) &&
+        Objects.equals(this.purpose, fileListRequest.purpose) &&
         Objects.equals(this.after, fileListRequest.after) &&
         Objects.equals(this.limit, fileListRequest.limit) &&
         Objects.equals(this.order, fileListRequest.order);
@@ -169,13 +200,14 @@ public class FileListRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(purpose, after, limit, order);
+    return Objects.hash(scopeId, purpose, after, limit, order);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class FileListRequest {\n");
+    sb.append("    scopeId: ").append(toIndentedString(scopeId)).append("\n");
     sb.append("    purpose: ").append(toIndentedString(purpose)).append("\n");
     sb.append("    after: ").append(toIndentedString(after)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
@@ -204,6 +236,10 @@ public class FileListRequest {
       this.instance = instance;
     }
 
+    public FileListRequest.Builder scopeId(String scopeId) {
+      this.instance.scopeId = scopeId;
+      return this;
+    }
     public FileListRequest.Builder purpose(Purpose purpose) {
       this.instance.purpose = purpose;
       return this;
@@ -254,6 +290,7 @@ public class FileListRequest {
   */
   public FileListRequest.Builder toBuilder() {
     return new FileListRequest.Builder()
+      .scopeId(getScopeId())
       .purpose(getPurpose())
       .after(getAfter())
       .limit(getLimit())
