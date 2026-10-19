@@ -39,6 +39,7 @@ import java.util.Objects;
   FileObject.JSON_PROPERTY_EXPIRE_AT,
   FileObject.JSON_PROPERTY_STATUS,
   FileObject.JSON_PROPERTY_DOWNLOAD_URL,
+  FileObject.JSON_PROPERTY_TOS,
   FileObject.JSON_PROPERTY_ERROR,
   FileObject.JSON_PROPERTY_PREPROCESS_CONFIGS
 })
@@ -124,6 +125,10 @@ public class FileObject {
   public static final String JSON_PROPERTY_DOWNLOAD_URL = "download_url";
   @javax.annotation.Nullable
   private String downloadUrl;
+
+  public static final String JSON_PROPERTY_TOS = "tos";
+  @javax.annotation.Nullable
+  private TosLocation tos;
 
   public static final String JSON_PROPERTY_ERROR = "error";
   @javax.annotation.Nullable
@@ -436,6 +441,31 @@ public class FileObject {
     this.downloadUrl = downloadUrl;
   }
 
+  public FileObject tos(@javax.annotation.Nullable TosLocation tos) {
+
+    this.tos = tos;
+    return this;
+  }
+
+  /**
+   * Stored object location. Only returned for files in user-owned TOS buckets.
+   * @return tos
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public TosLocation getTos() {
+    return tos;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TOS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTos(@javax.annotation.Nullable TosLocation tos) {
+    this.tos = tos;
+  }
+
   public FileObject error(@javax.annotation.Nullable FileError error) {
 
     this.error = error;
@@ -508,13 +538,14 @@ public class FileObject {
         Objects.equals(this.expireAt, fileObject.expireAt) &&
         Objects.equals(this.status, fileObject.status) &&
         Objects.equals(this.downloadUrl, fileObject.downloadUrl) &&
+        Objects.equals(this.tos, fileObject.tos) &&
         Objects.equals(this.error, fileObject.error) &&
         Objects.equals(this.preprocessConfigs, fileObject.preprocessConfigs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(_object, id, purpose, model, description, filename, bytes, mimeType, createdAt, expireAt, status, downloadUrl, error, preprocessConfigs);
+    return Objects.hash(_object, id, purpose, model, description, filename, bytes, mimeType, createdAt, expireAt, status, downloadUrl, tos, error, preprocessConfigs);
   }
 
   @Override
@@ -533,6 +564,7 @@ public class FileObject {
     sb.append("    expireAt: ").append(toIndentedString(expireAt)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    downloadUrl: ").append(toIndentedString(downloadUrl)).append("\n");
+    sb.append("    tos: ").append(toIndentedString(tos)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("    preprocessConfigs: ").append(toIndentedString(preprocessConfigs)).append("\n");
     sb.append("}");
@@ -607,6 +639,10 @@ public class FileObject {
       this.instance.downloadUrl = downloadUrl;
       return this;
     }
+    public FileObject.Builder tos(TosLocation tos) {
+      this.instance.tos = tos;
+      return this;
+    }
     public FileObject.Builder error(FileError error) {
       this.instance.error = error;
       return this;
@@ -661,6 +697,7 @@ public class FileObject {
       .expireAt(getExpireAt())
       .status(getStatus())
       .downloadUrl(getDownloadUrl())
+      .tos(getTos())
       .error(getError())
       .preprocessConfigs(getPreprocessConfigs());
   }
