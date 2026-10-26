@@ -43,7 +43,7 @@ public class VideoURL {
   }
 
   /**
-   * Public HTTP(S) URL or tos://&lt;bucket&gt;/&lt;key&gt;. Base64 and speaker references are not supported. Media properties and size are validated by the server.
+   * Public HTTP(S) URL or tos://&lt;bucket&gt;/&lt;key&gt;. Supported video resolutions: 360p, 480p, 720p and 1080p; minimum total pixel count (width * height): 172800. Base64 and speaker references are not supported. Media properties and size are validated by the server.
    * @return url
    */
   @javax.annotation.Nonnull

@@ -25,13 +25,17 @@ import java.util.Objects;
  * 文档块。
  */
 @JsonPropertyOrder({
+  ManagedAgentsDocumentBlock.JSON_PROPERTY_TYPE,
   ManagedAgentsDocumentBlock.JSON_PROPERTY_SOURCE,
   ManagedAgentsDocumentBlock.JSON_PROPERTY_TITLE,
-  ManagedAgentsDocumentBlock.JSON_PROPERTY_CONTEXT,
-  ManagedAgentsDocumentBlock.JSON_PROPERTY_TYPE
+  ManagedAgentsDocumentBlock.JSON_PROPERTY_CONTEXT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ManagedAgentsDocumentBlock implements ManagedAgentsMessageContentBlock, ManagedAgentsToolResultContentBlock {
+  public static final String JSON_PROPERTY_TYPE = "type";
+  @javax.annotation.Nonnull
+  private ContentBlockType type = ContentBlockType.DOCUMENT;
+
   public static final String JSON_PROPERTY_SOURCE = "source";
   @javax.annotation.Nonnull
   private DocumentSource source;
@@ -44,11 +48,32 @@ public class ManagedAgentsDocumentBlock implements ManagedAgentsMessageContentBl
   @javax.annotation.Nullable
   private String context;
 
-  public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull
-  private ContentBlockType type = ContentBlockType.DOCUMENT;
-
   public ManagedAgentsDocumentBlock() {
+  }
+
+  public ManagedAgentsDocumentBlock type(@javax.annotation.Nonnull ContentBlockType type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   * @return type
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public ContentBlockType getType() {
+    return type;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setType(@javax.annotation.Nonnull ContentBlockType type) {
+    this.type = type;
   }
 
   public ManagedAgentsDocumentBlock source(@javax.annotation.Nonnull DocumentSource source) {
@@ -126,31 +151,6 @@ public class ManagedAgentsDocumentBlock implements ManagedAgentsMessageContentBl
     this.context = context;
   }
 
-  public ManagedAgentsDocumentBlock type(@javax.annotation.Nonnull ContentBlockType type) {
-
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-  public ContentBlockType getType() {
-    return type;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull ContentBlockType type) {
-    this.type = type;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -161,25 +161,25 @@ public class ManagedAgentsDocumentBlock implements ManagedAgentsMessageContentBl
       return false;
     }
     ManagedAgentsDocumentBlock managedAgentsDocumentBlock = (ManagedAgentsDocumentBlock) o;
-    return Objects.equals(this.source, managedAgentsDocumentBlock.source) &&
+    return Objects.equals(this.type, managedAgentsDocumentBlock.type) &&
+        Objects.equals(this.source, managedAgentsDocumentBlock.source) &&
         Objects.equals(this.title, managedAgentsDocumentBlock.title) &&
-        Objects.equals(this.context, managedAgentsDocumentBlock.context) &&
-        Objects.equals(this.type, managedAgentsDocumentBlock.type);
+        Objects.equals(this.context, managedAgentsDocumentBlock.context);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(source, title, context, type);
+    return Objects.hash(type, source, title, context);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ManagedAgentsDocumentBlock {\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    context: ").append(toIndentedString(context)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -204,6 +204,10 @@ public class ManagedAgentsDocumentBlock implements ManagedAgentsMessageContentBl
       this.instance = instance;
     }
 
+    public ManagedAgentsDocumentBlock.Builder type(ContentBlockType type) {
+      this.instance.type = type;
+      return this;
+    }
     public ManagedAgentsDocumentBlock.Builder source(DocumentSource source) {
       this.instance.source = source;
       return this;
@@ -214,10 +218,6 @@ public class ManagedAgentsDocumentBlock implements ManagedAgentsMessageContentBl
     }
     public ManagedAgentsDocumentBlock.Builder context(String context) {
       this.instance.context = context;
-      return this;
-    }
-    public ManagedAgentsDocumentBlock.Builder type(ContentBlockType type) {
-      this.instance.type = type;
       return this;
     }
 
@@ -254,10 +254,10 @@ public class ManagedAgentsDocumentBlock implements ManagedAgentsMessageContentBl
   */
   public ManagedAgentsDocumentBlock.Builder toBuilder() {
     return new ManagedAgentsDocumentBlock.Builder()
+      .type(getType())
       .source(getSource())
       .title(getTitle())
-      .context(getContext())
-      .type(getType());
+      .context(getContext());
   }
 
 

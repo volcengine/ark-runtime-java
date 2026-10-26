@@ -52,6 +52,10 @@ public enum ItemType {
 
   REASONING("reasoning"),
 
+  TOOL_SEARCH_CALL("tool_search_call"),
+
+  TOOL_SEARCH_OUTPUT("tool_search_output"),
+
   TRANSCRIPTION("transcription"),
 
   WEB_SEARCH_CALL("web_search_call");

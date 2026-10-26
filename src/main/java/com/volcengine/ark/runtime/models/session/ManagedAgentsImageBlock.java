@@ -25,45 +25,20 @@ import java.util.Objects;
  * 图片块。
  */
 @JsonPropertyOrder({
-  ManagedAgentsImageBlock.JSON_PROPERTY_SOURCE,
-  ManagedAgentsImageBlock.JSON_PROPERTY_TYPE
+  ManagedAgentsImageBlock.JSON_PROPERTY_TYPE,
+  ManagedAgentsImageBlock.JSON_PROPERTY_SOURCE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ManagedAgentsImageBlock implements ManagedAgentsMessageContentBlock, ManagedAgentsToolResultContentBlock {
-  public static final String JSON_PROPERTY_SOURCE = "source";
-  @javax.annotation.Nonnull
-  private ImageSource source;
-
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
   private ContentBlockType type = ContentBlockType.IMAGE;
 
-  public ManagedAgentsImageBlock() {
-  }
-
-  public ManagedAgentsImageBlock source(@javax.annotation.Nonnull ImageSource source) {
-
-    this.source = source;
-    return this;
-  }
-
-  /**
-   * 图片来源。
-   * @return source
-   */
+  public static final String JSON_PROPERTY_SOURCE = "source";
   @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_SOURCE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  private ImageSource source;
 
-  public ImageSource getSource() {
-    return source;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_SOURCE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSource(@javax.annotation.Nonnull ImageSource source) {
-    this.source = source;
+  public ManagedAgentsImageBlock() {
   }
 
   public ManagedAgentsImageBlock type(@javax.annotation.Nonnull ContentBlockType type) {
@@ -91,6 +66,31 @@ public class ManagedAgentsImageBlock implements ManagedAgentsMessageContentBlock
     this.type = type;
   }
 
+  public ManagedAgentsImageBlock source(@javax.annotation.Nonnull ImageSource source) {
+
+    this.source = source;
+    return this;
+  }
+
+  /**
+   * 图片来源。
+   * @return source
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_SOURCE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public ImageSource getSource() {
+    return source;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SOURCE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setSource(@javax.annotation.Nonnull ImageSource source) {
+    this.source = source;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -101,21 +101,21 @@ public class ManagedAgentsImageBlock implements ManagedAgentsMessageContentBlock
       return false;
     }
     ManagedAgentsImageBlock managedAgentsImageBlock = (ManagedAgentsImageBlock) o;
-    return Objects.equals(this.source, managedAgentsImageBlock.source) &&
-        Objects.equals(this.type, managedAgentsImageBlock.type);
+    return Objects.equals(this.type, managedAgentsImageBlock.type) &&
+        Objects.equals(this.source, managedAgentsImageBlock.source);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(source, type);
+    return Objects.hash(type, source);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ManagedAgentsImageBlock {\n");
-    sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -140,12 +140,12 @@ public class ManagedAgentsImageBlock implements ManagedAgentsMessageContentBlock
       this.instance = instance;
     }
 
-    public ManagedAgentsImageBlock.Builder source(ImageSource source) {
-      this.instance.source = source;
-      return this;
-    }
     public ManagedAgentsImageBlock.Builder type(ContentBlockType type) {
       this.instance.type = type;
+      return this;
+    }
+    public ManagedAgentsImageBlock.Builder source(ImageSource source) {
+      this.instance.source = source;
       return this;
     }
 
@@ -182,8 +182,8 @@ public class ManagedAgentsImageBlock implements ManagedAgentsMessageContentBlock
   */
   public ManagedAgentsImageBlock.Builder toBuilder() {
     return new ManagedAgentsImageBlock.Builder()
-      .source(getSource())
-      .type(getType());
+      .type(getType())
+      .source(getSource());
   }
 
 

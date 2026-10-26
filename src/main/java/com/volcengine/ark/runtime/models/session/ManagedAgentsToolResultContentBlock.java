@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = ManagedAgentsImageBlock.class, name = "image"),
   @JsonSubTypes.Type(value = ManagedAgentsSearchResultBlock.class, name = "search_result"),
   @JsonSubTypes.Type(value = ManagedAgentsTextBlock.class, name = "text"),
+  @JsonSubTypes.Type(value = ManagedAgentsVideoBlock.class, name = "video"),
 })
 
 public interface ManagedAgentsToolResultContentBlock {

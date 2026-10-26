@@ -27,7 +27,8 @@ import java.util.Objects;
 @JsonPropertyOrder({
   ManagedAgentsSessionEvent.JSON_PROPERTY_TYPE,
   ManagedAgentsSessionEvent.JSON_PROPERTY_ID,
-  ManagedAgentsSessionEvent.JSON_PROPERTY_PROCESSED_AT
+  ManagedAgentsSessionEvent.JSON_PROPERTY_PROCESSED_AT,
+  ManagedAgentsSessionEvent.JSON_PROPERTY_STOP_REASON
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ManagedAgentsSessionEvent {
@@ -42,6 +43,10 @@ public class ManagedAgentsSessionEvent {
   public static final String JSON_PROPERTY_PROCESSED_AT = "processed_at";
   @javax.annotation.Nullable
   private String processedAt;
+
+  public static final String JSON_PROPERTY_STOP_REASON = "stop_reason";
+  @javax.annotation.Nullable
+  private ManagedAgentsSessionStopReason stopReason;
 
   public ManagedAgentsSessionEvent() {
   }
@@ -121,6 +126,31 @@ public class ManagedAgentsSessionEvent {
     this.processedAt = processedAt;
   }
 
+  public ManagedAgentsSessionEvent stopReason(@javax.annotation.Nullable ManagedAgentsSessionStopReason stopReason) {
+
+    this.stopReason = stopReason;
+    return this;
+  }
+
+  /**
+   * &#x60;session.status_idle&#x60; / &#x60;session.thread_status_idle&#x60; 的停止原因。
+   * @return stopReason
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_STOP_REASON, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public ManagedAgentsSessionStopReason getStopReason() {
+    return stopReason;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_STOP_REASON, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setStopReason(@javax.annotation.Nullable ManagedAgentsSessionStopReason stopReason) {
+    this.stopReason = stopReason;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -133,12 +163,13 @@ public class ManagedAgentsSessionEvent {
     ManagedAgentsSessionEvent managedAgentsSessionEvent = (ManagedAgentsSessionEvent) o;
     return Objects.equals(this.type, managedAgentsSessionEvent.type) &&
         Objects.equals(this.id, managedAgentsSessionEvent.id) &&
-        Objects.equals(this.processedAt, managedAgentsSessionEvent.processedAt);
+        Objects.equals(this.processedAt, managedAgentsSessionEvent.processedAt) &&
+        Objects.equals(this.stopReason, managedAgentsSessionEvent.stopReason);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, id, processedAt);
+    return Objects.hash(type, id, processedAt, stopReason);
   }
 
   @Override
@@ -148,6 +179,7 @@ public class ManagedAgentsSessionEvent {
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    processedAt: ").append(toIndentedString(processedAt)).append("\n");
+    sb.append("    stopReason: ").append(toIndentedString(stopReason)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -182,6 +214,10 @@ public class ManagedAgentsSessionEvent {
     }
     public ManagedAgentsSessionEvent.Builder processedAt(String processedAt) {
       this.instance.processedAt = processedAt;
+      return this;
+    }
+    public ManagedAgentsSessionEvent.Builder stopReason(ManagedAgentsSessionStopReason stopReason) {
+      this.instance.stopReason = stopReason;
       return this;
     }
 
@@ -220,7 +256,8 @@ public class ManagedAgentsSessionEvent {
     return new ManagedAgentsSessionEvent.Builder()
       .type(getType())
       .id(getId())
-      .processedAt(getProcessedAt());
+      .processedAt(getProcessedAt())
+      .stopReason(getStopReason());
   }
 
 

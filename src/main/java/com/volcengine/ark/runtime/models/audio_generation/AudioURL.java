@@ -43,7 +43,7 @@ public class AudioURL {
   }
 
   /**
-   * Public HTTP(S) URL, speaker://&lt;id&gt;, file://&lt;file_id&gt; for registered reference audio, or data:audio/{wav,mp3};base64,&lt;payload&gt;. Decoded base64 audio is limited to 15 MiB for reference generation; separation uses a 90 MiB source-audio limit. A speaker reference cannot be used for separation.
+   * Public HTTP(S) URL, speaker://&lt;id&gt; for a preset speaker, file://&lt;file_id&gt; for a custom voice registered through the Files API, or data:audio/{wav,mp3};base64,&lt;payload&gt;. Voice-cloning speaker IDs are not supported. Decoded base64 audio is limited to 15 MiB for reference generation; separation uses a 90 MiB source-audio limit. A speaker reference cannot be used for separation.
    * @return url
    */
   @javax.annotation.Nonnull

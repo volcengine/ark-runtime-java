@@ -30,6 +30,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
   @JsonSubTypes.Type(value = ItemFunctionMcpListTools.class, name = "mcp_list_tools"),
   @JsonSubTypes.Type(value = ItemEasyMessage.class, name = "message"),
   @JsonSubTypes.Type(value = ItemReasoning.class, name = "reasoning"),
+  @JsonSubTypes.Type(value = ItemToolSearchCall.class, name = "tool_search_call"),
+  @JsonSubTypes.Type(value = ItemToolSearchOutput.class, name = "tool_search_output"),
 })
 
 @com.volcengine.ark.runtime.utils.UnknownVariantFallback(UnknownInputItem.class)

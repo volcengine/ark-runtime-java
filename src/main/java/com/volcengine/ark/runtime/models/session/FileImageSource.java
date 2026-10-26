@@ -25,45 +25,20 @@ import java.util.Objects;
  * 通过 Files API 上传后引用的图片。
  */
 @JsonPropertyOrder({
-  FileImageSource.JSON_PROPERTY_FILE_ID,
-  FileImageSource.JSON_PROPERTY_TYPE
+  FileImageSource.JSON_PROPERTY_TYPE,
+  FileImageSource.JSON_PROPERTY_FILE_ID
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class FileImageSource implements ImageSource {
-  public static final String JSON_PROPERTY_FILE_ID = "file_id";
-  @javax.annotation.Nonnull
-  private String fileId;
-
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
   private ImageSourceType type = ImageSourceType.FILE;
 
-  public FileImageSource() {
-  }
-
-  public FileImageSource fileId(@javax.annotation.Nonnull String fileId) {
-
-    this.fileId = fileId;
-    return this;
-  }
-
-  /**
-   * file id，形如 &#x60;file_...&#x60;。
-   * @return fileId
-   */
+  public static final String JSON_PROPERTY_FILE_ID = "file_id";
   @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_FILE_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  private String fileId;
 
-  public String getFileId() {
-    return fileId;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_FILE_ID, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setFileId(@javax.annotation.Nonnull String fileId) {
-    this.fileId = fileId;
+  public FileImageSource() {
   }
 
   public FileImageSource type(@javax.annotation.Nonnull ImageSourceType type) {
@@ -91,6 +66,31 @@ public class FileImageSource implements ImageSource {
     this.type = type;
   }
 
+  public FileImageSource fileId(@javax.annotation.Nonnull String fileId) {
+
+    this.fileId = fileId;
+    return this;
+  }
+
+  /**
+   * file id，形如 &#x60;file_...&#x60;。
+   * @return fileId
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_FILE_ID, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public String getFileId() {
+    return fileId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FILE_ID, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setFileId(@javax.annotation.Nonnull String fileId) {
+    this.fileId = fileId;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -101,21 +101,21 @@ public class FileImageSource implements ImageSource {
       return false;
     }
     FileImageSource fileImageSource = (FileImageSource) o;
-    return Objects.equals(this.fileId, fileImageSource.fileId) &&
-        Objects.equals(this.type, fileImageSource.type);
+    return Objects.equals(this.type, fileImageSource.type) &&
+        Objects.equals(this.fileId, fileImageSource.fileId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(fileId, type);
+    return Objects.hash(type, fileId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class FileImageSource {\n");
-    sb.append("    fileId: ").append(toIndentedString(fileId)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    fileId: ").append(toIndentedString(fileId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -140,12 +140,12 @@ public class FileImageSource implements ImageSource {
       this.instance = instance;
     }
 
-    public FileImageSource.Builder fileId(String fileId) {
-      this.instance.fileId = fileId;
-      return this;
-    }
     public FileImageSource.Builder type(ImageSourceType type) {
       this.instance.type = type;
+      return this;
+    }
+    public FileImageSource.Builder fileId(String fileId) {
+      this.instance.fileId = fileId;
       return this;
     }
 
@@ -182,8 +182,8 @@ public class FileImageSource implements ImageSource {
   */
   public FileImageSource.Builder toBuilder() {
     return new FileImageSource.Builder()
-      .fileId(getFileId())
-      .type(getType());
+      .type(getType())
+      .fileId(getFileId());
   }
 
 
