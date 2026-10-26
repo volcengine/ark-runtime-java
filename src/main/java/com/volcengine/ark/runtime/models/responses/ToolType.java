@@ -38,6 +38,10 @@ public enum ToolType {
 
   MCP("mcp"),
 
+  NAMESPACE("namespace"),
+
+  TOOL_SEARCH("tool_search"),
+
   WEB_SEARCH("web_search");
 
   private String value;

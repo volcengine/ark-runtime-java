@@ -16,24 +16,89 @@
 
 package com.volcengine.ark.runtime.models.session;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 
 /**
  * 搜索结果内的纯文本片段。
  */
 @JsonPropertyOrder({
+  SearchResultContent.JSON_PROPERTY_TYPE,
   SearchResultContent.JSON_PROPERTY_TEXT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class SearchResultContent {
+  /**
+   * Gets or Sets type
+   */
+  public enum TypeEnum {
+    TEXT(String.valueOf("text"));
+
+    private String value;
+
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TypeEnum fromValue(String value) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (b.value.equalsIgnoreCase(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  public static final String JSON_PROPERTY_TYPE = "type";
+  @javax.annotation.Nonnull
+  private TypeEnum type;
+
   public static final String JSON_PROPERTY_TEXT = "text";
   @javax.annotation.Nonnull
   private String text;
 
   public SearchResultContent() {
+  }
+
+  public SearchResultContent type(@javax.annotation.Nonnull TypeEnum type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   * @return type
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public TypeEnum getType() {
+    return type;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setType(@javax.annotation.Nonnull TypeEnum type) {
+    this.type = type;
   }
 
   public SearchResultContent text(@javax.annotation.Nonnull String text) {
@@ -71,18 +136,20 @@ public class SearchResultContent {
       return false;
     }
     SearchResultContent searchResultContent = (SearchResultContent) o;
-    return Objects.equals(this.text, searchResultContent.text);
+    return Objects.equals(this.type, searchResultContent.type) &&
+        Objects.equals(this.text, searchResultContent.text);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(text);
+    return Objects.hash(type, text);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SearchResultContent {\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    text: ").append(toIndentedString(text)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -108,6 +175,10 @@ public class SearchResultContent {
       this.instance = instance;
     }
 
+    public SearchResultContent.Builder type(TypeEnum type) {
+      this.instance.type = type;
+      return this;
+    }
     public SearchResultContent.Builder text(String text) {
       this.instance.text = text;
       return this;
@@ -146,6 +217,7 @@ public class SearchResultContent {
   */
   public SearchResultContent.Builder toBuilder() {
     return new SearchResultContent.Builder()
+      .type(getType())
       .text(getText());
   }
 

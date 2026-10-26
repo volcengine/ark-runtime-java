@@ -31,7 +31,9 @@ public enum ContentBlockType {
 
   SEARCH_RESULT("search_result"),
 
-  TEXT("text");
+  TEXT("text"),
+
+  VIDEO("video");
 
   private String value;
 

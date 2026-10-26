@@ -63,7 +63,7 @@ public class ManagedAgentsUserMessageEventParams implements ManagedAgentsEventPa
   }
 
   /**
-   * 消息 content：多模态 block 列表（text / image / document）。
+   * 消息 content：多模态 block 列表（text / image / document / video）。
    * @return content
    */
   @javax.annotation.Nullable

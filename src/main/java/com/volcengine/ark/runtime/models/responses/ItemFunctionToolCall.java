@@ -30,6 +30,7 @@ import java.util.Objects;
   ItemFunctionToolCall.JSON_PROPERTY_ARGUMENTS,
   ItemFunctionToolCall.JSON_PROPERTY_CALL_ID,
   ItemFunctionToolCall.JSON_PROPERTY_NAME,
+  ItemFunctionToolCall.JSON_PROPERTY_NAMESPACE,
   ItemFunctionToolCall.JSON_PROPERTY_STATUS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
@@ -53,6 +54,10 @@ public class ItemFunctionToolCall implements InputItem, OutputItem {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nullable
   private String name;
+
+  public static final String JSON_PROPERTY_NAMESPACE = "namespace";
+  @javax.annotation.Nullable
+  private String namespace;
 
   public static final String JSON_PROPERTY_STATUS = "status";
   @javax.annotation.Nullable
@@ -186,6 +191,31 @@ public class ItemFunctionToolCall implements InputItem, OutputItem {
     this.name = name;
   }
 
+  public ItemFunctionToolCall namespace(@javax.annotation.Nullable String namespace) {
+
+    this.namespace = namespace;
+    return this;
+  }
+
+  /**
+   * Namespace of the called function, omitted for top-level functions.
+   * @return namespace
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_NAMESPACE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getNamespace() {
+    return namespace;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_NAMESPACE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setNamespace(@javax.annotation.Nullable String namespace) {
+    this.namespace = namespace;
+  }
+
   public ItemFunctionToolCall status(@javax.annotation.Nullable ItemStatus status) {
 
     this.status = status;
@@ -226,12 +256,13 @@ public class ItemFunctionToolCall implements InputItem, OutputItem {
         Objects.equals(this.arguments, itemFunctionToolCall.arguments) &&
         Objects.equals(this.callId, itemFunctionToolCall.callId) &&
         Objects.equals(this.name, itemFunctionToolCall.name) &&
+        Objects.equals(this.namespace, itemFunctionToolCall.namespace) &&
         Objects.equals(this.status, itemFunctionToolCall.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, arguments, callId, name, status);
+    return Objects.hash(id, type, arguments, callId, name, namespace, status);
   }
 
   @Override
@@ -243,6 +274,7 @@ public class ItemFunctionToolCall implements InputItem, OutputItem {
     sb.append("    arguments: ").append(toIndentedString(arguments)).append("\n");
     sb.append("    callId: ").append(toIndentedString(callId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    namespace: ").append(toIndentedString(namespace)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -288,6 +320,10 @@ public class ItemFunctionToolCall implements InputItem, OutputItem {
       this.instance.name = name;
       return this;
     }
+    public ItemFunctionToolCall.Builder namespace(String namespace) {
+      this.instance.namespace = namespace;
+      return this;
+    }
     public ItemFunctionToolCall.Builder status(ItemStatus status) {
       this.instance.status = status;
       return this;
@@ -331,6 +367,7 @@ public class ItemFunctionToolCall implements InputItem, OutputItem {
       .arguments(getArguments())
       .callId(getCallId())
       .name(getName())
+      .namespace(getNamespace())
       .status(getStatus());
   }
 

@@ -25,12 +25,16 @@ import java.util.Objects;
  * 纯文本文档；&#x60;media_type&#x60; 必须为 &#x60;text/plain&#x60;；&#x60;data&#x60; 是原文。
  */
 @JsonPropertyOrder({
+  PlainTextDocumentSource.JSON_PROPERTY_TYPE,
   PlainTextDocumentSource.JSON_PROPERTY_DATA,
-  PlainTextDocumentSource.JSON_PROPERTY_MEDIA_TYPE,
-  PlainTextDocumentSource.JSON_PROPERTY_TYPE
+  PlainTextDocumentSource.JSON_PROPERTY_MEDIA_TYPE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class PlainTextDocumentSource implements DocumentSource {
+  public static final String JSON_PROPERTY_TYPE = "type";
+  @javax.annotation.Nonnull
+  private DocumentSourceType type = DocumentSourceType.TEXT;
+
   public static final String JSON_PROPERTY_DATA = "data";
   @javax.annotation.Nonnull
   private String data;
@@ -39,11 +43,32 @@ public class PlainTextDocumentSource implements DocumentSource {
   @javax.annotation.Nonnull
   private String mediaType;
 
-  public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull
-  private DocumentSourceType type = DocumentSourceType.TEXT;
-
   public PlainTextDocumentSource() {
+  }
+
+  public PlainTextDocumentSource type(@javax.annotation.Nonnull DocumentSourceType type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   * @return type
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public DocumentSourceType getType() {
+    return type;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setType(@javax.annotation.Nonnull DocumentSourceType type) {
+    this.type = type;
   }
 
   public PlainTextDocumentSource data(@javax.annotation.Nonnull String data) {
@@ -96,31 +121,6 @@ public class PlainTextDocumentSource implements DocumentSource {
     this.mediaType = mediaType;
   }
 
-  public PlainTextDocumentSource type(@javax.annotation.Nonnull DocumentSourceType type) {
-
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-  public DocumentSourceType getType() {
-    return type;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull DocumentSourceType type) {
-    this.type = type;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -131,23 +131,23 @@ public class PlainTextDocumentSource implements DocumentSource {
       return false;
     }
     PlainTextDocumentSource plainTextDocumentSource = (PlainTextDocumentSource) o;
-    return Objects.equals(this.data, plainTextDocumentSource.data) &&
-        Objects.equals(this.mediaType, plainTextDocumentSource.mediaType) &&
-        Objects.equals(this.type, plainTextDocumentSource.type);
+    return Objects.equals(this.type, plainTextDocumentSource.type) &&
+        Objects.equals(this.data, plainTextDocumentSource.data) &&
+        Objects.equals(this.mediaType, plainTextDocumentSource.mediaType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(data, mediaType, type);
+    return Objects.hash(type, data, mediaType);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PlainTextDocumentSource {\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("    mediaType: ").append(toIndentedString(mediaType)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -172,16 +172,16 @@ public class PlainTextDocumentSource implements DocumentSource {
       this.instance = instance;
     }
 
+    public PlainTextDocumentSource.Builder type(DocumentSourceType type) {
+      this.instance.type = type;
+      return this;
+    }
     public PlainTextDocumentSource.Builder data(String data) {
       this.instance.data = data;
       return this;
     }
     public PlainTextDocumentSource.Builder mediaType(String mediaType) {
       this.instance.mediaType = mediaType;
-      return this;
-    }
-    public PlainTextDocumentSource.Builder type(DocumentSourceType type) {
-      this.instance.type = type;
       return this;
     }
 
@@ -218,9 +218,9 @@ public class PlainTextDocumentSource implements DocumentSource {
   */
   public PlainTextDocumentSource.Builder toBuilder() {
     return new PlainTextDocumentSource.Builder()
+      .type(getType())
       .data(getData())
-      .mediaType(getMediaType())
-      .type(getType());
+      .mediaType(getMediaType());
   }
 
 

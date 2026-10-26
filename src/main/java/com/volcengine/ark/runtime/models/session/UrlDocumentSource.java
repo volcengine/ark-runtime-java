@@ -25,45 +25,20 @@ import java.util.Objects;
  * 通过 URL 引用的文档。
  */
 @JsonPropertyOrder({
-  UrlDocumentSource.JSON_PROPERTY_URL,
-  UrlDocumentSource.JSON_PROPERTY_TYPE
+  UrlDocumentSource.JSON_PROPERTY_TYPE,
+  UrlDocumentSource.JSON_PROPERTY_URL
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class UrlDocumentSource implements DocumentSource {
-  public static final String JSON_PROPERTY_URL = "url";
-  @javax.annotation.Nonnull
-  private String url;
-
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
   private DocumentSourceType type = DocumentSourceType.URL;
 
-  public UrlDocumentSource() {
-  }
-
-  public UrlDocumentSource url(@javax.annotation.Nonnull String url) {
-
-    this.url = url;
-    return this;
-  }
-
-  /**
-   * 文档 URL。
-   * @return url
-   */
+  public static final String JSON_PROPERTY_URL = "url";
   @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_URL, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  private String url;
 
-  public String getUrl() {
-    return url;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_URL, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setUrl(@javax.annotation.Nonnull String url) {
-    this.url = url;
+  public UrlDocumentSource() {
   }
 
   public UrlDocumentSource type(@javax.annotation.Nonnull DocumentSourceType type) {
@@ -91,6 +66,31 @@ public class UrlDocumentSource implements DocumentSource {
     this.type = type;
   }
 
+  public UrlDocumentSource url(@javax.annotation.Nonnull String url) {
+
+    this.url = url;
+    return this;
+  }
+
+  /**
+   * 文档 URL。
+   * @return url
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_URL, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public String getUrl() {
+    return url;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_URL, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setUrl(@javax.annotation.Nonnull String url) {
+    this.url = url;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -101,21 +101,21 @@ public class UrlDocumentSource implements DocumentSource {
       return false;
     }
     UrlDocumentSource urlDocumentSource = (UrlDocumentSource) o;
-    return Objects.equals(this.url, urlDocumentSource.url) &&
-        Objects.equals(this.type, urlDocumentSource.type);
+    return Objects.equals(this.type, urlDocumentSource.type) &&
+        Objects.equals(this.url, urlDocumentSource.url);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(url, type);
+    return Objects.hash(type, url);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UrlDocumentSource {\n");
-    sb.append("    url: ").append(toIndentedString(url)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    url: ").append(toIndentedString(url)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -140,12 +140,12 @@ public class UrlDocumentSource implements DocumentSource {
       this.instance = instance;
     }
 
-    public UrlDocumentSource.Builder url(String url) {
-      this.instance.url = url;
-      return this;
-    }
     public UrlDocumentSource.Builder type(DocumentSourceType type) {
       this.instance.type = type;
+      return this;
+    }
+    public UrlDocumentSource.Builder url(String url) {
+      this.instance.url = url;
       return this;
     }
 
@@ -182,8 +182,8 @@ public class UrlDocumentSource implements DocumentSource {
   */
   public UrlDocumentSource.Builder toBuilder() {
     return new UrlDocumentSource.Builder()
-      .url(getUrl())
-      .type(getType());
+      .type(getType())
+      .url(getUrl());
   }
 
 

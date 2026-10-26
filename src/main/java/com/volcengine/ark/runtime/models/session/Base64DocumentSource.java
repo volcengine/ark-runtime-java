@@ -25,12 +25,16 @@ import java.util.Objects;
  * 直接以 base64 携带的文档数据。
  */
 @JsonPropertyOrder({
+  Base64DocumentSource.JSON_PROPERTY_TYPE,
   Base64DocumentSource.JSON_PROPERTY_DATA,
-  Base64DocumentSource.JSON_PROPERTY_MEDIA_TYPE,
-  Base64DocumentSource.JSON_PROPERTY_TYPE
+  Base64DocumentSource.JSON_PROPERTY_MEDIA_TYPE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class Base64DocumentSource implements DocumentSource {
+  public static final String JSON_PROPERTY_TYPE = "type";
+  @javax.annotation.Nonnull
+  private DocumentSourceType type = DocumentSourceType.BASE64;
+
   public static final String JSON_PROPERTY_DATA = "data";
   @javax.annotation.Nonnull
   private String data;
@@ -39,11 +43,32 @@ public class Base64DocumentSource implements DocumentSource {
   @javax.annotation.Nonnull
   private String mediaType;
 
-  public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull
-  private DocumentSourceType type = DocumentSourceType.BASE64;
-
   public Base64DocumentSource() {
+  }
+
+  public Base64DocumentSource type(@javax.annotation.Nonnull DocumentSourceType type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   * @return type
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public DocumentSourceType getType() {
+    return type;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setType(@javax.annotation.Nonnull DocumentSourceType type) {
+    this.type = type;
   }
 
   public Base64DocumentSource data(@javax.annotation.Nonnull String data) {
@@ -96,31 +121,6 @@ public class Base64DocumentSource implements DocumentSource {
     this.mediaType = mediaType;
   }
 
-  public Base64DocumentSource type(@javax.annotation.Nonnull DocumentSourceType type) {
-
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-  public DocumentSourceType getType() {
-    return type;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull DocumentSourceType type) {
-    this.type = type;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -131,23 +131,23 @@ public class Base64DocumentSource implements DocumentSource {
       return false;
     }
     Base64DocumentSource base64DocumentSource = (Base64DocumentSource) o;
-    return Objects.equals(this.data, base64DocumentSource.data) &&
-        Objects.equals(this.mediaType, base64DocumentSource.mediaType) &&
-        Objects.equals(this.type, base64DocumentSource.type);
+    return Objects.equals(this.type, base64DocumentSource.type) &&
+        Objects.equals(this.data, base64DocumentSource.data) &&
+        Objects.equals(this.mediaType, base64DocumentSource.mediaType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(data, mediaType, type);
+    return Objects.hash(type, data, mediaType);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Base64DocumentSource {\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("    mediaType: ").append(toIndentedString(mediaType)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -172,16 +172,16 @@ public class Base64DocumentSource implements DocumentSource {
       this.instance = instance;
     }
 
+    public Base64DocumentSource.Builder type(DocumentSourceType type) {
+      this.instance.type = type;
+      return this;
+    }
     public Base64DocumentSource.Builder data(String data) {
       this.instance.data = data;
       return this;
     }
     public Base64DocumentSource.Builder mediaType(String mediaType) {
       this.instance.mediaType = mediaType;
-      return this;
-    }
-    public Base64DocumentSource.Builder type(DocumentSourceType type) {
-      this.instance.type = type;
       return this;
     }
 
@@ -218,9 +218,9 @@ public class Base64DocumentSource implements DocumentSource {
   */
   public Base64DocumentSource.Builder toBuilder() {
     return new Base64DocumentSource.Builder()
+      .type(getType())
       .data(getData())
-      .mediaType(getMediaType())
-      .type(getType());
+      .mediaType(getMediaType());
   }
 
 

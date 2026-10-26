@@ -25,45 +25,20 @@ import java.util.Objects;
  * 文本块。用于 user.message / tool_result / system.message 的 content 列表。
  */
 @JsonPropertyOrder({
-  ManagedAgentsTextBlock.JSON_PROPERTY_TEXT,
-  ManagedAgentsTextBlock.JSON_PROPERTY_TYPE
+  ManagedAgentsTextBlock.JSON_PROPERTY_TYPE,
+  ManagedAgentsTextBlock.JSON_PROPERTY_TEXT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ManagedAgentsTextBlock implements ManagedAgentsMessageContentBlock, ManagedAgentsToolResultContentBlock {
-  public static final String JSON_PROPERTY_TEXT = "text";
-  @javax.annotation.Nonnull
-  private String text;
-
   public static final String JSON_PROPERTY_TYPE = "type";
   @javax.annotation.Nonnull
   private ContentBlockType type = ContentBlockType.TEXT;
 
-  public ManagedAgentsTextBlock() {
-  }
-
-  public ManagedAgentsTextBlock text(@javax.annotation.Nonnull String text) {
-
-    this.text = text;
-    return this;
-  }
-
-  /**
-   * 文本内容。
-   * @return text
-   */
+  public static final String JSON_PROPERTY_TEXT = "text";
   @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TEXT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  private String text;
 
-  public String getText() {
-    return text;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_TEXT, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setText(@javax.annotation.Nonnull String text) {
-    this.text = text;
+  public ManagedAgentsTextBlock() {
   }
 
   public ManagedAgentsTextBlock type(@javax.annotation.Nonnull ContentBlockType type) {
@@ -91,6 +66,31 @@ public class ManagedAgentsTextBlock implements ManagedAgentsMessageContentBlock,
     this.type = type;
   }
 
+  public ManagedAgentsTextBlock text(@javax.annotation.Nonnull String text) {
+
+    this.text = text;
+    return this;
+  }
+
+  /**
+   * 文本内容。
+   * @return text
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_TEXT, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public String getText() {
+    return text;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TEXT, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setText(@javax.annotation.Nonnull String text) {
+    this.text = text;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -101,21 +101,21 @@ public class ManagedAgentsTextBlock implements ManagedAgentsMessageContentBlock,
       return false;
     }
     ManagedAgentsTextBlock managedAgentsTextBlock = (ManagedAgentsTextBlock) o;
-    return Objects.equals(this.text, managedAgentsTextBlock.text) &&
-        Objects.equals(this.type, managedAgentsTextBlock.type);
+    return Objects.equals(this.type, managedAgentsTextBlock.type) &&
+        Objects.equals(this.text, managedAgentsTextBlock.text);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(text, type);
+    return Objects.hash(type, text);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ManagedAgentsTextBlock {\n");
-    sb.append("    text: ").append(toIndentedString(text)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    text: ").append(toIndentedString(text)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -140,12 +140,12 @@ public class ManagedAgentsTextBlock implements ManagedAgentsMessageContentBlock,
       this.instance = instance;
     }
 
-    public ManagedAgentsTextBlock.Builder text(String text) {
-      this.instance.text = text;
-      return this;
-    }
     public ManagedAgentsTextBlock.Builder type(ContentBlockType type) {
       this.instance.type = type;
+      return this;
+    }
+    public ManagedAgentsTextBlock.Builder text(String text) {
+      this.instance.text = text;
       return this;
     }
 
@@ -182,8 +182,8 @@ public class ManagedAgentsTextBlock implements ManagedAgentsMessageContentBlock,
   */
   public ManagedAgentsTextBlock.Builder toBuilder() {
     return new ManagedAgentsTextBlock.Builder()
-      .text(getText())
-      .type(getType());
+      .type(getType())
+      .text(getText());
   }
 
 

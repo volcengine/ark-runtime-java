@@ -30,10 +30,11 @@ import java.util.Objects;
   FunctionTool.JSON_PROPERTY_NAME,
   FunctionTool.JSON_PROPERTY_PARAMETERS,
   FunctionTool.JSON_PROPERTY_TYPE,
-  FunctionTool.JSON_PROPERTY_DESCRIPTION
+  FunctionTool.JSON_PROPERTY_DESCRIPTION,
+  FunctionTool.JSON_PROPERTY_DEFER_LOADING
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class FunctionTool implements Tool {
+public class FunctionTool implements Tool, ToolSearchResultTool {
   public static final String JSON_PROPERTY_NAME = "name";
   @javax.annotation.Nonnull
   private String name;
@@ -49,6 +50,10 @@ public class FunctionTool implements Tool {
   public static final String JSON_PROPERTY_DESCRIPTION = "description";
   @javax.annotation.Nullable
   private String description;
+
+  public static final String JSON_PROPERTY_DEFER_LOADING = "defer_loading";
+  @javax.annotation.Nullable
+  private Boolean deferLoading;
 
   public FunctionTool() {
   }
@@ -161,6 +166,31 @@ public class FunctionTool implements Tool {
     this.description = description;
   }
 
+  public FunctionTool deferLoading(@javax.annotation.Nullable Boolean deferLoading) {
+
+    this.deferLoading = deferLoading;
+    return this;
+  }
+
+  /**
+   * Defer the full schema until tool_search loads this function. Defaults to false.
+   * @return deferLoading
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DEFER_LOADING, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getDeferLoading() {
+    return deferLoading;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DEFER_LOADING, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setDeferLoading(@javax.annotation.Nullable Boolean deferLoading) {
+    this.deferLoading = deferLoading;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -174,12 +204,13 @@ public class FunctionTool implements Tool {
     return Objects.equals(this.name, functionTool.name) &&
         Objects.equals(this.parameters, functionTool.parameters) &&
         Objects.equals(this.type, functionTool.type) &&
-        Objects.equals(this.description, functionTool.description);
+        Objects.equals(this.description, functionTool.description) &&
+        Objects.equals(this.deferLoading, functionTool.deferLoading);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, parameters, type, description);
+    return Objects.hash(name, parameters, type, description, deferLoading);
   }
 
   @Override
@@ -190,6 +221,7 @@ public class FunctionTool implements Tool {
     sb.append("    parameters: ").append(toIndentedString(parameters)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    deferLoading: ").append(toIndentedString(deferLoading)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -230,6 +262,10 @@ public class FunctionTool implements Tool {
       this.instance.description = description;
       return this;
     }
+    public FunctionTool.Builder deferLoading(Boolean deferLoading) {
+      this.instance.deferLoading = deferLoading;
+      return this;
+    }
 
 
     /**
@@ -267,7 +303,8 @@ public class FunctionTool implements Tool {
       .name(getName())
       .parameters(getParameters())
       .type(getType())
-      .description(getDescription());
+      .description(getDescription())
+      .deferLoading(getDeferLoading());
   }
 
 

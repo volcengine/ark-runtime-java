@@ -27,14 +27,18 @@ import java.util.Objects;
  * 搜索结果块——多个 SearchResultContent 文本片段 + 元信息。
  */
 @JsonPropertyOrder({
+  ManagedAgentsSearchResultBlock.JSON_PROPERTY_TYPE,
   ManagedAgentsSearchResultBlock.JSON_PROPERTY_CITATIONS,
   ManagedAgentsSearchResultBlock.JSON_PROPERTY_CONTENT,
   ManagedAgentsSearchResultBlock.JSON_PROPERTY_SOURCE,
-  ManagedAgentsSearchResultBlock.JSON_PROPERTY_TITLE,
-  ManagedAgentsSearchResultBlock.JSON_PROPERTY_TYPE
+  ManagedAgentsSearchResultBlock.JSON_PROPERTY_TITLE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ManagedAgentsSearchResultBlock implements ManagedAgentsToolResultContentBlock {
+  public static final String JSON_PROPERTY_TYPE = "type";
+  @javax.annotation.Nonnull
+  private ContentBlockType type = ContentBlockType.SEARCH_RESULT;
+
   public static final String JSON_PROPERTY_CITATIONS = "citations";
   @javax.annotation.Nonnull
   private SearchResultCitations citations;
@@ -51,11 +55,32 @@ public class ManagedAgentsSearchResultBlock implements ManagedAgentsToolResultCo
   @javax.annotation.Nonnull
   private String title;
 
-  public static final String JSON_PROPERTY_TYPE = "type";
-  @javax.annotation.Nonnull
-  private ContentBlockType type = ContentBlockType.SEARCH_RESULT;
-
   public ManagedAgentsSearchResultBlock() {
+  }
+
+  public ManagedAgentsSearchResultBlock type(@javax.annotation.Nonnull ContentBlockType type) {
+
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   * @return type
+   */
+  @javax.annotation.Nonnull
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+
+  public ContentBlockType getType() {
+    return type;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
+  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  public void setType(@javax.annotation.Nonnull ContentBlockType type) {
+    this.type = type;
   }
 
   public ManagedAgentsSearchResultBlock citations(@javax.annotation.Nonnull SearchResultCitations citations) {
@@ -166,31 +191,6 @@ public class ManagedAgentsSearchResultBlock implements ManagedAgentsToolResultCo
     this.title = title;
   }
 
-  public ManagedAgentsSearchResultBlock type(@javax.annotation.Nonnull ContentBlockType type) {
-
-    this.type = type;
-    return this;
-  }
-
-  /**
-   * Get type
-   * @return type
-   */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-  public ContentBlockType getType() {
-    return type;
-  }
-
-
-  @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setType(@javax.annotation.Nonnull ContentBlockType type) {
-    this.type = type;
-  }
-
 
   @Override
   public boolean equals(Object o) {
@@ -201,27 +201,27 @@ public class ManagedAgentsSearchResultBlock implements ManagedAgentsToolResultCo
       return false;
     }
     ManagedAgentsSearchResultBlock managedAgentsSearchResultBlock = (ManagedAgentsSearchResultBlock) o;
-    return Objects.equals(this.citations, managedAgentsSearchResultBlock.citations) &&
+    return Objects.equals(this.type, managedAgentsSearchResultBlock.type) &&
+        Objects.equals(this.citations, managedAgentsSearchResultBlock.citations) &&
         Objects.equals(this.content, managedAgentsSearchResultBlock.content) &&
         Objects.equals(this.source, managedAgentsSearchResultBlock.source) &&
-        Objects.equals(this.title, managedAgentsSearchResultBlock.title) &&
-        Objects.equals(this.type, managedAgentsSearchResultBlock.type);
+        Objects.equals(this.title, managedAgentsSearchResultBlock.title);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(citations, content, source, title, type);
+    return Objects.hash(type, citations, content, source, title);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ManagedAgentsSearchResultBlock {\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    citations: ").append(toIndentedString(citations)).append("\n");
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -246,6 +246,10 @@ public class ManagedAgentsSearchResultBlock implements ManagedAgentsToolResultCo
       this.instance = instance;
     }
 
+    public ManagedAgentsSearchResultBlock.Builder type(ContentBlockType type) {
+      this.instance.type = type;
+      return this;
+    }
     public ManagedAgentsSearchResultBlock.Builder citations(SearchResultCitations citations) {
       this.instance.citations = citations;
       return this;
@@ -260,10 +264,6 @@ public class ManagedAgentsSearchResultBlock implements ManagedAgentsToolResultCo
     }
     public ManagedAgentsSearchResultBlock.Builder title(String title) {
       this.instance.title = title;
-      return this;
-    }
-    public ManagedAgentsSearchResultBlock.Builder type(ContentBlockType type) {
-      this.instance.type = type;
       return this;
     }
 
@@ -300,11 +300,11 @@ public class ManagedAgentsSearchResultBlock implements ManagedAgentsToolResultCo
   */
   public ManagedAgentsSearchResultBlock.Builder toBuilder() {
     return new ManagedAgentsSearchResultBlock.Builder()
+      .type(getType())
       .citations(getCitations())
       .content(getContent())
       .source(getSource())
-      .title(getTitle())
-      .type(getType());
+      .title(getTitle());
   }
 
 
