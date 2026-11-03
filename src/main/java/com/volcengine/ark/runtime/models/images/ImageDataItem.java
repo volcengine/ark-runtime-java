@@ -30,6 +30,8 @@ import java.util.Objects;
   ImageDataItem.JSON_PROPERTY_SIZE,
   ImageDataItem.JSON_PROPERTY_ERROR,
   ImageDataItem.JSON_PROPERTY_OUTPUT_FORMAT,
+  ImageDataItem.JSON_PROPERTY_BACKGROUND,
+  ImageDataItem.JSON_PROPERTY_TEXT_RECOGNITION,
   ImageDataItem.JSON_PROPERTY_Z_INDEX,
   ImageDataItem.JSON_PROPERTY_BOUNDING_BOX,
   ImageDataItem.JSON_PROPERTY_NAME,
@@ -56,6 +58,14 @@ public class ImageDataItem {
   public static final String JSON_PROPERTY_OUTPUT_FORMAT = "output_format";
   @javax.annotation.Nullable
   private OutputFormat outputFormat;
+
+  public static final String JSON_PROPERTY_BACKGROUND = "background";
+  @javax.annotation.Nullable
+  private OutputBackground background;
+
+  public static final String JSON_PROPERTY_TEXT_RECOGNITION = "text_recognition";
+  @javax.annotation.Nullable
+  private TextRecognition textRecognition;
 
   public static final String JSON_PROPERTY_Z_INDEX = "z_index";
   @javax.annotation.Nullable
@@ -201,6 +211,56 @@ public class ImageDataItem {
     this.outputFormat = outputFormat;
   }
 
+  public ImageDataItem background(@javax.annotation.Nullable OutputBackground background) {
+
+    this.background = background;
+    return this;
+  }
+
+  /**
+   * Actual output background.
+   * @return background
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_BACKGROUND, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public OutputBackground getBackground() {
+    return background;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_BACKGROUND, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBackground(@javax.annotation.Nullable OutputBackground background) {
+    this.background = background;
+  }
+
+  public ImageDataItem textRecognition(@javax.annotation.Nullable TextRecognition textRecognition) {
+
+    this.textRecognition = textRecognition;
+    return this;
+  }
+
+  /**
+   * Recognized text and styles for this layer.
+   * @return textRecognition
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TEXT_RECOGNITION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public TextRecognition getTextRecognition() {
+    return textRecognition;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TEXT_RECOGNITION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTextRecognition(@javax.annotation.Nullable TextRecognition textRecognition) {
+    this.textRecognition = textRecognition;
+  }
+
   public ImageDataItem zIndex(@javax.annotation.Nullable Integer zIndex) {
 
     this.zIndex = zIndex;
@@ -316,6 +376,8 @@ public class ImageDataItem {
         Objects.equals(this.size, imageDataItem.size) &&
         Objects.equals(this.error, imageDataItem.error) &&
         Objects.equals(this.outputFormat, imageDataItem.outputFormat) &&
+        Objects.equals(this.background, imageDataItem.background) &&
+        Objects.equals(this.textRecognition, imageDataItem.textRecognition) &&
         Objects.equals(this.zIndex, imageDataItem.zIndex) &&
         Objects.equals(this.boundingBox, imageDataItem.boundingBox) &&
         Objects.equals(this.name, imageDataItem.name) &&
@@ -324,7 +386,7 @@ public class ImageDataItem {
 
   @Override
   public int hashCode() {
-    return Objects.hash(url, b64Json, size, error, outputFormat, zIndex, boundingBox, name, description);
+    return Objects.hash(url, b64Json, size, error, outputFormat, background, textRecognition, zIndex, boundingBox, name, description);
   }
 
   @Override
@@ -336,6 +398,8 @@ public class ImageDataItem {
     sb.append("    size: ").append(toIndentedString(size)).append("\n");
     sb.append("    error: ").append(toIndentedString(error)).append("\n");
     sb.append("    outputFormat: ").append(toIndentedString(outputFormat)).append("\n");
+    sb.append("    background: ").append(toIndentedString(background)).append("\n");
+    sb.append("    textRecognition: ").append(toIndentedString(textRecognition)).append("\n");
     sb.append("    zIndex: ").append(toIndentedString(zIndex)).append("\n");
     sb.append("    boundingBox: ").append(toIndentedString(boundingBox)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
@@ -382,6 +446,14 @@ public class ImageDataItem {
     }
     public ImageDataItem.Builder outputFormat(OutputFormat outputFormat) {
       this.instance.outputFormat = outputFormat;
+      return this;
+    }
+    public ImageDataItem.Builder background(OutputBackground background) {
+      this.instance.background = background;
+      return this;
+    }
+    public ImageDataItem.Builder textRecognition(TextRecognition textRecognition) {
+      this.instance.textRecognition = textRecognition;
       return this;
     }
     public ImageDataItem.Builder zIndex(Integer zIndex) {
@@ -439,6 +511,8 @@ public class ImageDataItem {
       .size(getSize())
       .error(getError())
       .outputFormat(getOutputFormat())
+      .background(getBackground())
+      .textRecognition(getTextRecognition())
       .zIndex(getzIndex())
       .boundingBox(getBoundingBox())
       .name(getName())

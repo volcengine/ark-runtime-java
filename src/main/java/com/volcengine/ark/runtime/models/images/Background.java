@@ -25,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum Background {
 
+  AUTO("auto"),
+
   OPAQUE("opaque"),
 
   TRANSPARENT("transparent");

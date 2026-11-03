@@ -45,6 +45,8 @@ import java.util.Objects;
   Agent.JSON_PROPERTY_METADATA,
   Agent.JSON_PROPERTY_TAGS,
   Agent.JSON_PROPERTY_DISPLAY_NAME,
+  Agent.JSON_PROPERTY_CONTEXT_MANAGEMENT,
+  Agent.JSON_PROPERTY_ARCHIVED_AT,
   Agent.JSON_PROPERTY_CREATED_AT,
   Agent.JSON_PROPERTY_UPDATED_AT
 })
@@ -139,6 +141,14 @@ public class Agent {
   @javax.annotation.Nullable
   private String displayName;
 
+  public static final String JSON_PROPERTY_CONTEXT_MANAGEMENT = "context_management";
+  @javax.annotation.Nullable
+  private List<ContextManagementPolicy> contextManagement;
+
+  public static final String JSON_PROPERTY_ARCHIVED_AT = "archived_at";
+  @javax.annotation.Nullable
+  private String archivedAt;
+
   public static final String JSON_PROPERTY_CREATED_AT = "created_at";
   @javax.annotation.Nonnull
   private String createdAt;
@@ -148,6 +158,16 @@ public class Agent {
   private String updatedAt;
 
   public Agent() {
+  }
+  /**
+   * Constructor with only readonly parameters
+   */
+  @JsonCreator
+  public Agent(
+    @JsonProperty(value = JSON_PROPERTY_ARCHIVED_AT, required = false) String archivedAt
+  ) {
+    this();
+    this.archivedAt = archivedAt;
   }
 
   public Agent id(@javax.annotation.Nonnull String id) {
@@ -540,6 +560,53 @@ public class Agent {
     this.displayName = displayName;
   }
 
+  public Agent contextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+
+    this.contextManagement = contextManagement;
+    return this;
+  }
+
+  public Agent addContextManagementItem(ContextManagementPolicy contextManagementItem) {
+    if (this.contextManagement == null) {
+      this.contextManagement = new ArrayList<>();
+    }
+    this.contextManagement.add(contextManagementItem);
+    return this;
+  }
+
+  /**
+   * 上下文管理策略。服务端可能在公开响应中补展示默认；该默认不代表用户已显式配置。
+   * @return contextManagement
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<ContextManagementPolicy> getContextManagement() {
+    return contextManagement;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setContextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+    this.contextManagement = contextManagement;
+  }
+
+  /**
+   * 首次归档时间（RFC 3339），只读；未归档时省略。归档作用于资源 ID。
+   * @return archivedAt
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ARCHIVED_AT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getArchivedAt() {
+    return archivedAt;
+  }
+
+
+
   public Agent createdAt(@javax.annotation.Nonnull String createdAt) {
 
     this.createdAt = createdAt;
@@ -614,13 +681,15 @@ public class Agent {
         Objects.equals(this.metadata, agent.metadata) &&
         Objects.equals(this.tags, agent.tags) &&
         Objects.equals(this.displayName, agent.displayName) &&
+        Objects.equals(this.contextManagement, agent.contextManagement) &&
+        Objects.equals(this.archivedAt, agent.archivedAt) &&
         Objects.equals(this.createdAt, agent.createdAt) &&
         Objects.equals(this.updatedAt, agent.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, name, description, version, model, system, tools, mcpServers, skills, multiagent, metadata, tags, displayName, createdAt, updatedAt);
+    return Objects.hash(id, type, name, description, version, model, system, tools, mcpServers, skills, multiagent, metadata, tags, displayName, contextManagement, archivedAt, createdAt, updatedAt);
   }
 
   @Override
@@ -641,6 +710,8 @@ public class Agent {
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
+    sb.append("    contextManagement: ").append(toIndentedString(contextManagement)).append("\n");
+    sb.append("    archivedAt: ").append(toIndentedString(archivedAt)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
@@ -723,6 +794,14 @@ public class Agent {
       this.instance.displayName = displayName;
       return this;
     }
+    public Agent.Builder contextManagement(List<ContextManagementPolicy> contextManagement) {
+      this.instance.contextManagement = contextManagement;
+      return this;
+    }
+    public Agent.Builder archivedAt(String archivedAt) {
+      this.instance.archivedAt = archivedAt;
+      return this;
+    }
     public Agent.Builder createdAt(String createdAt) {
       this.instance.createdAt = createdAt;
       return this;
@@ -779,6 +858,8 @@ public class Agent {
       .metadata(getMetadata())
       .tags(getTags())
       .displayName(getDisplayName())
+      .contextManagement(getContextManagement())
+      .archivedAt(getArchivedAt())
       .createdAt(getCreatedAt())
       .updatedAt(getUpdatedAt());
   }

@@ -16,12 +16,12 @@
 
 package com.volcengine.ark.runtime.models.agent;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
 
 /**
  * 多 Agent 协调拓扑。&#x60;type&#x60; 当前支持 &#x60;coordinator&#x60; 与 &#x60;multiagent_20261001&#x60;。  - &#x60;coordinator&#x60; 使用 &#x60;agents&#x60;；&#x60;subagents&#x60; 会被服务端忽略。 - &#x60;multiagent_20261001&#x60; 使用 &#x60;subagents&#x60;；非空 &#x60;agents&#x60; 返回 400。 - 拓扑迁移只允许 &#x60;coordinator&#x60; 或单 Agent 升级到 &#x60;multiagent_20261001&#x60;；反之返回 400。 - &#x60;subagents&#x60; 表示拓扑配置值；Update 的 presence / null patch 语义由 &#x60;MultiagentPatch&#x60; 单独表达。
@@ -88,8 +88,7 @@ public class MultiagentConfig {
   }
 
   /**
-   * coordinator 的下属 Agent 数组，0–20 项；深度限制为 1。
-   * &#x60;multiagent_20261001&#x60; 不支持该字段。
+   * coordinator 的下属 Agent 数组，0–20 项；深度限制为 1。 &#x60;multiagent_20261001&#x60; 不使用该字段；服务端响应仍可能回显 &#x60;[]&#x60;。
    * @return agents
    */
   @javax.annotation.Nullable

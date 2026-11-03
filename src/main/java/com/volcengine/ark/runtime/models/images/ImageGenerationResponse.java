@@ -28,6 +28,7 @@ import java.util.Objects;
  */
 @JsonPropertyOrder({
   ImageGenerationResponse.JSON_PROPERTY_MODEL,
+  ImageGenerationResponse.JSON_PROPERTY_SAFETY_IDENTIFIER,
   ImageGenerationResponse.JSON_PROPERTY_CREATED,
   ImageGenerationResponse.JSON_PROPERTY_DATA,
   ImageGenerationResponse.JSON_PROPERTY_TOOLS,
@@ -39,6 +40,10 @@ public class ImageGenerationResponse {
   public static final String JSON_PROPERTY_MODEL = "model";
   @javax.annotation.Nonnull
   private String model;
+
+  public static final String JSON_PROPERTY_SAFETY_IDENTIFIER = "safety_identifier";
+  @javax.annotation.Nullable
+  private String safetyIdentifier;
 
   public static final String JSON_PROPERTY_CREATED = "created";
   @javax.annotation.Nonnull
@@ -86,6 +91,31 @@ public class ImageGenerationResponse {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setModel(@javax.annotation.Nonnull String model) {
     this.model = model;
+  }
+
+  public ImageGenerationResponse safetyIdentifier(@javax.annotation.Nullable String safetyIdentifier) {
+
+    this.safetyIdentifier = safetyIdentifier;
+    return this;
+  }
+
+  /**
+   * Echoed safety identifier.
+   * @return safetyIdentifier
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SAFETY_IDENTIFIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getSafetyIdentifier() {
+    return safetyIdentifier;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SAFETY_IDENTIFIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSafetyIdentifier(@javax.annotation.Nullable String safetyIdentifier) {
+    this.safetyIdentifier = safetyIdentifier;
   }
 
   public ImageGenerationResponse created(@javax.annotation.Nonnull Long created) {
@@ -240,6 +270,7 @@ public class ImageGenerationResponse {
     }
     ImageGenerationResponse imageGenerationResponse = (ImageGenerationResponse) o;
     return Objects.equals(this.model, imageGenerationResponse.model) &&
+        Objects.equals(this.safetyIdentifier, imageGenerationResponse.safetyIdentifier) &&
         Objects.equals(this.created, imageGenerationResponse.created) &&
         Objects.equals(this.data, imageGenerationResponse.data) &&
         Objects.equals(this.tools, imageGenerationResponse.tools) &&
@@ -249,7 +280,7 @@ public class ImageGenerationResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(model, created, data, tools, usage, error);
+    return Objects.hash(model, safetyIdentifier, created, data, tools, usage, error);
   }
 
   @Override
@@ -257,6 +288,7 @@ public class ImageGenerationResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class ImageGenerationResponse {\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
+    sb.append("    safetyIdentifier: ").append(toIndentedString(safetyIdentifier)).append("\n");
     sb.append("    created: ").append(toIndentedString(created)).append("\n");
     sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("    tools: ").append(toIndentedString(tools)).append("\n");
@@ -288,6 +320,10 @@ public class ImageGenerationResponse {
 
     public ImageGenerationResponse.Builder model(String model) {
       this.instance.model = model;
+      return this;
+    }
+    public ImageGenerationResponse.Builder safetyIdentifier(String safetyIdentifier) {
+      this.instance.safetyIdentifier = safetyIdentifier;
       return this;
     }
     public ImageGenerationResponse.Builder created(Long created) {
@@ -345,6 +381,7 @@ public class ImageGenerationResponse {
   public ImageGenerationResponse.Builder toBuilder() {
     return new ImageGenerationResponse.Builder()
       .model(getModel())
+      .safetyIdentifier(getSafetyIdentifier())
       .created(getCreated())
       .data(getData())
       .tools(getTools())

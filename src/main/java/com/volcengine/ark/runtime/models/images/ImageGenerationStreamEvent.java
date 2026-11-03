@@ -29,6 +29,7 @@ import java.util.Objects;
 @JsonPropertyOrder({
   ImageGenerationStreamEvent.JSON_PROPERTY_TYPE,
   ImageGenerationStreamEvent.JSON_PROPERTY_MODEL,
+  ImageGenerationStreamEvent.JSON_PROPERTY_SAFETY_IDENTIFIER,
   ImageGenerationStreamEvent.JSON_PROPERTY_CREATED,
   ImageGenerationStreamEvent.JSON_PROPERTY_IMAGE_INDEX,
   ImageGenerationStreamEvent.JSON_PROPERTY_URL,
@@ -47,6 +48,10 @@ public class ImageGenerationStreamEvent {
   public static final String JSON_PROPERTY_MODEL = "model";
   @javax.annotation.Nonnull
   private String model;
+
+  public static final String JSON_PROPERTY_SAFETY_IDENTIFIER = "safety_identifier";
+  @javax.annotation.Nullable
+  private String safetyIdentifier;
 
   public static final String JSON_PROPERTY_CREATED = "created";
   @javax.annotation.Nonnull
@@ -131,6 +136,31 @@ public class ImageGenerationStreamEvent {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setModel(@javax.annotation.Nonnull String model) {
     this.model = model;
+  }
+
+  public ImageGenerationStreamEvent safetyIdentifier(@javax.annotation.Nullable String safetyIdentifier) {
+
+    this.safetyIdentifier = safetyIdentifier;
+    return this;
+  }
+
+  /**
+   * Echoed safety identifier.
+   * @return safetyIdentifier
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SAFETY_IDENTIFIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getSafetyIdentifier() {
+    return safetyIdentifier;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SAFETY_IDENTIFIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSafetyIdentifier(@javax.annotation.Nullable String safetyIdentifier) {
+    this.safetyIdentifier = safetyIdentifier;
   }
 
   public ImageGenerationStreamEvent created(@javax.annotation.Nonnull Long created) {
@@ -353,6 +383,7 @@ public class ImageGenerationStreamEvent {
     ImageGenerationStreamEvent imageGenerationStreamEvent = (ImageGenerationStreamEvent) o;
     return Objects.equals(this.type, imageGenerationStreamEvent.type) &&
         Objects.equals(this.model, imageGenerationStreamEvent.model) &&
+        Objects.equals(this.safetyIdentifier, imageGenerationStreamEvent.safetyIdentifier) &&
         Objects.equals(this.created, imageGenerationStreamEvent.created) &&
         Objects.equals(this.imageIndex, imageGenerationStreamEvent.imageIndex) &&
         Objects.equals(this.url, imageGenerationStreamEvent.url) &&
@@ -365,7 +396,7 @@ public class ImageGenerationStreamEvent {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, model, created, imageIndex, url, b64Json, size, tools, usage, error);
+    return Objects.hash(type, model, safetyIdentifier, created, imageIndex, url, b64Json, size, tools, usage, error);
   }
 
   @Override
@@ -374,6 +405,7 @@ public class ImageGenerationStreamEvent {
     sb.append("class ImageGenerationStreamEvent {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
+    sb.append("    safetyIdentifier: ").append(toIndentedString(safetyIdentifier)).append("\n");
     sb.append("    created: ").append(toIndentedString(created)).append("\n");
     sb.append("    imageIndex: ").append(toIndentedString(imageIndex)).append("\n");
     sb.append("    url: ").append(toIndentedString(url)).append("\n");
@@ -412,6 +444,10 @@ public class ImageGenerationStreamEvent {
     }
     public ImageGenerationStreamEvent.Builder model(String model) {
       this.instance.model = model;
+      return this;
+    }
+    public ImageGenerationStreamEvent.Builder safetyIdentifier(String safetyIdentifier) {
+      this.instance.safetyIdentifier = safetyIdentifier;
       return this;
     }
     public ImageGenerationStreamEvent.Builder created(Long created) {
@@ -482,6 +518,7 @@ public class ImageGenerationStreamEvent {
     return new ImageGenerationStreamEvent.Builder()
       .type(getType())
       .model(getModel())
+      .safetyIdentifier(getSafetyIdentifier())
       .created(getCreated())
       .imageIndex(getImageIndex())
       .url(getUrl())

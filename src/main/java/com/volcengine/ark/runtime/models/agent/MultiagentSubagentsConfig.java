@@ -16,12 +16,12 @@
 
 package com.volcengine.ark.runtime.models.agent;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
 
 /**
  * &#x60;multiagent_20261001&#x60; 的子代理配置。  在 UpdateAgent patch 中，&#x60;inline_agents&#x60; / &#x60;predefined_agents&#x60; 的显式 &#x60;null&#x60; 与省略具有不同语义。Java typed model 将 &#x60;null&#x60; 序列化为省略； 需要显式 &#x60;null&#x60; 的 Java 调用方必须使用 raw request body。

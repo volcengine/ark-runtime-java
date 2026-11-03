@@ -27,6 +27,7 @@ import java.util.Objects;
  * ListRequest
  */
 @JsonPropertyOrder({
+  ListRequest.JSON_PROPERTY_INCLUDE_ARCHIVED,
   ListRequest.JSON_PROPERTY_AGENT_ID,
   ListRequest.JSON_PROPERTY_AGENT_VERSION,
   ListRequest.JSON_PROPERTY_CREATED_AT_GT,
@@ -41,6 +42,10 @@ import java.util.Objects;
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ListRequest {
+  public static final String JSON_PROPERTY_INCLUDE_ARCHIVED = "include_archived";
+  @javax.annotation.Nullable
+  private Boolean includeArchived;
+
   public static final String JSON_PROPERTY_AGENT_ID = "agent_id";
   @javax.annotation.Nullable
   private String agentId;
@@ -86,6 +91,31 @@ public class ListRequest {
   private List<SessionStatus> status;
 
   public ListRequest() {
+  }
+
+  public ListRequest includeArchived(@javax.annotation.Nullable Boolean includeArchived) {
+
+    this.includeArchived = includeArchived;
+    return this;
+  }
+
+  /**
+   * 是否包含已归档会话。省略或 false 时排除 archived_at 非空或 status&#x3D;terminated 的会话； true 时包含这些会话，其他筛选条件仍生效。查询 terminated 会话需同时传 true。
+   * @return includeArchived
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_INCLUDE_ARCHIVED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getIncludeArchived() {
+    return includeArchived;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_INCLUDE_ARCHIVED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIncludeArchived(@javax.annotation.Nullable Boolean includeArchived) {
+    this.includeArchived = includeArchived;
   }
 
   public ListRequest agentId(@javax.annotation.Nullable String agentId) {
@@ -381,7 +411,8 @@ public class ListRequest {
       return false;
     }
     ListRequest listRequest = (ListRequest) o;
-    return Objects.equals(this.agentId, listRequest.agentId) &&
+    return Objects.equals(this.includeArchived, listRequest.includeArchived) &&
+        Objects.equals(this.agentId, listRequest.agentId) &&
         Objects.equals(this.agentVersion, listRequest.agentVersion) &&
         Objects.equals(this.createdAtGt, listRequest.createdAtGt) &&
         Objects.equals(this.createdAtGte, listRequest.createdAtGte) &&
@@ -396,13 +427,14 @@ public class ListRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(agentId, agentVersion, createdAtGt, createdAtGte, createdAtLt, createdAtLte, limit, memoryStoreId, order, page, status);
+    return Objects.hash(includeArchived, agentId, agentVersion, createdAtGt, createdAtGte, createdAtLt, createdAtLte, limit, memoryStoreId, order, page, status);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListRequest {\n");
+    sb.append("    includeArchived: ").append(toIndentedString(includeArchived)).append("\n");
     sb.append("    agentId: ").append(toIndentedString(agentId)).append("\n");
     sb.append("    agentVersion: ").append(toIndentedString(agentVersion)).append("\n");
     sb.append("    createdAtGt: ").append(toIndentedString(createdAtGt)).append("\n");
@@ -438,6 +470,10 @@ public class ListRequest {
       this.instance = instance;
     }
 
+    public ListRequest.Builder includeArchived(Boolean includeArchived) {
+      this.instance.includeArchived = includeArchived;
+      return this;
+    }
     public ListRequest.Builder agentId(String agentId) {
       this.instance.agentId = agentId;
       return this;
@@ -516,6 +552,7 @@ public class ListRequest {
   */
   public ListRequest.Builder toBuilder() {
     return new ListRequest.Builder()
+      .includeArchived(getIncludeArchived())
       .agentId(getAgentId())
       .agentVersion(getAgentVersion())
       .createdAtGt(getCreatedAtGt())

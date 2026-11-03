@@ -20,7 +20,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -33,7 +35,11 @@ import java.util.Objects;
   ModelConfig.JSON_PROPERTY_INPUT_MODALITIES,
   ModelConfig.JSON_PROPERTY_PROVIDER,
   ModelConfig.JSON_PROPERTY_THINKING,
-  ModelConfig.JSON_PROPERTY_REASONING_EFFORT
+  ModelConfig.JSON_PROPERTY_REASONING_EFFORT,
+  ModelConfig.JSON_PROPERTY_SERVICE_TIER,
+  ModelConfig.JSON_PROPERTY_BASE_URL,
+  ModelConfig.JSON_PROPERTY_PROTOCOL,
+  ModelConfig.JSON_PROPERTY_HEADERS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ModelConfig {
@@ -64,6 +70,22 @@ public class ModelConfig {
   public static final String JSON_PROPERTY_REASONING_EFFORT = "reasoning_effort";
   @javax.annotation.Nullable
   private String reasoningEffort;
+
+  public static final String JSON_PROPERTY_SERVICE_TIER = "service_tier";
+  @javax.annotation.Nullable
+  private String serviceTier;
+
+  public static final String JSON_PROPERTY_BASE_URL = "base_url";
+  @javax.annotation.Nullable
+  private String baseUrl;
+
+  public static final String JSON_PROPERTY_PROTOCOL = "protocol";
+  @javax.annotation.Nullable
+  private String protocol;
+
+  public static final String JSON_PROPERTY_HEADERS = "headers";
+  @javax.annotation.Nullable
+  private Map<String, String> headers;
 
   public ModelConfig() {
   }
@@ -251,6 +273,114 @@ public class ModelConfig {
     this.reasoningEffort = reasoningEffort;
   }
 
+  public ModelConfig serviceTier(@javax.annotation.Nullable String serviceTier) {
+
+    this.serviceTier = serviceTier;
+    return this;
+  }
+
+  /**
+   * 服务档位。
+   * @return serviceTier
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SERVICE_TIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getServiceTier() {
+    return serviceTier;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SERVICE_TIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setServiceTier(@javax.annotation.Nullable String serviceTier) {
+    this.serviceTier = serviceTier;
+  }
+
+  public ModelConfig baseUrl(@javax.annotation.Nullable String baseUrl) {
+
+    this.baseUrl = baseUrl;
+    return this;
+  }
+
+  /**
+   * 自定义模型接入点 base URL。  配合非 &#x60;ark&#x60; 的 &#x60;provider&#x60; 使用。非 &#x60;ark&#x60; provider 必须提供本字段与 &#x60;token_limits&#x60;；&#x60;ark&#x60; provider 指定本字段返回 400。
+   * @return baseUrl
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_BASE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getBaseUrl() {
+    return baseUrl;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_BASE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBaseUrl(@javax.annotation.Nullable String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
+
+  public ModelConfig protocol(@javax.annotation.Nullable String protocol) {
+
+    this.protocol = protocol;
+    return this;
+  }
+
+  /**
+   * 模型接入协议。  取值须命中服务端维护的接入协议白名单，非法值返回 400。
+   * @return protocol
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROTOCOL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getProtocol() {
+    return protocol;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROTOCOL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProtocol(@javax.annotation.Nullable String protocol) {
+    this.protocol = protocol;
+  }
+
+  public ModelConfig headers(@javax.annotation.Nullable Map<String, String> headers) {
+
+    this.headers = headers;
+    return this;
+  }
+
+  public ModelConfig putHeadersItem(String key, String headersItem) {
+    if (this.headers == null) {
+      this.headers = new HashMap<>();
+    }
+    this.headers.put(key, headersItem);
+    return this;
+  }
+
+  /**
+   * 模型静态请求 header。  仅用于非认证类静态 header，例如 &#x60;X-Trial-Id&#x60;。&#x60;Authorization&#x60; / &#x60;X-Api-Key&#x60; 等认证 header 不得写入本字段，必须由 SendEvent 请求上的 &#x60;X-User-Model-Header-*&#x60; 动态提供。服务端对历史请求的兼容行为不构成新 客户端可依赖的公开能力。
+   * @return headers
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_HEADERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public Map<String, String> getHeaders() {
+    return headers;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_HEADERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setHeaders(@javax.annotation.Nullable Map<String, String> headers) {
+    this.headers = headers;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -267,12 +397,16 @@ public class ModelConfig {
         Objects.equals(this.inputModalities, modelConfig.inputModalities) &&
         Objects.equals(this.provider, modelConfig.provider) &&
         Objects.equals(this.thinking, modelConfig.thinking) &&
-        Objects.equals(this.reasoningEffort, modelConfig.reasoningEffort);
+        Objects.equals(this.reasoningEffort, modelConfig.reasoningEffort) &&
+        Objects.equals(this.serviceTier, modelConfig.serviceTier) &&
+        Objects.equals(this.baseUrl, modelConfig.baseUrl) &&
+        Objects.equals(this.protocol, modelConfig.protocol) &&
+        Objects.equals(this.headers, modelConfig.headers);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, speed, tokenLimits, inputModalities, provider, thinking, reasoningEffort);
+    return Objects.hash(id, speed, tokenLimits, inputModalities, provider, thinking, reasoningEffort, serviceTier, baseUrl, protocol, headers);
   }
 
   @Override
@@ -286,6 +420,10 @@ public class ModelConfig {
     sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
     sb.append("    thinking: ").append(toIndentedString(thinking)).append("\n");
     sb.append("    reasoningEffort: ").append(toIndentedString(reasoningEffort)).append("\n");
+    sb.append("    serviceTier: ").append(toIndentedString(serviceTier)).append("\n");
+    sb.append("    baseUrl: ").append(toIndentedString(baseUrl)).append("\n");
+    sb.append("    protocol: ").append(toIndentedString(protocol)).append("\n");
+    sb.append("    headers: ").append(toIndentedString(headers)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -338,6 +476,22 @@ public class ModelConfig {
       this.instance.reasoningEffort = reasoningEffort;
       return this;
     }
+    public ModelConfig.Builder serviceTier(String serviceTier) {
+      this.instance.serviceTier = serviceTier;
+      return this;
+    }
+    public ModelConfig.Builder baseUrl(String baseUrl) {
+      this.instance.baseUrl = baseUrl;
+      return this;
+    }
+    public ModelConfig.Builder protocol(String protocol) {
+      this.instance.protocol = protocol;
+      return this;
+    }
+    public ModelConfig.Builder headers(Map<String, String> headers) {
+      this.instance.headers = headers;
+      return this;
+    }
 
 
     /**
@@ -378,7 +532,11 @@ public class ModelConfig {
       .inputModalities(getInputModalities())
       .provider(getProvider())
       .thinking(getThinking())
-      .reasoningEffort(getReasoningEffort());
+      .reasoningEffort(getReasoningEffort())
+      .serviceTier(getServiceTier())
+      .baseUrl(getBaseUrl())
+      .protocol(getProtocol())
+      .headers(getHeaders());
   }
 
 

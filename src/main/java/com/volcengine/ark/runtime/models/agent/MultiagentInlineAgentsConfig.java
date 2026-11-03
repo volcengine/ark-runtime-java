@@ -16,10 +16,10 @@
 
 package com.volcengine.ark.runtime.models.agent;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
 
 /**
  * &#x60;multiagent_20261001&#x60; 的 inline 子代理能力开关。

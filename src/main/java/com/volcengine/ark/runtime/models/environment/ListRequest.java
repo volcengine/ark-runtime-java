@@ -25,11 +25,16 @@ import java.util.Objects;
  * ListRequest
  */
 @JsonPropertyOrder({
+  ListRequest.JSON_PROPERTY_INCLUDE_ARCHIVED,
   ListRequest.JSON_PROPERTY_PAGE,
   ListRequest.JSON_PROPERTY_LIMIT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ListRequest {
+  public static final String JSON_PROPERTY_INCLUDE_ARCHIVED = "include_archived";
+  @javax.annotation.Nullable
+  private Boolean includeArchived;
+
   public static final String JSON_PROPERTY_PAGE = "page";
   @javax.annotation.Nullable
   private String page;
@@ -39,6 +44,31 @@ public class ListRequest {
   private Integer limit;
 
   public ListRequest() {
+  }
+
+  public ListRequest includeArchived(@javax.annotation.Nullable Boolean includeArchived) {
+
+    this.includeArchived = includeArchived;
+    return this;
+  }
+
+  /**
+   * 是否包含已归档资源。省略或 false 时排除已归档，true 时同时返回未归档与已归档资源。
+   * @return includeArchived
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_INCLUDE_ARCHIVED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getIncludeArchived() {
+    return includeArchived;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_INCLUDE_ARCHIVED, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setIncludeArchived(@javax.annotation.Nullable Boolean includeArchived) {
+    this.includeArchived = includeArchived;
   }
 
   public ListRequest page(@javax.annotation.Nullable String page) {
@@ -101,19 +131,21 @@ public class ListRequest {
       return false;
     }
     ListRequest listRequest = (ListRequest) o;
-    return Objects.equals(this.page, listRequest.page) &&
+    return Objects.equals(this.includeArchived, listRequest.includeArchived) &&
+        Objects.equals(this.page, listRequest.page) &&
         Objects.equals(this.limit, listRequest.limit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(page, limit);
+    return Objects.hash(includeArchived, page, limit);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListRequest {\n");
+    sb.append("    includeArchived: ").append(toIndentedString(includeArchived)).append("\n");
     sb.append("    page: ").append(toIndentedString(page)).append("\n");
     sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
     sb.append("}");
@@ -140,6 +172,10 @@ public class ListRequest {
       this.instance = instance;
     }
 
+    public ListRequest.Builder includeArchived(Boolean includeArchived) {
+      this.instance.includeArchived = includeArchived;
+      return this;
+    }
     public ListRequest.Builder page(String page) {
       this.instance.page = page;
       return this;
@@ -182,6 +218,7 @@ public class ListRequest {
   */
   public ListRequest.Builder toBuilder() {
     return new ListRequest.Builder()
+      .includeArchived(getIncludeArchived())
       .page(getPage())
       .limit(getLimit());
   }

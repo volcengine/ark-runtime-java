@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * 模型上下文与输入输出 token 限制。
+ * 模型上下文与输入输出 token 限制。  三个字段保持 optional，是为了兼容 Ark provider 和旧数据；非 &#x60;ark&#x60; provider 必须提供 &#x60;token_limits&#x60;，且三个字段必须全部存在且为正数，由服务端校验。
  */
 @JsonPropertyOrder({
   TokenLimits.JSON_PROPERTY_CONTEXT_WINDOW,

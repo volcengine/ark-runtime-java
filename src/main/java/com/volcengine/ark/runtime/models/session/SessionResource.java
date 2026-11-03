@@ -30,6 +30,7 @@ import java.util.Objects;
   SessionResource.JSON_PROPERTY_FILE_ID,
   SessionResource.JSON_PROPERTY_MEMORY_STORE_ID,
   SessionResource.JSON_PROPERTY_ACCESS,
+  SessionResource.JSON_PROPERTY_INSTRUCTIONS,
   SessionResource.JSON_PROPERTY_MOUNT_PATH,
   SessionResource.JSON_PROPERTY_CREATED_AT,
   SessionResource.JSON_PROPERTY_UPDATED_AT,
@@ -58,6 +59,10 @@ public class SessionResource {
   public static final String JSON_PROPERTY_ACCESS = "access";
   @javax.annotation.Nullable
   private SessionResourceAccess access;
+
+  public static final String JSON_PROPERTY_INSTRUCTIONS = "instructions";
+  @javax.annotation.Nullable
+  private String instructions;
 
   public static final String JSON_PROPERTY_MOUNT_PATH = "mount_path";
   @javax.annotation.Nullable
@@ -209,6 +214,31 @@ public class SessionResource {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setAccess(@javax.annotation.Nullable SessionResourceAccess access) {
     this.access = access;
+  }
+
+  public SessionResource instructions(@javax.annotation.Nullable String instructions) {
+
+    this.instructions = instructions;
+    return this;
+  }
+
+  /**
+   * MemoryStore 会话级使用指导，最长 4096 个 Unicode 字符。
+   * @return instructions
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_INSTRUCTIONS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getInstructions() {
+    return instructions;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_INSTRUCTIONS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setInstructions(@javax.annotation.Nullable String instructions) {
+    this.instructions = instructions;
   }
 
   public SessionResource mountPath(@javax.annotation.Nullable String mountPath) {
@@ -376,6 +406,7 @@ public class SessionResource {
         Objects.equals(this.fileId, sessionResource.fileId) &&
         Objects.equals(this.memoryStoreId, sessionResource.memoryStoreId) &&
         Objects.equals(this.access, sessionResource.access) &&
+        Objects.equals(this.instructions, sessionResource.instructions) &&
         Objects.equals(this.mountPath, sessionResource.mountPath) &&
         Objects.equals(this.createdAt, sessionResource.createdAt) &&
         Objects.equals(this.updatedAt, sessionResource.updatedAt) &&
@@ -386,7 +417,7 @@ public class SessionResource {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, fileId, memoryStoreId, access, mountPath, createdAt, updatedAt, tosBucket, tosKey, tosRegion);
+    return Objects.hash(id, type, fileId, memoryStoreId, access, instructions, mountPath, createdAt, updatedAt, tosBucket, tosKey, tosRegion);
   }
 
   @Override
@@ -398,6 +429,7 @@ public class SessionResource {
     sb.append("    fileId: ").append(toIndentedString(fileId)).append("\n");
     sb.append("    memoryStoreId: ").append(toIndentedString(memoryStoreId)).append("\n");
     sb.append("    access: ").append(toIndentedString(access)).append("\n");
+    sb.append("    instructions: ").append(toIndentedString(instructions)).append("\n");
     sb.append("    mountPath: ").append(toIndentedString(mountPath)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
@@ -446,6 +478,10 @@ public class SessionResource {
     }
     public SessionResource.Builder access(SessionResourceAccess access) {
       this.instance.access = access;
+      return this;
+    }
+    public SessionResource.Builder instructions(String instructions) {
+      this.instance.instructions = instructions;
       return this;
     }
     public SessionResource.Builder mountPath(String mountPath) {
@@ -511,6 +547,7 @@ public class SessionResource {
       .fileId(getFileId())
       .memoryStoreId(getMemoryStoreId())
       .access(getAccess())
+      .instructions(getInstructions())
       .mountPath(getMountPath())
       .createdAt(getCreatedAt())
       .updatedAt(getUpdatedAt())

@@ -37,6 +37,7 @@ import java.util.Objects;
   AgentRef.JSON_PROPERTY_MCP_SERVERS,
   AgentRef.JSON_PROPERTY_SKILLS,
   AgentRef.JSON_PROPERTY_MULTIAGENT,
+  AgentRef.JSON_PROPERTY_CONTEXT_MANAGEMENT,
   AgentRef.JSON_PROPERTY_DISPLAY_NAME,
   AgentRef.JSON_PROPERTY_MODEL
 })
@@ -73,6 +74,10 @@ public class AgentRef {
   public static final String JSON_PROPERTY_MULTIAGENT = "multiagent";
   @javax.annotation.Nullable
   private Map<String, Object> multiagent;
+
+  public static final String JSON_PROPERTY_CONTEXT_MANAGEMENT = "context_management";
+  @javax.annotation.Nullable
+  private List<AgentContextManagementPolicy> contextManagement;
 
   public static final String JSON_PROPERTY_DISPLAY_NAME = "display_name";
   @javax.annotation.Nullable
@@ -317,6 +322,39 @@ public class AgentRef {
     this.multiagent = multiagent;
   }
 
+  public AgentRef contextManagement(@javax.annotation.Nullable List<AgentContextManagementPolicy> contextManagement) {
+
+    this.contextManagement = contextManagement;
+    return this;
+  }
+
+  public AgentRef addContextManagementItem(AgentContextManagementPolicy contextManagementItem) {
+    if (this.contextManagement == null) {
+      this.contextManagement = new ArrayList<>();
+    }
+    this.contextManagement.add(contextManagementItem);
+    return this;
+  }
+
+  /**
+   * Agent 上下文管理策略列表，当前最多一条策略。
+   * @return contextManagement
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+
+  public List<AgentContextManagementPolicy> getContextManagement() {
+    return contextManagement;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+  public void setContextManagement(@javax.annotation.Nullable List<AgentContextManagementPolicy> contextManagement) {
+    this.contextManagement = contextManagement;
+  }
+
   public AgentRef displayName(@javax.annotation.Nullable String displayName) {
 
     this.displayName = displayName;
@@ -385,13 +423,14 @@ public class AgentRef {
         Objects.equals(this.mcpServers, agentRef.mcpServers) &&
         Objects.equals(this.skills, agentRef.skills) &&
         Objects.equals(this.multiagent, agentRef.multiagent) &&
+        Objects.equals(this.contextManagement, agentRef.contextManagement) &&
         Objects.equals(this.displayName, agentRef.displayName) &&
         Objects.equals(this.model, agentRef.model);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, id, version, system, tools, mcpServers, skills, multiagent, displayName, model);
+    return Objects.hash(type, id, version, system, tools, mcpServers, skills, multiagent, contextManagement, displayName, model);
   }
 
   @Override
@@ -406,6 +445,7 @@ public class AgentRef {
     sb.append("    mcpServers: ").append(toIndentedString(mcpServers)).append("\n");
     sb.append("    skills: ").append(toIndentedString(skills)).append("\n");
     sb.append("    multiagent: ").append(toIndentedString(multiagent)).append("\n");
+    sb.append("    contextManagement: ").append(toIndentedString(contextManagement)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
     sb.append("}");
@@ -464,6 +504,10 @@ public class AgentRef {
       this.instance.multiagent = multiagent;
       return this;
     }
+    public AgentRef.Builder contextManagement(List<AgentContextManagementPolicy> contextManagement) {
+      this.instance.contextManagement = contextManagement;
+      return this;
+    }
     public AgentRef.Builder displayName(String displayName) {
       this.instance.displayName = displayName;
       return this;
@@ -514,6 +558,7 @@ public class AgentRef {
       .mcpServers(getMcpServers())
       .skills(getSkills())
       .multiagent(getMultiagent())
+      .contextManagement(getContextManagement())
       .displayName(getDisplayName())
       .model(getModel());
   }

@@ -201,6 +201,12 @@ public interface ArkApi {
     @GET("/api/v3/environments")
     Single<ListEnvironmentsResponse> listEnvironments(@Query("limit") Integer limit, @Query("page") String page, @HeaderMap Map<String, String> customHeaders);
 
+    @POST("/api/v3/environments/{environmentId}/archive")
+    Single<Environment> archiveEnvironment(@Path("environmentId") String environmentId, @HeaderMap Map<String, String> customHeaders);
+
+    @GET("/api/v3/environments")
+    Single<ListEnvironmentsResponse> listEnvironments(@Query("limit") Integer limit, @Query("page") String page, @Query("include_archived") Boolean includeArchived, @HeaderMap Map<String, String> customHeaders);
+
     @POST("/api/v3/environments/{environmentId}")
     Single<Environment> updateEnvironment(@Path("environmentId") String environmentId, @Body UpdateEnvironmentRequest request, @HeaderMap Map<String, String> customHeaders);
 
@@ -248,6 +254,12 @@ public interface ArkApi {
                                           @Query("created_at_gte") String createdAtGte,
                                           @Query("created_at_lte") String createdAtLte,
                                           @HeaderMap Map<String, String> customHeaders);
+
+    @POST("/api/v3/agents/{agentId}/archive")
+    Single<Agent> archiveAgent(@Path("agentId") String agentId, @HeaderMap Map<String, String> customHeaders);
+
+    @GET("/api/v3/agents")
+    Single<ListAgentsResponse> listAgents(@Query("limit") Integer limit, @Query("page") String page, @Query("created_at_gte") String createdAtGte, @Query("created_at_lte") String createdAtLte, @Query("include_archived") Boolean includeArchived, @HeaderMap Map<String, String> customHeaders);
 
     @POST("/api/v3/agents/{agentId}")
     Single<Agent> updateAgent(@Path("agentId") String agentId, @Body UpdateAgentRequest request, @HeaderMap Map<String, String> customHeaders);
@@ -379,6 +391,12 @@ public interface ArkApi {
                                               @Query("page") String page,
                                               @Query("status") List<String> status,
                                               @HeaderMap Map<String, String> customHeaders);
+
+    @POST("/api/v3/sessions/{sessionId}/archive")
+    Single<Session> archiveSession(@Path("sessionId") String sessionId, @HeaderMap Map<String, String> customHeaders);
+
+    @GET("/api/v3/sessions")
+    Single<ListSessionsResponse> listSessions(@Query("agent_id") String agentId, @Query("agent_version") Integer agentVersion, @Query("created_at_gt") String createdAtGt, @Query("created_at_gte") String createdAtGte, @Query("created_at_lt") String createdAtLt, @Query("created_at_lte") String createdAtLte, @Query("limit") Integer limit, @Query("memory_store_id") String memoryStoreId, @Query("order") String order, @Query("page") String page, @Query("status") List<String> status, @Query("include_archived") Boolean includeArchived, @HeaderMap Map<String, String> customHeaders);
 
     @POST("/api/v3/sessions/{sessionId}")
     Single<Session> updateSession(@Path("sessionId") String sessionId, @Body UpdateSessionRequest request, @HeaderMap Map<String, String> customHeaders);

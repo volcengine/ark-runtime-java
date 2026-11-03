@@ -305,7 +305,7 @@ public class ModelOverrides {
   }
 
   /**
-   * 自定义模型请求 header（整组覆写），例如 &#x60;Authorization&#x60; 或 &#x60;X-Trial-Id&#x60;；key / value 均为字符串。
+   * 自定义模型请求 header（整组覆写），例如 &#x60;X-Trial-Id&#x60;；key / value 均为 字符串。  新接入只允许非认证类静态 header。认证 header 必须通过 SendEvent 请求上的 &#x60;X-User-Model-Header-*&#x60; 按请求提供，不得写入本字段。服务端对历史请求的 兼容行为不构成新客户端可依赖的公开能力。
    * @return headers
    */
   @javax.annotation.Nullable
