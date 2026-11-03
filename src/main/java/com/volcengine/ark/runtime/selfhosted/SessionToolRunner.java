@@ -340,6 +340,9 @@ public class SessionToolRunner {
             return;
         }
         if (!ownsTool(event, custom)) {
+            if (state.externalTools.containsKey(callId)) {
+                return;
+            }
             state.externalTools.put(callId, event);
             maybeArmPendingIdle();
             results.add(new ToolCallResult(callId, event.getName(), custom, "", false, event, null));
@@ -634,6 +637,7 @@ public class SessionToolRunner {
             if (SelfHostedConstants.SESSION_STOP_REASON_REQUIRES_ACTION.equals(event.stopReasonType())) {
                 for (String eventId : event.stopReasonEventIds()) {
                     state.blockingEventIds.put(eventId, Boolean.TRUE);
+                    state.pendingBlockingEventIds.put(eventId, Boolean.TRUE);
                 }
             }
             state.toolUsesSinceStatus.clear();
@@ -651,7 +655,20 @@ public class SessionToolRunner {
         if (!state.blockingEventsKnown) {
             return true;
         }
-        return state.blockingEventIds.containsKey(callId) || state.toolUsesSinceStatus.containsKey(callId);
+        return isBlockingToolUse(callId) || state.toolUsesSinceStatus.containsKey(callId);
+    }
+
+    private boolean isBlockingToolUse(String callId) {
+        // StopReason.EventIDs 里是 agent.tool_use 的事件 id，而 runner 内部以
+        // tool_use_id 作为 call id，两者不能直接互相查表。
+        if (state.blockingEventIds.containsKey(callId)
+                || state.pendingBlockingEventIds.containsKey(callId)) {
+            return true;
+        }
+        Event event = state.toolUseEvents.get(callId);
+        return event != null && (
+                state.blockingEventIds.containsKey(event.getId())
+                || state.pendingBlockingEventIds.containsKey(event.getId()));
     }
 
     private void reconcileRecoveredResults() {
@@ -659,7 +676,7 @@ public class SessionToolRunner {
             return;
         }
         for (String callId : new ArrayList<>(state.recoveredResults.keySet())) {
-            if (state.blockingEventIds.containsKey(callId) && state.sessionToolUses.containsKey(callId)) {
+            if (isBlockingToolUse(callId) && state.sessionToolUses.containsKey(callId)) {
                 state.recoveredResults.remove(callId);
                 continue;
             }
@@ -737,6 +754,11 @@ public class SessionToolRunner {
         state.recoveredResults.remove(callId);
         state.pendingAsk.remove(callId);
         state.externalTools.remove(callId);
+        Event toolUse = state.toolUseEvents.get(callId);
+        if (toolUse != null && toolUse.getId() != null && !toolUse.getId().isEmpty()) {
+            state.pendingBlockingEventIds.remove(toolUse.getId());
+        }
+        state.pendingBlockingEventIds.remove(callId);
         state.toolUseEvents.remove(callId);
         maybeArmPendingIdle();
     }
@@ -862,6 +884,7 @@ public class SessionToolRunner {
         Map<String, Boolean> sessionToolUses = new LinkedHashMap<>();
         Map<String, Boolean> toolUsesSinceStatus = new LinkedHashMap<>();
         Map<String, Boolean> blockingEventIds = new LinkedHashMap<>();
+        Map<String, Boolean> pendingBlockingEventIds = new LinkedHashMap<>();
         boolean blockingEventsKnown;
         long idleArmedAt;
         boolean idleArmPending;

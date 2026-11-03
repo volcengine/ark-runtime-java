@@ -329,6 +329,44 @@ public class SessionToolRunnerTest {
     }
 
     @Test
+    public void earlierRequiresActionSurvivesLaterIdle() throws Exception {
+        AtomicInteger executions = new AtomicInteger();
+        SessionToolRunner runner = runnerWithStore(null, countingTool(executions), new ArrayList<>());
+
+        processListedEvents(
+                runner,
+                java.util.Arrays.asList(
+                        toolUseWithEventId("use-1", "call-1"),
+                        requiresAction("use-1"),
+                        toolUseWithEventId("use-2", "call-2"),
+                        requiresAction("use-2")),
+                false);
+
+        finishExecution(runner);
+        finishExecution(runner);
+
+        assertEquals(2, executions.get());
+        runner.close();
+    }
+
+    @Test
+    public void externalToolReconcileDoesNotDuplicateResult() throws Exception {
+        AtomicInteger executions = new AtomicInteger();
+        SessionToolRunner runner = runnerWithStore(null, countingTool(executions), new ArrayList<>());
+        List<Event> events = java.util.Arrays.asList(
+                toolUseWithEventId("event-external-1", "call-external-1", "external"),
+                requiresAction("event-external-1"));
+
+        processListedEvents(runner, events, true);
+        processListedEvents(runner, events, true);
+        processListedEvents(runner, events, true);
+
+        assertEquals(0, executions.get());
+        assertEquals(1, runner.getResults().size());
+        runner.close();
+    }
+
+    @Test
     public void listInterruptCancelsToolFromEarlierPoll() throws Exception {
         CountDownLatch started = new CountDownLatch(1);
         CountDownLatch canceled = new CountDownLatch(1);
@@ -407,6 +445,29 @@ public class SessionToolRunnerTest {
         assertEquals(0, executions.get());
         assertEquals(Collections.singletonList(result), sent);
         assertEquals(Collections.singletonList("current-call"), marked);
+        assertTrue(discarded.isEmpty());
+        runner.close();
+    }
+
+    @Test
+    public void currentBlockerMatchesEventIdToToolUseId() throws Exception {
+        List<String> discarded = new ArrayList<>();
+        List<String> marked = new ArrayList<>();
+        FileToolResultStore store = recordingStore(discarded, marked);
+        AtomicInteger executions = new AtomicInteger();
+        List<Event> sent = new ArrayList<>();
+        SessionToolRunner runner = runnerWithStore(store, countingTool(executions), sent);
+        Event result = Event.newUserCustomToolResultEvent("call-1", Collections.emptyList(), false, "");
+        stateMap(runner, "pendingResults").put("call-1", result);
+        stateMap(runner, "recoveredResults").put("call-1", Boolean.TRUE);
+
+        processListedEvents(runner, java.util.Arrays.asList(
+                toolUseWithEventId("sevt-use-1", "call-1"),
+                requiresAction("sevt-use-1")));
+
+        assertEquals(0, executions.get());
+        assertEquals(Collections.singletonList(result), sent);
+        assertEquals(Collections.singletonList("call-1"), marked);
         assertTrue(discarded.isEmpty());
         runner.close();
     }
@@ -586,6 +647,20 @@ public class SessionToolRunnerTest {
         raw.put("name", name);
         raw.put("custom_tool_use_id", callId);
         raw.put("session_thread_id", threadId);
+        raw.put("input", Collections.emptyMap());
+        return Event.fromMap(raw);
+    }
+
+    private static Event toolUseWithEventId(String eventId, String callId) {
+        return toolUseWithEventId(eventId, callId, "custom");
+    }
+
+    private static Event toolUseWithEventId(String eventId, String callId, String name) {
+        Map<String, Object> raw = new LinkedHashMap<>();
+        raw.put("id", eventId);
+        raw.put("type", "agent.custom_tool_use");
+        raw.put("name", name);
+        raw.put("custom_tool_use_id", callId);
         raw.put("input", Collections.emptyMap());
         return Event.fromMap(raw);
     }

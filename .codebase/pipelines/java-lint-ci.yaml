@@ -4,6 +4,7 @@ trigger:
   change:
     paths:
       - "src/main/java/**"
+      - "src/test/java/**"
       - "pom.xml"
       - "checkstyle.xml"
 
@@ -17,3 +18,6 @@ jobs:
         commands:
           - mvn compile -q
           - mvn checkstyle:check -q
+      - name: test
+        commands:
+          - mvn test -q

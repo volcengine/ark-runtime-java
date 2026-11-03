@@ -25,7 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum MultiagentType {
 
-  COORDINATOR("coordinator");
+  COORDINATOR("coordinator"),
+
+  MULTIAGENT_20261001("multiagent_20261001");
 
   private String value;
 
