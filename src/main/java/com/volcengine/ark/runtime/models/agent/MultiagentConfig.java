@@ -16,19 +16,20 @@
 
 package com.volcengine.ark.runtime.models.agent;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * 多 Agent 协调拓扑。
+ * 多 Agent 协调拓扑。&#x60;type&#x60; 当前支持 &#x60;coordinator&#x60; 与 &#x60;multiagent_20261001&#x60;。  - &#x60;coordinator&#x60; 使用 &#x60;agents&#x60;；&#x60;subagents&#x60; 会被服务端忽略。 - &#x60;multiagent_20261001&#x60; 使用 &#x60;subagents&#x60;；非空 &#x60;agents&#x60; 返回 400。 - 拓扑迁移只允许 &#x60;coordinator&#x60; 或单 Agent 升级到 &#x60;multiagent_20261001&#x60;；反之返回 400。 - &#x60;subagents&#x60; 表示拓扑配置值；Update 的 presence / null patch 语义由 &#x60;MultiagentPatch&#x60; 单独表达。
  */
 @JsonPropertyOrder({
   MultiagentConfig.JSON_PROPERTY_TYPE,
-  MultiagentConfig.JSON_PROPERTY_AGENTS
+  MultiagentConfig.JSON_PROPERTY_AGENTS,
+  MultiagentConfig.JSON_PROPERTY_SUBAGENTS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class MultiagentConfig {
@@ -37,8 +38,12 @@ public class MultiagentConfig {
   private MultiagentType type;
 
   public static final String JSON_PROPERTY_AGENTS = "agents";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private List<AgentRef> agents;
+
+  public static final String JSON_PROPERTY_SUBAGENTS = "subagents";
+  @javax.annotation.Nullable
+  private MultiagentSubagentsConfig subagents;
 
   public MultiagentConfig() {
   }
@@ -68,7 +73,7 @@ public class MultiagentConfig {
     this.type = type;
   }
 
-  public MultiagentConfig agents(@javax.annotation.Nonnull List<AgentRef> agents) {
+  public MultiagentConfig agents(@javax.annotation.Nullable List<AgentRef> agents) {
 
     this.agents = agents;
     return this;
@@ -83,22 +88,48 @@ public class MultiagentConfig {
   }
 
   /**
-   * 下属 Agent 数组，1–20 项；深度限制为 1（被引用的 Agent 自身不能再有 &#x60;multiagent&#x60;）。
+   * coordinator 的下属 Agent 数组，0–20 项；深度限制为 1。
+   * &#x60;multiagent_20261001&#x60; 不支持该字段。
    * @return agents
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_AGENTS, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_AGENTS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
 
   public List<AgentRef> getAgents() {
     return agents;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_AGENTS, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setAgents(@javax.annotation.Nonnull List<AgentRef> agents) {
+  @JsonProperty(value = JSON_PROPERTY_AGENTS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+  public void setAgents(@javax.annotation.Nullable List<AgentRef> agents) {
     this.agents = agents;
+  }
+
+  public MultiagentConfig subagents(@javax.annotation.Nullable MultiagentSubagentsConfig subagents) {
+
+    this.subagents = subagents;
+    return this;
+  }
+
+  /**
+   * &#x60;multiagent_20261001&#x60; 的子代理配置。  Create 时必须提供。该属性不接受显式 &#x60;null&#x60;。
+   * @return subagents
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SUBAGENTS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public MultiagentSubagentsConfig getSubagents() {
+    return subagents;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SUBAGENTS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSubagents(@javax.annotation.Nullable MultiagentSubagentsConfig subagents) {
+    this.subagents = subagents;
   }
 
 
@@ -112,12 +143,13 @@ public class MultiagentConfig {
     }
     MultiagentConfig multiagentConfig = (MultiagentConfig) o;
     return Objects.equals(this.type, multiagentConfig.type) &&
-        Objects.equals(this.agents, multiagentConfig.agents);
+        Objects.equals(this.agents, multiagentConfig.agents) &&
+        Objects.equals(this.subagents, multiagentConfig.subagents);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, agents);
+    return Objects.hash(type, agents, subagents);
   }
 
   @Override
@@ -126,6 +158,7 @@ public class MultiagentConfig {
     sb.append("class MultiagentConfig {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    agents: ").append(toIndentedString(agents)).append("\n");
+    sb.append("    subagents: ").append(toIndentedString(subagents)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -156,6 +189,10 @@ public class MultiagentConfig {
     }
     public MultiagentConfig.Builder agents(List<AgentRef> agents) {
       this.instance.agents = agents;
+      return this;
+    }
+    public MultiagentConfig.Builder subagents(MultiagentSubagentsConfig subagents) {
+      this.instance.subagents = subagents;
       return this;
     }
 
@@ -193,7 +230,8 @@ public class MultiagentConfig {
   public MultiagentConfig.Builder toBuilder() {
     return new MultiagentConfig.Builder()
       .type(getType())
-      .agents(getAgents());
+      .agents(getAgents())
+      .subagents(getSubagents());
   }
 
 

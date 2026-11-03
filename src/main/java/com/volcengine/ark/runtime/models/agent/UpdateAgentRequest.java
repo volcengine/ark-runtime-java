@@ -16,14 +16,14 @@
 
 package com.volcengine.ark.runtime.models.agent;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * 更新 Agent 的请求体。语义： - 省略 &#x3D; 保留 - 空字符串/null &#x3D; 清空（仅 description / system / 数组类） - &#x60;name&#x60; / &#x60;model&#x60; 不可清空 - &#x60;metadata&#x60; 走 patch - &#x60;mcp_servers&#x60; / &#x60;tools&#x60; / &#x60;skills&#x60; 整体替换 - &#x60;version&#x60; 必填，必须等于服务端当前版本（乐观并发控制）
@@ -82,7 +82,7 @@ public class UpdateAgentRequest {
 
   public static final String JSON_PROPERTY_MULTIAGENT = "multiagent";
   @javax.annotation.Nullable
-  private MultiagentConfig multiagent;
+  private MultiagentPatch multiagent;
 
   public static final String JSON_PROPERTY_METADATA = "metadata";
   @javax.annotation.Nullable
@@ -344,28 +344,33 @@ public class UpdateAgentRequest {
     this.skills = skills;
   }
 
-  public UpdateAgentRequest multiagent(@javax.annotation.Nullable MultiagentConfig multiagent) {
+  public UpdateAgentRequest multiagent(@javax.annotation.Nullable MultiagentPatch multiagent) {
 
     this.multiagent = multiagent;
     return this;
   }
 
   /**
-   * 多 Agent 编排拓扑。
+   * 多 Agent 编排拓扑（patch）：顶层省略 &#x3D; 不改，显式 null &#x3D; 移除。
+   * 同为 multiagent_20261001 时，subagents 省略会保留当前配置；subagents
+   * 显式 null 会重置为默认配置。subagents 内层的 inline_agents /
+   * predefined_agents 按字段是否显式出现合并，省略保留，显式 null 按各自
+   * 重置语义处理，predefined_agents 显式 [] 清空名册。coordinator 的 agents
+   * 传值时整体替换名册，省略等价于空名册。
    * @return multiagent
    */
   @javax.annotation.Nullable
   @JsonProperty(value = JSON_PROPERTY_MULTIAGENT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public MultiagentConfig getMultiagent() {
+  public MultiagentPatch getMultiagent() {
     return multiagent;
   }
 
 
   @JsonProperty(value = JSON_PROPERTY_MULTIAGENT, required = false)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setMultiagent(@javax.annotation.Nullable MultiagentConfig multiagent) {
+  public void setMultiagent(@javax.annotation.Nullable MultiagentPatch multiagent) {
     this.multiagent = multiagent;
   }
 
@@ -540,7 +545,7 @@ public class UpdateAgentRequest {
       this.instance.skills = skills;
       return this;
     }
-    public UpdateAgentRequest.Builder multiagent(MultiagentConfig multiagent) {
+    public UpdateAgentRequest.Builder multiagent(MultiagentPatch multiagent) {
       this.instance.multiagent = multiagent;
       return this;
     }

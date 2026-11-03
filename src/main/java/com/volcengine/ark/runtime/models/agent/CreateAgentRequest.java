@@ -27,6 +27,8 @@ import java.util.Objects;
 
 /**
  * 创建 Agent 的请求体。
+ *
+ * multiagent_20261001 必须携带非 null 的 subagents；该条件由服务端校验。
  */
 @JsonPropertyOrder({
   CreateAgentRequest.JSON_PROPERTY_NAME,
@@ -321,7 +323,7 @@ public class CreateAgentRequest {
   }
 
   /**
-   * 多 Agent 编排拓扑。
+   * 多 Agent 编排拓扑。multiagent_20261001 时 subagents 必填且不能为 null。
    * @return multiagent
    */
   @javax.annotation.Nullable
