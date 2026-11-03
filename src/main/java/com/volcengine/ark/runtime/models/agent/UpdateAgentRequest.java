@@ -16,17 +16,17 @@
 
 package com.volcengine.ark.runtime.models.agent;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
 
 /**
- * 更新 Agent 的请求体。语义： - 省略 &#x3D; 保留 - 空字符串/null &#x3D; 清空（仅 description / system / 数组类） - &#x60;name&#x60; / &#x60;model&#x60; 不可清空 - &#x60;metadata&#x60; 走 patch - &#x60;mcp_servers&#x60; / &#x60;tools&#x60; / &#x60;skills&#x60; 整体替换 - &#x60;version&#x60; 必填，必须等于服务端当前版本（乐观并发控制）
+ * 更新 Agent 的请求体。语义： - 省略 &#x3D; 保留 - 空字符串/null &#x3D; 清空（仅 description / system / 既有数组类；context_management 的 null 表示保留） - &#x60;name&#x60; / &#x60;model&#x60; 不可清空 - &#x60;metadata&#x60; 走 patch - &#x60;mcp_servers&#x60; / &#x60;tools&#x60; / &#x60;skills&#x60; 整体替换 - &#x60;version&#x60; 必填，必须等于服务端当前版本（乐观并发控制）
  */
 @JsonPropertyOrder({
   UpdateAgentRequest.JSON_PROPERTY_VERSION,
@@ -40,7 +40,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   UpdateAgentRequest.JSON_PROPERTY_SKILLS,
   UpdateAgentRequest.JSON_PROPERTY_MULTIAGENT,
   UpdateAgentRequest.JSON_PROPERTY_METADATA,
-  UpdateAgentRequest.JSON_PROPERTY_TAGS
+  UpdateAgentRequest.JSON_PROPERTY_TAGS,
+  UpdateAgentRequest.JSON_PROPERTY_CONTEXT_MANAGEMENT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class UpdateAgentRequest {
@@ -91,6 +92,10 @@ public class UpdateAgentRequest {
   public static final String JSON_PROPERTY_TAGS = "tags";
   @javax.annotation.Nullable
   private List<Tag> tags;
+
+  public static final String JSON_PROPERTY_CONTEXT_MANAGEMENT = "context_management";
+  @javax.annotation.Nullable
+  private List<ContextManagementPolicy> contextManagement;
 
   public UpdateAgentRequest() {
   }
@@ -440,6 +445,39 @@ public class UpdateAgentRequest {
     this.tags = tags;
   }
 
+  public UpdateAgentRequest contextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+
+    this.contextManagement = contextManagement;
+    return this;
+  }
+
+  public UpdateAgentRequest addContextManagementItem(ContextManagementPolicy contextManagementItem) {
+    if (this.contextManagement == null) {
+      this.contextManagement = new ArrayList<>();
+    }
+    this.contextManagement.add(contextManagementItem);
+    return this;
+  }
+
+  /**
+   * Agent 上下文管理策略列表，当前最多一条策略。
+   * @return contextManagement
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+
+  public List<ContextManagementPolicy> getContextManagement() {
+    return contextManagement;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+  public void setContextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+    this.contextManagement = contextManagement;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -461,12 +499,13 @@ public class UpdateAgentRequest {
         Objects.equals(this.skills, updateAgentRequest.skills) &&
         Objects.equals(this.multiagent, updateAgentRequest.multiagent) &&
         Objects.equals(this.metadata, updateAgentRequest.metadata) &&
-        Objects.equals(this.tags, updateAgentRequest.tags);
+        Objects.equals(this.tags, updateAgentRequest.tags) &&
+        Objects.equals(this.contextManagement, updateAgentRequest.contextManagement);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, name, displayName, model, description, system, mcpServers, tools, skills, multiagent, metadata, tags);
+    return Objects.hash(version, name, displayName, model, description, system, mcpServers, tools, skills, multiagent, metadata, tags, contextManagement);
   }
 
   @Override
@@ -485,6 +524,7 @@ public class UpdateAgentRequest {
     sb.append("    multiagent: ").append(toIndentedString(multiagent)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append("    contextManagement: ").append(toIndentedString(contextManagement)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -557,6 +597,10 @@ public class UpdateAgentRequest {
       this.instance.tags = tags;
       return this;
     }
+    public UpdateAgentRequest.Builder contextManagement(List<ContextManagementPolicy> contextManagement) {
+      this.instance.contextManagement = contextManagement;
+      return this;
+    }
 
 
     /**
@@ -602,7 +646,8 @@ public class UpdateAgentRequest {
       .skills(getSkills())
       .multiagent(getMultiagent())
       .metadata(getMetadata())
-      .tags(getTags());
+      .tags(getTags())
+      .contextManagement(getContextManagement());
   }
 
 

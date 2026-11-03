@@ -173,7 +173,7 @@ public class ManagedAgentsUserToolConfirmationEventParams implements ManagedAgen
   }
 
   /**
-   * 目标 session_thread_id。
+   * 目标 session_thread_id；可选，且不要求客户端回填。  缺省（字段缺失或空串）不是错误：服务端按 &#x60;tool_use_id&#x60; 反查该次工具调用的权威 归属 thread（multi-agent 下可能是子 thread），把授权结果路由回它。显式传入时 必须与服务端反查结果一致，不一致是 typed error；客户端不得用该字段把结果投到 别的 thread。
    * @return sessionThreadId
    */
   @javax.annotation.Nullable

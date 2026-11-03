@@ -623,6 +623,17 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
         return execute(api.listEnvironments(limit, page, new HashMap<>()));
     }
 
+    public Environment archiveEnvironment(String environmentId) {
+        if (environmentId == null || environmentId.isEmpty()) {
+            throw new IllegalArgumentException("environment_id is required");
+        }
+        return execute(api.archiveEnvironment(environmentId, new HashMap<>()));
+    }
+
+    public ListEnvironmentsResponse listEnvironments(Integer limit, String page, Boolean includeArchived) {
+        return execute(api.listEnvironments(limit, page, includeArchived, new HashMap<>()));
+    }
+
     public Environment updateEnvironment(String environmentId, UpdateEnvironmentRequest request) {
         return execute(api.updateEnvironment(environmentId, request, new HashMap<>()));
     }
@@ -688,6 +699,17 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
                                           String createdAtGte, String createdAtLte) {
         return execute(api.listAgents(limit, page, createdAtGte, createdAtLte,
             new HashMap<>()));
+    }
+
+    public Agent archiveAgent(String agentId) {
+        if (agentId == null || agentId.isEmpty()) {
+            throw new IllegalArgumentException("agent_id is required");
+        }
+        return execute(api.archiveAgent(agentId, new HashMap<>()));
+    }
+
+    public ListAgentsResponse listAgents(Integer limit, String page, String createdAtGte, String createdAtLte, Boolean includeArchived) {
+        return execute(api.listAgents(limit, page, createdAtGte, createdAtLte, includeArchived, new HashMap<>()));
     }
 
     public Agent updateAgent(String agentId, UpdateAgentRequest request) {
@@ -838,6 +860,17 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
         return execute(api.listSessions(agentId, agentVersion, createdAtGt, createdAtGte,
             createdAtLt, createdAtLte, limit, memoryStoreId, order, page, status,
             new HashMap<>()));
+    }
+
+    public Session archiveSession(String sessionId) {
+        if (sessionId == null || sessionId.isEmpty()) {
+            throw new IllegalArgumentException("session_id is required");
+        }
+        return execute(api.archiveSession(sessionId, new HashMap<>()));
+    }
+
+    public ListSessionsResponse listSessions(String agentId, Integer agentVersion, String createdAtGt, String createdAtGte, String createdAtLt, String createdAtLte, Integer limit, String memoryStoreId, String order, String page, List<String> status, Boolean includeArchived) {
+        return execute(api.listSessions(agentId, agentVersion, createdAtGt, createdAtGte, createdAtLt, createdAtLte, limit, memoryStoreId, order, page, status, includeArchived, new HashMap<>()));
     }
 
     public Session updateSession(String sessionId, UpdateSessionRequest request) {

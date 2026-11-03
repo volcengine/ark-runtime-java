@@ -37,6 +37,7 @@ import java.util.Objects;
   AgentRef.JSON_PROPERTY_TOOLS,
   AgentRef.JSON_PROPERTY_MCP_SERVERS,
   AgentRef.JSON_PROPERTY_SKILLS,
+  AgentRef.JSON_PROPERTY_CONTEXT_MANAGEMENT,
   AgentRef.JSON_PROPERTY_DISPLAY_NAME
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
@@ -80,6 +81,10 @@ public class AgentRef {
   public static final String JSON_PROPERTY_SKILLS = "skills";
   @javax.annotation.Nullable
   private List<AgentSkillRef> skills;
+
+  public static final String JSON_PROPERTY_CONTEXT_MANAGEMENT = "context_management";
+  @javax.annotation.Nullable
+  private List<ContextManagementPolicy> contextManagement;
 
   public static final String JSON_PROPERTY_DISPLAY_NAME = "display_name";
   @javax.annotation.Nullable
@@ -362,6 +367,39 @@ public class AgentRef {
     this.skills = skills;
   }
 
+  public AgentRef contextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+
+    this.contextManagement = contextManagement;
+    return this;
+  }
+
+  public AgentRef addContextManagementItem(ContextManagementPolicy contextManagementItem) {
+    if (this.contextManagement == null) {
+      this.contextManagement = new ArrayList<>();
+    }
+    this.contextManagement.add(contextManagementItem);
+    return this;
+  }
+
+  /**
+   * Session 响应中冻结的成员 Agent 上下文管理策略。
+   * @return contextManagement
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<ContextManagementPolicy> getContextManagement() {
+    return contextManagement;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setContextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+    this.contextManagement = contextManagement;
+  }
+
   public AgentRef displayName(@javax.annotation.Nullable String displayName) {
 
     this.displayName = displayName;
@@ -407,12 +445,13 @@ public class AgentRef {
         Objects.equals(this.tools, agentRef.tools) &&
         Objects.equals(this.mcpServers, agentRef.mcpServers) &&
         Objects.equals(this.skills, agentRef.skills) &&
+        Objects.equals(this.contextManagement, agentRef.contextManagement) &&
         Objects.equals(this.displayName, agentRef.displayName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, id, version, name, description, model, system, tools, mcpServers, skills, displayName);
+    return Objects.hash(type, id, version, name, description, model, system, tools, mcpServers, skills, contextManagement, displayName);
   }
 
   @Override
@@ -429,6 +468,7 @@ public class AgentRef {
     sb.append("    tools: ").append(toIndentedString(tools)).append("\n");
     sb.append("    mcpServers: ").append(toIndentedString(mcpServers)).append("\n");
     sb.append("    skills: ").append(toIndentedString(skills)).append("\n");
+    sb.append("    contextManagement: ").append(toIndentedString(contextManagement)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -494,6 +534,10 @@ public class AgentRef {
       this.instance.skills = skills;
       return this;
     }
+    public AgentRef.Builder contextManagement(List<ContextManagementPolicy> contextManagement) {
+      this.instance.contextManagement = contextManagement;
+      return this;
+    }
     public AgentRef.Builder displayName(String displayName) {
       this.instance.displayName = displayName;
       return this;
@@ -542,6 +586,7 @@ public class AgentRef {
       .tools(getTools())
       .mcpServers(getMcpServers())
       .skills(getSkills())
+      .contextManagement(getContextManagement())
       .displayName(getDisplayName());
   }
 

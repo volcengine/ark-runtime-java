@@ -26,9 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 创建 Agent 的请求体。
- *
- * multiagent_20261001 必须携带非 null 的 subagents；该条件由服务端校验。
+ * 创建 Agent 的请求体。  multiagent_20261001 必须携带非 null 的 subagents；该条件由服务端校验， 并通过 dependentSchemas 写入公开契约。
  */
 @JsonPropertyOrder({
   CreateAgentRequest.JSON_PROPERTY_NAME,
@@ -41,7 +39,8 @@ import java.util.Objects;
   CreateAgentRequest.JSON_PROPERTY_SKILLS,
   CreateAgentRequest.JSON_PROPERTY_MULTIAGENT,
   CreateAgentRequest.JSON_PROPERTY_METADATA,
-  CreateAgentRequest.JSON_PROPERTY_TAGS
+  CreateAgentRequest.JSON_PROPERTY_TAGS,
+  CreateAgentRequest.JSON_PROPERTY_CONTEXT_MANAGEMENT
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CreateAgentRequest {
@@ -88,6 +87,10 @@ public class CreateAgentRequest {
   public static final String JSON_PROPERTY_TAGS = "tags";
   @javax.annotation.Nullable
   private List<Tag> tags;
+
+  public static final String JSON_PROPERTY_CONTEXT_MANAGEMENT = "context_management";
+  @javax.annotation.Nullable
+  private List<ContextManagementPolicy> contextManagement;
 
   public CreateAgentRequest() {
   }
@@ -407,6 +410,39 @@ public class CreateAgentRequest {
     this.tags = tags;
   }
 
+  public CreateAgentRequest contextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+
+    this.contextManagement = contextManagement;
+    return this;
+  }
+
+  public CreateAgentRequest addContextManagementItem(ContextManagementPolicy contextManagementItem) {
+    if (this.contextManagement == null) {
+      this.contextManagement = new ArrayList<>();
+    }
+    this.contextManagement.add(contextManagementItem);
+    return this;
+  }
+
+  /**
+   * Agent 上下文管理策略列表，当前最多一条策略。
+   * @return contextManagement
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+
+  public List<ContextManagementPolicy> getContextManagement() {
+    return contextManagement;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_CONTEXT_MANAGEMENT, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+  public void setContextManagement(@javax.annotation.Nullable List<ContextManagementPolicy> contextManagement) {
+    this.contextManagement = contextManagement;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -427,12 +463,13 @@ public class CreateAgentRequest {
         Objects.equals(this.skills, createAgentRequest.skills) &&
         Objects.equals(this.multiagent, createAgentRequest.multiagent) &&
         Objects.equals(this.metadata, createAgentRequest.metadata) &&
-        Objects.equals(this.tags, createAgentRequest.tags);
+        Objects.equals(this.tags, createAgentRequest.tags) &&
+        Objects.equals(this.contextManagement, createAgentRequest.contextManagement);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, model, description, displayName, system, mcpServers, tools, skills, multiagent, metadata, tags);
+    return Objects.hash(name, model, description, displayName, system, mcpServers, tools, skills, multiagent, metadata, tags, contextManagement);
   }
 
   @Override
@@ -450,6 +487,7 @@ public class CreateAgentRequest {
     sb.append("    multiagent: ").append(toIndentedString(multiagent)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append("    contextManagement: ").append(toIndentedString(contextManagement)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -518,6 +556,10 @@ public class CreateAgentRequest {
       this.instance.tags = tags;
       return this;
     }
+    public CreateAgentRequest.Builder contextManagement(List<ContextManagementPolicy> contextManagement) {
+      this.instance.contextManagement = contextManagement;
+      return this;
+    }
 
 
     /**
@@ -562,7 +604,8 @@ public class CreateAgentRequest {
       .skills(getSkills())
       .multiagent(getMultiagent())
       .metadata(getMetadata())
-      .tags(getTags());
+      .tags(getTags())
+      .contextManagement(getContextManagement());
   }
 
 

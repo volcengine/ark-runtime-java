@@ -19,6 +19,8 @@ package com.volcengine.ark.runtime.models.session;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -29,7 +31,12 @@ import java.util.Objects;
   ModelUpgrades.JSON_PROPERTY_SPEED,
   ModelUpgrades.JSON_PROPERTY_THINKING,
   ModelUpgrades.JSON_PROPERTY_REASONING_EFFORT,
-  ModelUpgrades.JSON_PROPERTY_SERVICE_TIER
+  ModelUpgrades.JSON_PROPERTY_SERVICE_TIER,
+  ModelUpgrades.JSON_PROPERTY_PROVIDER,
+  ModelUpgrades.JSON_PROPERTY_PROTOCOL,
+  ModelUpgrades.JSON_PROPERTY_BASE_URL,
+  ModelUpgrades.JSON_PROPERTY_HEADERS,
+  ModelUpgrades.JSON_PROPERTY_TOKEN_LIMITS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ModelUpgrades {
@@ -52,6 +59,26 @@ public class ModelUpgrades {
   public static final String JSON_PROPERTY_SERVICE_TIER = "service_tier";
   @javax.annotation.Nullable
   private String serviceTier;
+
+  public static final String JSON_PROPERTY_PROVIDER = "provider";
+  @javax.annotation.Nullable
+  private String provider;
+
+  public static final String JSON_PROPERTY_PROTOCOL = "protocol";
+  @javax.annotation.Nullable
+  private String protocol;
+
+  public static final String JSON_PROPERTY_BASE_URL = "base_url";
+  @javax.annotation.Nullable
+  private String baseUrl;
+
+  public static final String JSON_PROPERTY_HEADERS = "headers";
+  @javax.annotation.Nullable
+  private Map<String, String> headers;
+
+  public static final String JSON_PROPERTY_TOKEN_LIMITS = "token_limits";
+  @javax.annotation.Nullable
+  private OverrideTokenLimits tokenLimits;
 
   public ModelUpgrades() {
   }
@@ -181,6 +208,139 @@ public class ModelUpgrades {
     this.serviceTier = serviceTier;
   }
 
+  public ModelUpgrades provider(@javax.annotation.Nullable String provider) {
+
+    this.provider = provider;
+    return this;
+  }
+
+  /**
+   * 目标模型提供方。  切到非 &#x60;ark&#x60; provider 时，&#x60;base_url&#x60; 与 &#x60;token_limits&#x60; 必填（可继承 当前 Session 快照中已有的值，否则返回 400）；&#x60;ark&#x60; provider 不允许 指定 &#x60;token_limits&#x60; 或非空 &#x60;base_url&#x60;。
+   * @return provider
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getProvider() {
+    return provider;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProvider(@javax.annotation.Nullable String provider) {
+    this.provider = provider;
+  }
+
+  public ModelUpgrades protocol(@javax.annotation.Nullable String protocol) {
+
+    this.protocol = protocol;
+    return this;
+  }
+
+  /**
+   * 目标模型接入协议；取值须命中服务端维护的接入协议白名单，非法值返回 400。
+   * @return protocol
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROTOCOL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getProtocol() {
+    return protocol;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROTOCOL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setProtocol(@javax.annotation.Nullable String protocol) {
+    this.protocol = protocol;
+  }
+
+  public ModelUpgrades baseUrl(@javax.annotation.Nullable String baseUrl) {
+
+    this.baseUrl = baseUrl;
+    return this;
+  }
+
+  /**
+   * 自定义模型接入点 base URL。配合非 &#x60;ark&#x60; 的 &#x60;provider&#x60; 使用； &#x60;ark&#x60; provider 指定非空值时返回 400。
+   * @return baseUrl
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_BASE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getBaseUrl() {
+    return baseUrl;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_BASE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setBaseUrl(@javax.annotation.Nullable String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
+
+  public ModelUpgrades headers(@javax.annotation.Nullable Map<String, String> headers) {
+
+    this.headers = headers;
+    return this;
+  }
+
+  public ModelUpgrades putHeadersItem(String key, String headersItem) {
+    if (this.headers == null) {
+      this.headers = new HashMap<>();
+    }
+    this.headers.put(key, headersItem);
+    return this;
+  }
+
+  /**
+   * 模型静态请求 header（整组覆写）。  仅用于非认证类静态 header；认证 header 必须由 SendEvent 请求上的 &#x60;X-User-Model-Header-*&#x60; 动态提供。
+   * @return headers
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_HEADERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public Map<String, String> getHeaders() {
+    return headers;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_HEADERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setHeaders(@javax.annotation.Nullable Map<String, String> headers) {
+    this.headers = headers;
+  }
+
+  public ModelUpgrades tokenLimits(@javax.annotation.Nullable OverrideTokenLimits tokenLimits) {
+
+    this.tokenLimits = tokenLimits;
+    return this;
+  }
+
+  /**
+   * 模型 token 限制。非 &#x60;ark&#x60; provider 提供时必须包含三个字段；可继承 当前 Session 快照中已有的值。
+   * @return tokenLimits
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOKEN_LIMITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public OverrideTokenLimits getTokenLimits() {
+    return tokenLimits;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TOKEN_LIMITS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTokenLimits(@javax.annotation.Nullable OverrideTokenLimits tokenLimits) {
+    this.tokenLimits = tokenLimits;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -195,12 +355,17 @@ public class ModelUpgrades {
         Objects.equals(this.speed, modelUpgrades.speed) &&
         Objects.equals(this.thinking, modelUpgrades.thinking) &&
         Objects.equals(this.reasoningEffort, modelUpgrades.reasoningEffort) &&
-        Objects.equals(this.serviceTier, modelUpgrades.serviceTier);
+        Objects.equals(this.serviceTier, modelUpgrades.serviceTier) &&
+        Objects.equals(this.provider, modelUpgrades.provider) &&
+        Objects.equals(this.protocol, modelUpgrades.protocol) &&
+        Objects.equals(this.baseUrl, modelUpgrades.baseUrl) &&
+        Objects.equals(this.headers, modelUpgrades.headers) &&
+        Objects.equals(this.tokenLimits, modelUpgrades.tokenLimits);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, speed, thinking, reasoningEffort, serviceTier);
+    return Objects.hash(id, speed, thinking, reasoningEffort, serviceTier, provider, protocol, baseUrl, headers, tokenLimits);
   }
 
   @Override
@@ -212,6 +377,11 @@ public class ModelUpgrades {
     sb.append("    thinking: ").append(toIndentedString(thinking)).append("\n");
     sb.append("    reasoningEffort: ").append(toIndentedString(reasoningEffort)).append("\n");
     sb.append("    serviceTier: ").append(toIndentedString(serviceTier)).append("\n");
+    sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
+    sb.append("    protocol: ").append(toIndentedString(protocol)).append("\n");
+    sb.append("    baseUrl: ").append(toIndentedString(baseUrl)).append("\n");
+    sb.append("    headers: ").append(toIndentedString(headers)).append("\n");
+    sb.append("    tokenLimits: ").append(toIndentedString(tokenLimits)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -256,6 +426,26 @@ public class ModelUpgrades {
       this.instance.serviceTier = serviceTier;
       return this;
     }
+    public ModelUpgrades.Builder provider(String provider) {
+      this.instance.provider = provider;
+      return this;
+    }
+    public ModelUpgrades.Builder protocol(String protocol) {
+      this.instance.protocol = protocol;
+      return this;
+    }
+    public ModelUpgrades.Builder baseUrl(String baseUrl) {
+      this.instance.baseUrl = baseUrl;
+      return this;
+    }
+    public ModelUpgrades.Builder headers(Map<String, String> headers) {
+      this.instance.headers = headers;
+      return this;
+    }
+    public ModelUpgrades.Builder tokenLimits(OverrideTokenLimits tokenLimits) {
+      this.instance.tokenLimits = tokenLimits;
+      return this;
+    }
 
 
     /**
@@ -294,7 +484,12 @@ public class ModelUpgrades {
       .speed(getSpeed())
       .thinking(getThinking())
       .reasoningEffort(getReasoningEffort())
-      .serviceTier(getServiceTier());
+      .serviceTier(getServiceTier())
+      .provider(getProvider())
+      .protocol(getProtocol())
+      .baseUrl(getBaseUrl())
+      .headers(getHeaders())
+      .tokenLimits(getTokenLimits());
   }
 
 

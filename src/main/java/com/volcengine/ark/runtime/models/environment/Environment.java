@@ -38,6 +38,7 @@ import java.util.Objects;
   Environment.JSON_PROPERTY_CONFIG,
   Environment.JSON_PROPERTY_METADATA,
   Environment.JSON_PROPERTY_SCOPE,
+  Environment.JSON_PROPERTY_ARCHIVED_AT,
   Environment.JSON_PROPERTY_CREATED_AT,
   Environment.JSON_PROPERTY_UPDATED_AT,
   Environment.JSON_PROPERTY_OVERRIDDEN_FIELDS
@@ -105,6 +106,10 @@ public class Environment {
   @javax.annotation.Nullable
   private EnvironmentScope scope;
 
+  public static final String JSON_PROPERTY_ARCHIVED_AT = "archived_at";
+  @javax.annotation.Nullable
+  private String archivedAt;
+
   public static final String JSON_PROPERTY_CREATED_AT = "created_at";
   @javax.annotation.Nonnull
   private String createdAt;
@@ -118,6 +123,16 @@ public class Environment {
   private List<String> overriddenFields;
 
   public Environment() {
+  }
+  /**
+   * Constructor with only readonly parameters
+   */
+  @JsonCreator
+  public Environment(
+    @JsonProperty(value = JSON_PROPERTY_ARCHIVED_AT, required = false) String archivedAt
+  ) {
+    this();
+    this.archivedAt = archivedAt;
   }
 
   public Environment id(@javax.annotation.Nonnull String id) {
@@ -303,6 +318,20 @@ public class Environment {
     this.scope = scope;
   }
 
+  /**
+   * 首次归档时间（RFC 3339），只读；未归档时省略。归档作用于资源 ID。
+   * @return archivedAt
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ARCHIVED_AT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getArchivedAt() {
+    return archivedAt;
+  }
+
+
+
   public Environment createdAt(@javax.annotation.Nonnull String createdAt) {
 
     this.createdAt = createdAt;
@@ -403,6 +432,7 @@ public class Environment {
         Objects.equals(this.config, environment.config) &&
         Objects.equals(this.metadata, environment.metadata) &&
         Objects.equals(this.scope, environment.scope) &&
+        Objects.equals(this.archivedAt, environment.archivedAt) &&
         Objects.equals(this.createdAt, environment.createdAt) &&
         Objects.equals(this.updatedAt, environment.updatedAt) &&
         Objects.equals(this.overriddenFields, environment.overriddenFields);
@@ -410,7 +440,7 @@ public class Environment {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, name, description, config, metadata, scope, createdAt, updatedAt, overriddenFields);
+    return Objects.hash(id, type, name, description, config, metadata, scope, archivedAt, createdAt, updatedAt, overriddenFields);
   }
 
   @Override
@@ -424,6 +454,7 @@ public class Environment {
     sb.append("    config: ").append(toIndentedString(config)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
+    sb.append("    archivedAt: ").append(toIndentedString(archivedAt)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    overriddenFields: ").append(toIndentedString(overriddenFields)).append("\n");
@@ -479,6 +510,10 @@ public class Environment {
       this.instance.scope = scope;
       return this;
     }
+    public Environment.Builder archivedAt(String archivedAt) {
+      this.instance.archivedAt = archivedAt;
+      return this;
+    }
     public Environment.Builder createdAt(String createdAt) {
       this.instance.createdAt = createdAt;
       return this;
@@ -532,6 +567,7 @@ public class Environment {
       .config(getConfig())
       .metadata(getMetadata())
       .scope(getScope())
+      .archivedAt(getArchivedAt())
       .createdAt(getCreatedAt())
       .updatedAt(getUpdatedAt())
       .overriddenFields(getOverriddenFields());

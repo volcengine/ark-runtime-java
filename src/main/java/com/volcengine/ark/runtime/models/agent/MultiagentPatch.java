@@ -16,12 +16,12 @@
 
 package com.volcengine.ark.runtime.models.agent;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.Objects;
 
 /**
  * UpdateAgent 的多 Agent 编排 patch。  顶层省略 &#x3D; 不改，显式 &#x60;null&#x60; &#x3D; 移除。同为 multiagent_20261001 时， subagents 省略会保留当前配置；subagents 显式 &#x60;null&#x60; 会重置为默认配置。 subagents 内层的 inline_agents / predefined_agents 按字段是否显式出现合并， 省略保留，显式 &#x60;null&#x60; 按各自重置语义处理，predefined_agents 显式 &#x60;[]&#x60; 清空名册。coordinator 的 agents 传值时整体替换名册，省略等价于空名册。

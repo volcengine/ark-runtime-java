@@ -28,6 +28,7 @@ import java.util.Objects;
  */
 @JsonPropertyOrder({
   CreateImageGenerationRequest.JSON_PROPERTY_MODEL,
+  CreateImageGenerationRequest.JSON_PROPERTY_SAFETY_IDENTIFIER,
   CreateImageGenerationRequest.JSON_PROPERTY_PROMPT,
   CreateImageGenerationRequest.JSON_PROPERTY_IMAGE,
   CreateImageGenerationRequest.JSON_PROPERTY_STREAM,
@@ -43,13 +44,18 @@ import java.util.Objects;
   CreateImageGenerationRequest.JSON_PROPERTY_TOOLS,
   CreateImageGenerationRequest.JSON_PROPERTY_OUTPUT_FORMAT,
   CreateImageGenerationRequest.JSON_PROPERTY_BACKGROUND,
-  CreateImageGenerationRequest.JSON_PROPERTY_LAYER_DECOMPOSITION
+  CreateImageGenerationRequest.JSON_PROPERTY_LAYER_DECOMPOSITION,
+  CreateImageGenerationRequest.JSON_PROPERTY_LAYER_DECOMPOSITION_OPTIONS
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class CreateImageGenerationRequest {
   public static final String JSON_PROPERTY_MODEL = "model";
   @javax.annotation.Nonnull
   private String model;
+
+  public static final String JSON_PROPERTY_SAFETY_IDENTIFIER = "safety_identifier";
+  @javax.annotation.Nullable
+  private String safetyIdentifier;
 
   public static final String JSON_PROPERTY_PROMPT = "prompt";
   @javax.annotation.Nullable
@@ -115,6 +121,10 @@ public class CreateImageGenerationRequest {
   @javax.annotation.Nullable
   private Boolean layerDecomposition;
 
+  public static final String JSON_PROPERTY_LAYER_DECOMPOSITION_OPTIONS = "layer_decomposition_options";
+  @javax.annotation.Nullable
+  private LayerDecompositionOptions layerDecompositionOptions;
+
   public CreateImageGenerationRequest() {
   }
 
@@ -141,6 +151,31 @@ public class CreateImageGenerationRequest {
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
   public void setModel(@javax.annotation.Nonnull String model) {
     this.model = model;
+  }
+
+  public CreateImageGenerationRequest safetyIdentifier(@javax.annotation.Nullable String safetyIdentifier) {
+
+    this.safetyIdentifier = safetyIdentifier;
+    return this;
+  }
+
+  /**
+   * Stable, unique end-user identifier for safety and abuse tracing. Hash usernames, email addresses, or internal user IDs before sending to protect privacy.
+   * @return safetyIdentifier
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SAFETY_IDENTIFIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getSafetyIdentifier() {
+    return safetyIdentifier;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SAFETY_IDENTIFIER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSafetyIdentifier(@javax.annotation.Nullable String safetyIdentifier) {
+    this.safetyIdentifier = safetyIdentifier;
   }
 
   public CreateImageGenerationRequest prompt(@javax.annotation.Nullable String prompt) {
@@ -325,7 +360,7 @@ public class CreateImageGenerationRequest {
   }
 
   /**
-   * Output size hint (e.g. &#x60;1024x1024&#x60;, &#x60;1K&#x60;, &#x60;2K&#x60;, or &#x60;auto&#x60;). &#x60;auto&#x60; is supported for layer decomposition.
+   * Output size, such as &#x60;1024x1024&#x60;, &#x60;0.5K&#x60;, &#x60;1K&#x60;, &#x60;1.5K&#x60;, &#x60;2K&#x60;, &#x60;3K&#x60;, or &#x60;auto&#x60;.
    * @return size
    */
   @javax.annotation.Nullable
@@ -483,7 +518,7 @@ public class CreateImageGenerationRequest {
   }
 
   /**
-   * Container/codec for the generated image bytes.
+   * Output image format.
    * @return outputFormat
    */
   @javax.annotation.Nullable
@@ -508,7 +543,7 @@ public class CreateImageGenerationRequest {
   }
 
   /**
-   * Output background. Defaults to &#x60;opaque&#x60;. &#x60;transparent&#x60; requires exactly one PNG reference image with an alpha channel and PNG output.
+   * Requested background type.
    * @return background
    */
   @javax.annotation.Nullable
@@ -551,6 +586,31 @@ public class CreateImageGenerationRequest {
     this.layerDecomposition = layerDecomposition;
   }
 
+  public CreateImageGenerationRequest layerDecompositionOptions(@javax.annotation.Nullable LayerDecompositionOptions layerDecompositionOptions) {
+
+    this.layerDecompositionOptions = layerDecompositionOptions;
+    return this;
+  }
+
+  /**
+   * Layer count and OCR options.
+   * @return layerDecompositionOptions
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_LAYER_DECOMPOSITION_OPTIONS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public LayerDecompositionOptions getLayerDecompositionOptions() {
+    return layerDecompositionOptions;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_LAYER_DECOMPOSITION_OPTIONS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLayerDecompositionOptions(@javax.annotation.Nullable LayerDecompositionOptions layerDecompositionOptions) {
+    this.layerDecompositionOptions = layerDecompositionOptions;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -562,6 +622,7 @@ public class CreateImageGenerationRequest {
     }
     CreateImageGenerationRequest createImageGenerationRequest = (CreateImageGenerationRequest) o;
     return Objects.equals(this.model, createImageGenerationRequest.model) &&
+        Objects.equals(this.safetyIdentifier, createImageGenerationRequest.safetyIdentifier) &&
         Objects.equals(this.prompt, createImageGenerationRequest.prompt) &&
         Objects.equals(this.image, createImageGenerationRequest.image) &&
         Objects.equals(this.stream, createImageGenerationRequest.stream) &&
@@ -577,12 +638,13 @@ public class CreateImageGenerationRequest {
         Objects.equals(this.tools, createImageGenerationRequest.tools) &&
         Objects.equals(this.outputFormat, createImageGenerationRequest.outputFormat) &&
         Objects.equals(this.background, createImageGenerationRequest.background) &&
-        Objects.equals(this.layerDecomposition, createImageGenerationRequest.layerDecomposition);
+        Objects.equals(this.layerDecomposition, createImageGenerationRequest.layerDecomposition) &&
+        Objects.equals(this.layerDecompositionOptions, createImageGenerationRequest.layerDecompositionOptions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(model, prompt, image, stream, responseFormat, seed, guidanceScale, imageGuidanceScale, size, watermark, sequentialImageGeneration, sequentialImageGenerationOptions, optimizePromptOptions, tools, outputFormat, background, layerDecomposition);
+    return Objects.hash(model, safetyIdentifier, prompt, image, stream, responseFormat, seed, guidanceScale, imageGuidanceScale, size, watermark, sequentialImageGeneration, sequentialImageGenerationOptions, optimizePromptOptions, tools, outputFormat, background, layerDecomposition, layerDecompositionOptions);
   }
 
   @Override
@@ -590,6 +652,7 @@ public class CreateImageGenerationRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateImageGenerationRequest {\n");
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
+    sb.append("    safetyIdentifier: ").append(toIndentedString(safetyIdentifier)).append("\n");
     sb.append("    prompt: ").append(toIndentedString(prompt)).append("\n");
     sb.append("    image: ").append(toIndentedString(image)).append("\n");
     sb.append("    stream: ").append(toIndentedString(stream)).append("\n");
@@ -606,6 +669,7 @@ public class CreateImageGenerationRequest {
     sb.append("    outputFormat: ").append(toIndentedString(outputFormat)).append("\n");
     sb.append("    background: ").append(toIndentedString(background)).append("\n");
     sb.append("    layerDecomposition: ").append(toIndentedString(layerDecomposition)).append("\n");
+    sb.append("    layerDecompositionOptions: ").append(toIndentedString(layerDecompositionOptions)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -632,6 +696,10 @@ public class CreateImageGenerationRequest {
 
     public CreateImageGenerationRequest.Builder model(String model) {
       this.instance.model = model;
+      return this;
+    }
+    public CreateImageGenerationRequest.Builder safetyIdentifier(String safetyIdentifier) {
+      this.instance.safetyIdentifier = safetyIdentifier;
       return this;
     }
     public CreateImageGenerationRequest.Builder prompt(String prompt) {
@@ -698,6 +766,10 @@ public class CreateImageGenerationRequest {
       this.instance.layerDecomposition = layerDecomposition;
       return this;
     }
+    public CreateImageGenerationRequest.Builder layerDecompositionOptions(LayerDecompositionOptions layerDecompositionOptions) {
+      this.instance.layerDecompositionOptions = layerDecompositionOptions;
+      return this;
+    }
 
 
     /**
@@ -733,6 +805,7 @@ public class CreateImageGenerationRequest {
   public CreateImageGenerationRequest.Builder toBuilder() {
     return new CreateImageGenerationRequest.Builder()
       .model(getModel())
+      .safetyIdentifier(getSafetyIdentifier())
       .prompt(getPrompt())
       .image(getImage())
       .stream(getStream())
@@ -748,7 +821,8 @@ public class CreateImageGenerationRequest {
       .tools(getTools())
       .outputFormat(getOutputFormat())
       .background(getBackground())
-      .layerDecomposition(getLayerDecomposition());
+      .layerDecomposition(getLayerDecomposition())
+      .layerDecompositionOptions(getLayerDecompositionOptions());
   }
 
 
