@@ -211,6 +211,7 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)
+                .addConverterFactory(new ListResponseConverterFactory(mapper))
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
 
