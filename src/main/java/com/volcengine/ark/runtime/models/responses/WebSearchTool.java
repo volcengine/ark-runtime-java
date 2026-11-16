@@ -31,7 +31,9 @@ import java.util.Objects;
   WebSearchTool.JSON_PROPERTY_LIMIT,
   WebSearchTool.JSON_PROPERTY_USER_LOCATION,
   WebSearchTool.JSON_PROPERTY_SOURCES,
-  WebSearchTool.JSON_PROPERTY_MAX_KEYWORD
+  WebSearchTool.JSON_PROPERTY_MAX_KEYWORD,
+  WebSearchTool.JSON_PROPERTY_FILTERS,
+  WebSearchTool.JSON_PROPERTY_TIME_RANGE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class WebSearchTool implements Tool {
@@ -54,6 +56,14 @@ public class WebSearchTool implements Tool {
   public static final String JSON_PROPERTY_MAX_KEYWORD = "max_keyword";
   @javax.annotation.Nullable
   private Integer maxKeyword;
+
+  public static final String JSON_PROPERTY_FILTERS = "filters";
+  @javax.annotation.Nullable
+  private WebSearchFilters filters;
+
+  public static final String JSON_PROPERTY_TIME_RANGE = "time_range";
+  @javax.annotation.Nullable
+  private String timeRange;
 
   public WebSearchTool() {
   }
@@ -191,6 +201,56 @@ public class WebSearchTool implements Tool {
     this.maxKeyword = maxKeyword;
   }
 
+  public WebSearchTool filters(@javax.annotation.Nullable WebSearchFilters filters) {
+
+    this.filters = filters;
+    return this;
+  }
+
+  /**
+   * Domain and authority filters. Only supported with the doubao source.
+   * @return filters
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FILTERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public WebSearchFilters getFilters() {
+    return filters;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FILTERS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFilters(@javax.annotation.Nullable WebSearchFilters filters) {
+    this.filters = filters;
+  }
+
+  public WebSearchTool timeRange(@javax.annotation.Nullable String timeRange) {
+
+    this.timeRange = timeRange;
+    return this;
+  }
+
+  /**
+   * Publish time range of the results: &#x60;OneDay&#x60;, &#x60;OneWeek&#x60;, &#x60;OneMonth&#x60;, &#x60;OneYear&#x60;, or an inclusive date range &#x60;YYYY-MM-DD..YYYY-MM-DD&#x60;. Empty means unrestricted. Only supported with the doubao source.
+   * @return timeRange
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TIME_RANGE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getTimeRange() {
+    return timeRange;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TIME_RANGE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTimeRange(@javax.annotation.Nullable String timeRange) {
+    this.timeRange = timeRange;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -205,12 +265,14 @@ public class WebSearchTool implements Tool {
         Objects.equals(this.limit, webSearchTool.limit) &&
         Objects.equals(this.userLocation, webSearchTool.userLocation) &&
         Objects.equals(this.sources, webSearchTool.sources) &&
-        Objects.equals(this.maxKeyword, webSearchTool.maxKeyword);
+        Objects.equals(this.maxKeyword, webSearchTool.maxKeyword) &&
+        Objects.equals(this.filters, webSearchTool.filters) &&
+        Objects.equals(this.timeRange, webSearchTool.timeRange);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, limit, userLocation, sources, maxKeyword);
+    return Objects.hash(type, limit, userLocation, sources, maxKeyword, filters, timeRange);
   }
 
   @Override
@@ -222,6 +284,8 @@ public class WebSearchTool implements Tool {
     sb.append("    userLocation: ").append(toIndentedString(userLocation)).append("\n");
     sb.append("    sources: ").append(toIndentedString(sources)).append("\n");
     sb.append("    maxKeyword: ").append(toIndentedString(maxKeyword)).append("\n");
+    sb.append("    filters: ").append(toIndentedString(filters)).append("\n");
+    sb.append("    timeRange: ").append(toIndentedString(timeRange)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -266,6 +330,14 @@ public class WebSearchTool implements Tool {
       this.instance.maxKeyword = maxKeyword;
       return this;
     }
+    public WebSearchTool.Builder filters(WebSearchFilters filters) {
+      this.instance.filters = filters;
+      return this;
+    }
+    public WebSearchTool.Builder timeRange(String timeRange) {
+      this.instance.timeRange = timeRange;
+      return this;
+    }
 
 
     /**
@@ -304,7 +376,9 @@ public class WebSearchTool implements Tool {
       .limit(getLimit())
       .userLocation(getUserLocation())
       .sources(getSources())
-      .maxKeyword(getMaxKeyword());
+      .maxKeyword(getMaxKeyword())
+      .filters(getFilters())
+      .timeRange(getTimeRange());
   }
 
 
