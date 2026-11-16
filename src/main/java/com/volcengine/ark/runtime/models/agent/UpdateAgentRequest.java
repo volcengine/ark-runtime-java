@@ -356,12 +356,7 @@ public class UpdateAgentRequest {
   }
 
   /**
-   * 多 Agent 编排拓扑（patch）：顶层省略 &#x3D; 不改，显式 null &#x3D; 移除。
-   * 同为 multiagent_20261001 时，subagents 省略会保留当前配置；subagents
-   * 显式 null 会重置为默认配置。subagents 内层的 inline_agents /
-   * predefined_agents 按字段是否显式出现合并，省略保留，显式 null 按各自
-   * 重置语义处理，predefined_agents 显式 [] 清空名册。coordinator 的 agents
-   * 传值时整体替换名册，省略等价于空名册。
+   * Get multiagent
    * @return multiagent
    */
   @javax.annotation.Nullable

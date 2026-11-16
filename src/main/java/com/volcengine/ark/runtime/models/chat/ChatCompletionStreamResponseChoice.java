@@ -113,7 +113,7 @@ public class ChatCompletionStreamResponseChoice {
   }
 
   /**
-   * The reason the model stopped generating tokens.
+   * Get finishReason
    * @return finishReason
    */
   @javax.annotation.Nullable

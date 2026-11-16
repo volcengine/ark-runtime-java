@@ -45,7 +45,7 @@ public class ItemReasoning implements InputItem, OutputItem {
   private ItemType type = ItemType.REASONING;
 
   public static final String JSON_PROPERTY_STATUS = "status";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private ItemStatus status;
 
   public static final String JSON_PROPERTY_SUMMARY = "summary";
@@ -113,7 +113,7 @@ public class ItemReasoning implements InputItem, OutputItem {
     this.type = type;
   }
 
-  public ItemReasoning status(@javax.annotation.Nonnull ItemStatus status) {
+  public ItemReasoning status(@javax.annotation.Nullable ItemStatus status) {
 
     this.status = status;
     return this;
@@ -123,18 +123,18 @@ public class ItemReasoning implements InputItem, OutputItem {
    * Get status
    * @return status
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_STATUS, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_STATUS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public ItemStatus getStatus() {
     return status;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_STATUS, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setStatus(@javax.annotation.Nonnull ItemStatus status) {
+  @JsonProperty(value = JSON_PROPERTY_STATUS, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setStatus(@javax.annotation.Nullable ItemStatus status) {
     this.status = status;
   }
 

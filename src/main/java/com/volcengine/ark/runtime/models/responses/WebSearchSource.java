@@ -31,7 +31,9 @@ public enum WebSearchSource {
 
   MOJI("moji"),
 
-  SEARCH_ENGINE("search_engine");
+  SEARCH_ENGINE("search_engine"),
+
+  DOUBAO("doubao");
 
   private String value;
 

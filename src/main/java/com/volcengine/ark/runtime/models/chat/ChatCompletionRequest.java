@@ -50,6 +50,7 @@ import java.util.Objects;
   ChatCompletionRequest.JSON_PROPERTY_TOOLS,
   ChatCompletionRequest.JSON_PROPERTY_PARALLEL_TOOL_CALLS,
   ChatCompletionRequest.JSON_PROPERTY_USER,
+  ChatCompletionRequest.JSON_PROPERTY_PROMPT_CACHE_KEY,
   ChatCompletionRequest.JSON_PROPERTY_SERVICE_TIER,
   ChatCompletionRequest.JSON_PROPERTY_REASONING_EFFORT,
   ChatCompletionRequest.JSON_PROPERTY_THINKING
@@ -139,6 +140,10 @@ public class ChatCompletionRequest {
   public static final String JSON_PROPERTY_USER = "user";
   @javax.annotation.Nullable
   private String user;
+
+  public static final String JSON_PROPERTY_PROMPT_CACHE_KEY = "prompt_cache_key";
+  @javax.annotation.Nullable
+  private String promptCacheKey;
 
   public static final String JSON_PROPERTY_SERVICE_TIER = "service_tier";
   @javax.annotation.Nullable
@@ -704,6 +709,31 @@ public class ChatCompletionRequest {
     this.user = user;
   }
 
+  public ChatCompletionRequest promptCacheKey(@javax.annotation.Nullable String promptCacheKey) {
+
+    this.promptCacheKey = promptCacheKey;
+    return this;
+  }
+
+  /**
+   * A routing hint for prompt cache affinity.
+   * @return promptCacheKey
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PROMPT_CACHE_KEY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getPromptCacheKey() {
+    return promptCacheKey;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PROMPT_CACHE_KEY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPromptCacheKey(@javax.annotation.Nullable String promptCacheKey) {
+    this.promptCacheKey = promptCacheKey;
+  }
+
   public ChatCompletionRequest serviceTier(@javax.annotation.Nullable RequestServiceTier serviceTier) {
 
     this.serviceTier = serviceTier;
@@ -810,6 +840,7 @@ public class ChatCompletionRequest {
         Objects.equals(this.tools, chatCompletionRequest.tools) &&
         Objects.equals(this.parallelToolCalls, chatCompletionRequest.parallelToolCalls) &&
         Objects.equals(this.user, chatCompletionRequest.user) &&
+        Objects.equals(this.promptCacheKey, chatCompletionRequest.promptCacheKey) &&
         Objects.equals(this.serviceTier, chatCompletionRequest.serviceTier) &&
         Objects.equals(this.reasoningEffort, chatCompletionRequest.reasoningEffort) &&
         Objects.equals(this.thinking, chatCompletionRequest.thinking);
@@ -817,7 +848,7 @@ public class ChatCompletionRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(messages, model, frequencyPenalty, presencePenalty, repetitionPenalty, logitBias, logprobs, topLogprobs, maxTokens, maxCompletionTokens, n, responseFormat, stop, stream, streamOptions, temperature, topP, toolChoice, tools, parallelToolCalls, user, serviceTier, reasoningEffort, thinking);
+    return Objects.hash(messages, model, frequencyPenalty, presencePenalty, repetitionPenalty, logitBias, logprobs, topLogprobs, maxTokens, maxCompletionTokens, n, responseFormat, stop, stream, streamOptions, temperature, topP, toolChoice, tools, parallelToolCalls, user, promptCacheKey, serviceTier, reasoningEffort, thinking);
   }
 
   @Override
@@ -845,6 +876,7 @@ public class ChatCompletionRequest {
     sb.append("    tools: ").append(toIndentedString(tools)).append("\n");
     sb.append("    parallelToolCalls: ").append(toIndentedString(parallelToolCalls)).append("\n");
     sb.append("    user: ").append(toIndentedString(user)).append("\n");
+    sb.append("    promptCacheKey: ").append(toIndentedString(promptCacheKey)).append("\n");
     sb.append("    serviceTier: ").append(toIndentedString(serviceTier)).append("\n");
     sb.append("    reasoningEffort: ").append(toIndentedString(reasoningEffort)).append("\n");
     sb.append("    thinking: ").append(toIndentedString(thinking)).append("\n");
@@ -956,6 +988,10 @@ public class ChatCompletionRequest {
       this.instance.user = user;
       return this;
     }
+    public ChatCompletionRequest.Builder promptCacheKey(String promptCacheKey) {
+      this.instance.promptCacheKey = promptCacheKey;
+      return this;
+    }
     public ChatCompletionRequest.Builder serviceTier(RequestServiceTier serviceTier) {
       this.instance.serviceTier = serviceTier;
       return this;
@@ -1023,6 +1059,7 @@ public class ChatCompletionRequest {
       .tools(getTools())
       .parallelToolCalls(getParallelToolCalls())
       .user(getUser())
+      .promptCacheKey(getPromptCacheKey())
       .serviceTier(getServiceTier())
       .reasoningEffort(getReasoningEffort())
       .thinking(getThinking());

@@ -726,7 +726,7 @@ public class ResponsesRequest {
   }
 
   /**
-   * Get promptCacheKey
+   * A routing hint for prompt cache affinity.
    * @return promptCacheKey
    */
   @javax.annotation.Nullable

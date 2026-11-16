@@ -90,7 +90,7 @@ public class ChatCompletionStreamResponseDelta {
   }
 
   /**
-   * The contents of the chunk message.
+   * Get content
    * @return content
    */
   @javax.annotation.Nullable

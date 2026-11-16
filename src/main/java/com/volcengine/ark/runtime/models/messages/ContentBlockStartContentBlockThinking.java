@@ -26,7 +26,8 @@ import java.util.Objects;
  */
 @JsonPropertyOrder({
   ContentBlockStartContentBlockThinking.JSON_PROPERTY_TYPE,
-  ContentBlockStartContentBlockThinking.JSON_PROPERTY_THINKING
+  ContentBlockStartContentBlockThinking.JSON_PROPERTY_THINKING,
+  ContentBlockStartContentBlockThinking.JSON_PROPERTY_SIGNATURE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ContentBlockStartContentBlockThinking implements ContentBlockStartContentBlock {
@@ -37,6 +38,10 @@ public class ContentBlockStartContentBlockThinking implements ContentBlockStartC
   public static final String JSON_PROPERTY_THINKING = "thinking";
   @javax.annotation.Nullable
   private String thinking;
+
+  public static final String JSON_PROPERTY_SIGNATURE = "signature";
+  @javax.annotation.Nullable
+  private String signature;
 
   public ContentBlockStartContentBlockThinking() {
   }
@@ -91,6 +96,31 @@ public class ContentBlockStartContentBlockThinking implements ContentBlockStartC
     this.thinking = thinking;
   }
 
+  public ContentBlockStartContentBlockThinking signature(@javax.annotation.Nullable String signature) {
+
+    this.signature = signature;
+    return this;
+  }
+
+  /**
+   * Initial signature placeholder. May be empty; signature deltas provide the final value.
+   * @return signature
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_SIGNATURE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getSignature() {
+    return signature;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_SIGNATURE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setSignature(@javax.annotation.Nullable String signature) {
+    this.signature = signature;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -102,12 +132,13 @@ public class ContentBlockStartContentBlockThinking implements ContentBlockStartC
     }
     ContentBlockStartContentBlockThinking contentBlockStartContentBlockThinking = (ContentBlockStartContentBlockThinking) o;
     return Objects.equals(this.type, contentBlockStartContentBlockThinking.type) &&
-        Objects.equals(this.thinking, contentBlockStartContentBlockThinking.thinking);
+        Objects.equals(this.thinking, contentBlockStartContentBlockThinking.thinking) &&
+        Objects.equals(this.signature, contentBlockStartContentBlockThinking.signature);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, thinking);
+    return Objects.hash(type, thinking, signature);
   }
 
   @Override
@@ -116,6 +147,7 @@ public class ContentBlockStartContentBlockThinking implements ContentBlockStartC
     sb.append("class ContentBlockStartContentBlockThinking {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    thinking: ").append(toIndentedString(thinking)).append("\n");
+    sb.append("    signature: ").append(toIndentedString(signature)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -146,6 +178,10 @@ public class ContentBlockStartContentBlockThinking implements ContentBlockStartC
     }
     public ContentBlockStartContentBlockThinking.Builder thinking(String thinking) {
       this.instance.thinking = thinking;
+      return this;
+    }
+    public ContentBlockStartContentBlockThinking.Builder signature(String signature) {
+      this.instance.signature = signature;
       return this;
     }
 
@@ -183,7 +219,8 @@ public class ContentBlockStartContentBlockThinking implements ContentBlockStartC
   public ContentBlockStartContentBlockThinking.Builder toBuilder() {
     return new ContentBlockStartContentBlockThinking.Builder()
       .type(getType())
-      .thinking(getThinking());
+      .thinking(getThinking())
+      .signature(getSignature());
   }
 
 
