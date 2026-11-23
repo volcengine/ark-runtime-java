@@ -33,7 +33,9 @@ public enum ContentType {
 
   AUDIO_URL("audio_url"),
 
-  DRAFT_TASK("draft_task");
+  DRAFT_TASK("draft_task"),
+
+  FILE_URL("file_url");
 
   private String value;
 

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * 凭证 auth 类型。按值决定 &#x60;CredentialAuth&#x60; 里哪些字段被使用： - &#x60;mcp_oauth&#x60;：&#x60;mcp_server_url&#x60; + &#x60;access_token&#x60;(w) + 可选 &#x60;expires_at&#x60; / &#x60;refresh&#x60; - &#x60;static_bearer&#x60;：&#x60;mcp_server_url&#x60; + &#x60;token&#x60;(w) - &#x60;environment_variable&#x60;：&#x60;secret_name&#x60; + &#x60;secret_value&#x60;(w) + &#x60;networking&#x60;
+ * 凭证 auth 类型。按值决定 &#x60;CredentialAuth&#x60; 里哪些字段被使用： - &#x60;mcp_oauth&#x60;：&#x60;mcp_server_url&#x60; + &#x60;access_token&#x60;(w) + 可选 &#x60;expires_at&#x60; / &#x60;refresh&#x60; - &#x60;static_bearer&#x60;：&#x60;mcp_server_url&#x60; + &#x60;token&#x60;(w) - &#x60;mcp_static&#x60;：&#x60;mcp_server_url&#x60; + &#x60;token&#x60;(w)（省略注入配置时使用 bearer） - &#x60;environment_variable&#x60;：&#x60;secret_name&#x60; + &#x60;secret_value&#x60;(w) + &#x60;networking&#x60;
  */
 public enum CredentialAuthType {
 
@@ -29,7 +29,9 @@ public enum CredentialAuthType {
 
   STATIC_BEARER("static_bearer"),
 
-  ENVIRONMENT_VARIABLE("environment_variable");
+  ENVIRONMENT_VARIABLE("environment_variable"),
+
+  MCP_STATIC("mcp_static");
 
   private String value;
 

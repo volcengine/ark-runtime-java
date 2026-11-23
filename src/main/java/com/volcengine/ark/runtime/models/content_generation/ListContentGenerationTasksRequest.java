@@ -32,7 +32,12 @@ import java.util.Objects;
   ListContentGenerationTasksRequest.JSON_PROPERTY_FILTER_STATUS,
   ListContentGenerationTasksRequest.JSON_PROPERTY_FILTER_TASK_IDS,
   ListContentGenerationTasksRequest.JSON_PROPERTY_FILTER_MODEL,
-  ListContentGenerationTasksRequest.JSON_PROPERTY_FILTER_SERVICE_TIER
+  ListContentGenerationTasksRequest.JSON_PROPERTY_FILTER_SERVICE_TIER,
+  ListContentGenerationTasksRequest.JSON_PROPERTY_MODEL,
+  ListContentGenerationTasksRequest.JSON_PROPERTY_FILTER_STATUSES,
+  ListContentGenerationTasksRequest.JSON_PROPERTY_LIMIT,
+  ListContentGenerationTasksRequest.JSON_PROPERTY_AFTER,
+  ListContentGenerationTasksRequest.JSON_PROPERTY_ORDER
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ListContentGenerationTasksRequest {
@@ -59,6 +64,26 @@ public class ListContentGenerationTasksRequest {
   public static final String JSON_PROPERTY_FILTER_SERVICE_TIER = "filter.service_tier";
   @javax.annotation.Nullable
   private String filterServiceTier;
+
+  public static final String JSON_PROPERTY_MODEL = "model";
+  @javax.annotation.Nullable
+  private String model;
+
+  public static final String JSON_PROPERTY_FILTER_STATUSES = "filter.statuses";
+  @javax.annotation.Nullable
+  private List<TaskStatus> filterStatuses;
+
+  public static final String JSON_PROPERTY_LIMIT = "limit";
+  @javax.annotation.Nullable
+  private Integer limit;
+
+  public static final String JSON_PROPERTY_AFTER = "after";
+  @javax.annotation.Nullable
+  private String after;
+
+  public static final String JSON_PROPERTY_ORDER = "order";
+  @javax.annotation.Nullable
+  private ListOrder order;
 
   public ListContentGenerationTasksRequest() {
   }
@@ -221,6 +246,139 @@ public class ListContentGenerationTasksRequest {
     this.filterServiceTier = filterServiceTier;
   }
 
+  public ListContentGenerationTasksRequest model(@javax.annotation.Nullable String model) {
+
+    this.model = model;
+    return this;
+  }
+
+  /**
+   * List V2: endpoint id whose tasks to list. When set, the cursor parameters below apply and the response carries &#x60;data&#x60; / &#x60;first_id&#x60; / &#x60;last_id&#x60; / &#x60;has_more&#x60; instead of &#x60;total&#x60; / &#x60;items&#x60;.
+   * @return model
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getModel() {
+    return model;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_MODEL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setModel(@javax.annotation.Nullable String model) {
+    this.model = model;
+  }
+
+  public ListContentGenerationTasksRequest filterStatuses(@javax.annotation.Nullable List<TaskStatus> filterStatuses) {
+
+    this.filterStatuses = filterStatuses;
+    return this;
+  }
+
+  public ListContentGenerationTasksRequest addFilterStatusesItem(TaskStatus filterStatusesItem) {
+    if (this.filterStatuses == null) {
+      this.filterStatuses = new ArrayList<>();
+    }
+    this.filterStatuses.add(filterStatusesItem);
+    return this;
+  }
+
+  /**
+   * List V2: filter by one or more lifecycle statuses.
+   * @return filterStatuses
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FILTER_STATUSES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+
+  public List<TaskStatus> getFilterStatuses() {
+    return filterStatuses;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FILTER_STATUSES, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+  public void setFilterStatuses(@javax.annotation.Nullable List<TaskStatus> filterStatuses) {
+    this.filterStatuses = filterStatuses;
+  }
+
+  public ListContentGenerationTasksRequest limit(@javax.annotation.Nullable Integer limit) {
+
+    this.limit = limit;
+    return this;
+  }
+
+  /**
+   * List V2: page size, 1-100; defaults to 20.
+   * @return limit
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_LIMIT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Integer getLimit() {
+    return limit;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_LIMIT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLimit(@javax.annotation.Nullable Integer limit) {
+    this.limit = limit;
+  }
+
+  public ListContentGenerationTasksRequest after(@javax.annotation.Nullable String after) {
+
+    this.after = after;
+    return this;
+  }
+
+  /**
+   * List V2: cursor; the &#x60;last_id&#x60; of the previous page.
+   * @return after
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_AFTER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getAfter() {
+    return after;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_AFTER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setAfter(@javax.annotation.Nullable String after) {
+    this.after = after;
+  }
+
+  public ListContentGenerationTasksRequest order(@javax.annotation.Nullable ListOrder order) {
+
+    this.order = order;
+    return this;
+  }
+
+  /**
+   * List V2: sort order by creation time; defaults to &#x60;desc&#x60;.
+   * @return order
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ORDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public ListOrder getOrder() {
+    return order;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_ORDER, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setOrder(@javax.annotation.Nullable ListOrder order) {
+    this.order = order;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -236,12 +394,17 @@ public class ListContentGenerationTasksRequest {
         Objects.equals(this.filterStatus, listContentGenerationTasksRequest.filterStatus) &&
         Objects.equals(this.filterTaskIds, listContentGenerationTasksRequest.filterTaskIds) &&
         Objects.equals(this.filterModel, listContentGenerationTasksRequest.filterModel) &&
-        Objects.equals(this.filterServiceTier, listContentGenerationTasksRequest.filterServiceTier);
+        Objects.equals(this.filterServiceTier, listContentGenerationTasksRequest.filterServiceTier) &&
+        Objects.equals(this.model, listContentGenerationTasksRequest.model) &&
+        Objects.equals(this.filterStatuses, listContentGenerationTasksRequest.filterStatuses) &&
+        Objects.equals(this.limit, listContentGenerationTasksRequest.limit) &&
+        Objects.equals(this.after, listContentGenerationTasksRequest.after) &&
+        Objects.equals(this.order, listContentGenerationTasksRequest.order);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(pageNum, pageSize, filterStatus, filterTaskIds, filterModel, filterServiceTier);
+    return Objects.hash(pageNum, pageSize, filterStatus, filterTaskIds, filterModel, filterServiceTier, model, filterStatuses, limit, after, order);
   }
 
   @Override
@@ -254,6 +417,11 @@ public class ListContentGenerationTasksRequest {
     sb.append("    filterTaskIds: ").append(toIndentedString(filterTaskIds)).append("\n");
     sb.append("    filterModel: ").append(toIndentedString(filterModel)).append("\n");
     sb.append("    filterServiceTier: ").append(toIndentedString(filterServiceTier)).append("\n");
+    sb.append("    model: ").append(toIndentedString(model)).append("\n");
+    sb.append("    filterStatuses: ").append(toIndentedString(filterStatuses)).append("\n");
+    sb.append("    limit: ").append(toIndentedString(limit)).append("\n");
+    sb.append("    after: ").append(toIndentedString(after)).append("\n");
+    sb.append("    order: ").append(toIndentedString(order)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -302,6 +470,26 @@ public class ListContentGenerationTasksRequest {
       this.instance.filterServiceTier = filterServiceTier;
       return this;
     }
+    public ListContentGenerationTasksRequest.Builder model(String model) {
+      this.instance.model = model;
+      return this;
+    }
+    public ListContentGenerationTasksRequest.Builder filterStatuses(List<TaskStatus> filterStatuses) {
+      this.instance.filterStatuses = filterStatuses;
+      return this;
+    }
+    public ListContentGenerationTasksRequest.Builder limit(Integer limit) {
+      this.instance.limit = limit;
+      return this;
+    }
+    public ListContentGenerationTasksRequest.Builder after(String after) {
+      this.instance.after = after;
+      return this;
+    }
+    public ListContentGenerationTasksRequest.Builder order(ListOrder order) {
+      this.instance.order = order;
+      return this;
+    }
 
 
     /**
@@ -341,7 +529,12 @@ public class ListContentGenerationTasksRequest {
       .filterStatus(getFilterStatus())
       .filterTaskIds(getFilterTaskIds())
       .filterModel(getFilterModel())
-      .filterServiceTier(getFilterServiceTier());
+      .filterServiceTier(getFilterServiceTier())
+      .model(getModel())
+      .filterStatuses(getFilterStatuses())
+      .limit(getLimit())
+      .after(getAfter())
+      .order(getOrder());
   }
 
 

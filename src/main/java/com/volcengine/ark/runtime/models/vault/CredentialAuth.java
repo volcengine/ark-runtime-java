@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * 凭证的鉴权细节。按 &#x60;type&#x60; 决定哪些字段非空： - &#x60;mcp_oauth&#x60; → &#x60;mcp_server_url&#x60; + &#x60;access_token&#x60;(write-only) + 可选 &#x60;expires_at&#x60; / &#x60;refresh&#x60; - &#x60;static_bearer&#x60; → &#x60;mcp_server_url&#x60; + &#x60;token&#x60;(write-only) - &#x60;environment_variable&#x60; → &#x60;secret_name&#x60; + &#x60;secret_value&#x60;(write-only) + &#x60;networking&#x60;  所有 secret 字段（&#x60;access_token&#x60; / &#x60;token&#x60; / &#x60;secret_value&#x60; / &#x60;refresh.refresh_token&#x60; / &#x60;token_endpoint_auth.client_secret&#x60;）都是 write-only：响应永不返回。
+ * 凭证的鉴权细节。按 &#x60;type&#x60; 决定哪些字段非空： - &#x60;mcp_oauth&#x60; → &#x60;mcp_server_url&#x60; + &#x60;access_token&#x60;(write-only) + 可选 &#x60;expires_at&#x60; / &#x60;refresh&#x60; - &#x60;static_bearer&#x60; → &#x60;mcp_server_url&#x60; + &#x60;token&#x60;(write-only) - &#x60;mcp_static&#x60; → &#x60;mcp_server_url&#x60; + &#x60;token&#x60;(write-only)（省略注入配置时使用 bearer） - &#x60;environment_variable&#x60; → &#x60;secret_name&#x60; + &#x60;secret_value&#x60;(write-only) + &#x60;networking&#x60;  &#x60;mcp_static&#x60; 与 &#x60;static_bearer&#x60; 并存，响应保留原始类型，不做归一化。 按类型的必填性由服务端校验；SDK 的可选字段不代表任意组合都合法。 为保持旧 SDK 公开对象结构，本模型暂不暴露 header/query 注入配置；完整配置支持另行提供。  所有 secret 字段（&#x60;access_token&#x60; / &#x60;token&#x60; / &#x60;secret_value&#x60; / &#x60;refresh.refresh_token&#x60; / &#x60;token_endpoint_auth.client_secret&#x60;）都是 write-only：响应永不返回。
  */
 @JsonPropertyOrder({
   CredentialAuth.JSON_PROPERTY_TYPE,
@@ -108,7 +108,7 @@ public class CredentialAuth {
   }
 
   /**
-   * MCP server URL；&#x60;mcp_oauth&#x60; / &#x60;static_bearer&#x60; 用。
+   * MCP server URL；&#x60;mcp_oauth&#x60; / &#x60;static_bearer&#x60; / &#x60;mcp_static&#x60; 用。
    * @return mcpServerUrl
    */
   @javax.annotation.Nullable
@@ -208,7 +208,7 @@ public class CredentialAuth {
   }
 
   /**
-   * Bearer token；&#x60;static_bearer&#x60; 专用（write-only）。
+   * 静态密钥；&#x60;static_bearer&#x60; / &#x60;mcp_static&#x60; 创建时必填（write-only）。&#x60;mcp_static&#x60; 的 bearer 注入时不得包含 &#x60;Bearer &#x60; 前缀。
    * @return token
    */
   @javax.annotation.Nullable

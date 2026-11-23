@@ -24,18 +24,45 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * List Credentials 响应体。  注意：wire 上字段名是 &#x60;credentials&#x60;（与 vault / session 的 &#x60;data&#x60; 不一致）， 以 stg 实际形态为准。
+ * List Credentials 响应体。  与 List Vaults 一致，本页数据在 &#x60;data&#x60; 键下；空集合返回 &#x60;[]&#x60;。
  */
 @JsonPropertyOrder({
-  ListCredentialsResponse.JSON_PROPERTY_CREDENTIALS,
+  ListCredentialsResponse.JSON_PROPERTY_DATA,
   ListCredentialsResponse.JSON_PROPERTY_NEXT_PAGE,
   ListCredentialsResponse.JSON_PROPERTY_TOTAL
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ListCredentialsResponse {
+  // Legacy source/binary API; the only serialized property remains data.
+  @Deprecated
   public static final String JSON_PROPERTY_CREDENTIALS = "credentials";
+
+  @Deprecated
+  @com.fasterxml.jackson.annotation.JsonIgnore
   @javax.annotation.Nonnull
-  private List<Credential> credentials;
+  public List<Credential> getCredentials() {
+    return getData();
+  }
+
+  @Deprecated
+  @com.fasterxml.jackson.annotation.JsonIgnore
+  public void setCredentials(@javax.annotation.Nonnull List<Credential> credentials) {
+    setData(credentials);
+  }
+
+  @Deprecated
+  public ListCredentialsResponse credentials(@javax.annotation.Nonnull List<Credential> credentials) {
+    return data(credentials);
+  }
+
+  @Deprecated
+  public ListCredentialsResponse addCredentialsItem(Credential item) {
+    return addDataItem(item);
+  }
+
+  public static final String JSON_PROPERTY_DATA = "data";
+  @javax.annotation.Nonnull
+  private List<Credential> data;
 
   public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
   @javax.annotation.Nullable
@@ -48,37 +75,37 @@ public class ListCredentialsResponse {
   public ListCredentialsResponse() {
   }
 
-  public ListCredentialsResponse credentials(@javax.annotation.Nonnull List<Credential> credentials) {
+  public ListCredentialsResponse data(@javax.annotation.Nonnull List<Credential> data) {
 
-    this.credentials = credentials;
+    this.data = data;
     return this;
   }
 
-  public ListCredentialsResponse addCredentialsItem(Credential credentialsItem) {
-    if (this.credentials == null) {
-      this.credentials = new ArrayList<>();
+  public ListCredentialsResponse addDataItem(Credential dataItem) {
+    if (this.data == null) {
+      this.data = new ArrayList<>();
     }
-    this.credentials.add(credentialsItem);
+    this.data.add(dataItem);
     return this;
   }
 
   /**
    * 本页 Credential 列表。
-   * @return credentials
+   * @return data
    */
   @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_CREDENTIALS, required = true)
+  @JsonProperty(value = JSON_PROPERTY_DATA, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public List<Credential> getCredentials() {
-    return credentials;
+  public List<Credential> getData() {
+    return data;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_CREDENTIALS, required = true)
+  @JsonProperty(value = JSON_PROPERTY_DATA, required = true)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setCredentials(@javax.annotation.Nonnull List<Credential> credentials) {
-    this.credentials = credentials;
+  public void setData(@javax.annotation.Nonnull List<Credential> data) {
+    this.data = data;
   }
 
   public ListCredentialsResponse nextPage(@javax.annotation.Nullable String nextPage) {
@@ -141,21 +168,21 @@ public class ListCredentialsResponse {
       return false;
     }
     ListCredentialsResponse listCredentialsResponse = (ListCredentialsResponse) o;
-    return Objects.equals(this.credentials, listCredentialsResponse.credentials) &&
+    return Objects.equals(this.data, listCredentialsResponse.data) &&
         Objects.equals(this.nextPage, listCredentialsResponse.nextPage) &&
         Objects.equals(this.total, listCredentialsResponse.total);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(credentials, nextPage, total);
+    return Objects.hash(data, nextPage, total);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ListCredentialsResponse {\n");
-    sb.append("    credentials: ").append(toIndentedString(credentials)).append("\n");
+    sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("    nextPage: ").append(toIndentedString(nextPage)).append("\n");
     sb.append("    total: ").append(toIndentedString(total)).append("\n");
     sb.append("}");
@@ -182,8 +209,13 @@ public class ListCredentialsResponse {
       this.instance = instance;
     }
 
+    @Deprecated
     public ListCredentialsResponse.Builder credentials(List<Credential> credentials) {
-      this.instance.credentials = credentials;
+      return data(credentials);
+    }
+
+    public ListCredentialsResponse.Builder data(List<Credential> data) {
+      this.instance.data = data;
       return this;
     }
     public ListCredentialsResponse.Builder nextPage(String nextPage) {
@@ -228,7 +260,7 @@ public class ListCredentialsResponse {
   */
   public ListCredentialsResponse.Builder toBuilder() {
     return new ListCredentialsResponse.Builder()
-      .credentials(getCredentials())
+      .data(getData())
       .nextPage(getNextPage())
       .total(getTotal());
   }

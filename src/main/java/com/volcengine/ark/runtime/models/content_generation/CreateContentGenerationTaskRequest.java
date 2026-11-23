@@ -43,8 +43,17 @@ import java.util.Objects;
   CreateContentGenerationTaskRequest.JSON_PROPERTY_FRAMES,
   CreateContentGenerationTaskRequest.JSON_PROPERTY_SUBDIVISION_LEVEL,
   CreateContentGenerationTaskRequest.JSON_PROPERTY_FILE_FORMAT,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_OUTPUT_FORMAT,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_TEXTURE,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_GEOMETRY_QUALITY,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_GEOMETRY_DETAIL,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_FACE,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_TEXTURE_RESOLUTION,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_PRESERVE_UV,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_PRIORITY,
   CreateContentGenerationTaskRequest.JSON_PROPERTY_DRAFT,
   CreateContentGenerationTaskRequest.JSON_PROPERTY_OPTIMIZE_PROMPT,
+  CreateContentGenerationTaskRequest.JSON_PROPERTY_OMNI_REFERENCE_TASK_TYPE,
   CreateContentGenerationTaskRequest.JSON_PROPERTY_TOOLS,
   CreateContentGenerationTaskRequest.JSON_PROPERTY_REASONING_EFFORT,
   CreateContentGenerationTaskRequest.JSON_PROPERTY_HUMAN_FACE_MODE,
@@ -116,6 +125,38 @@ public class CreateContentGenerationTaskRequest {
   @javax.annotation.Nullable
   private String fileFormat;
 
+  public static final String JSON_PROPERTY_OUTPUT_FORMAT = "output_format";
+  @javax.annotation.Nullable
+  private String outputFormat;
+
+  public static final String JSON_PROPERTY_TEXTURE = "texture";
+  @javax.annotation.Nullable
+  private Boolean texture;
+
+  public static final String JSON_PROPERTY_GEOMETRY_QUALITY = "geometry_quality";
+  @javax.annotation.Nullable
+  private String geometryQuality;
+
+  public static final String JSON_PROPERTY_GEOMETRY_DETAIL = "geometry_detail";
+  @javax.annotation.Nullable
+  private String geometryDetail;
+
+  public static final String JSON_PROPERTY_FACE = "face";
+  @javax.annotation.Nullable
+  private Long face;
+
+  public static final String JSON_PROPERTY_TEXTURE_RESOLUTION = "texture_resolution";
+  @javax.annotation.Nullable
+  private String textureResolution;
+
+  public static final String JSON_PROPERTY_PRESERVE_UV = "preserve_uv";
+  @javax.annotation.Nullable
+  private Boolean preserveUv;
+
+  public static final String JSON_PROPERTY_PRIORITY = "priority";
+  @javax.annotation.Nullable
+  private Integer priority;
+
   public static final String JSON_PROPERTY_DRAFT = "draft";
   @javax.annotation.Nullable
   private Boolean draft;
@@ -123,6 +164,10 @@ public class CreateContentGenerationTaskRequest {
   public static final String JSON_PROPERTY_OPTIMIZE_PROMPT = "optimize_prompt";
   @javax.annotation.Nullable
   private Boolean optimizePrompt;
+
+  public static final String JSON_PROPERTY_OMNI_REFERENCE_TASK_TYPE = "omni_reference_task_type";
+  @javax.annotation.Nullable
+  private String omniReferenceTaskType;
 
   public static final String JSON_PROPERTY_TOOLS = "tools";
   @javax.annotation.Nullable
@@ -551,6 +596,206 @@ public class CreateContentGenerationTaskRequest {
     this.fileFormat = fileFormat;
   }
 
+  public CreateContentGenerationTaskRequest outputFormat(@javax.annotation.Nullable String outputFormat) {
+
+    this.outputFormat = outputFormat;
+    return this;
+  }
+
+  /**
+   * Get outputFormat
+   * @return outputFormat
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_OUTPUT_FORMAT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getOutputFormat() {
+    return outputFormat;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_OUTPUT_FORMAT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setOutputFormat(@javax.annotation.Nullable String outputFormat) {
+    this.outputFormat = outputFormat;
+  }
+
+  public CreateContentGenerationTaskRequest texture(@javax.annotation.Nullable Boolean texture) {
+
+    this.texture = texture;
+    return this;
+  }
+
+  /**
+   * 3D generation with image-only input: &#x60;false&#x60; generates an untextured mesh, omitted or &#x60;true&#x60; generates a textured model.
+   * @return texture
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TEXTURE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getTexture() {
+    return texture;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TEXTURE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTexture(@javax.annotation.Nullable Boolean texture) {
+    this.texture = texture;
+  }
+
+  public CreateContentGenerationTaskRequest geometryQuality(@javax.annotation.Nullable String geometryQuality) {
+
+    this.geometryQuality = geometryQuality;
+    return this;
+  }
+
+  /**
+   * 3D geometry quality tier: &#x60;low&#x60;, &#x60;medium&#x60;, &#x60;high&#x60;, &#x60;xhigh&#x60; or &#x60;ultra&#x60;.
+   * @return geometryQuality
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_GEOMETRY_QUALITY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getGeometryQuality() {
+    return geometryQuality;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_GEOMETRY_QUALITY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setGeometryQuality(@javax.annotation.Nullable String geometryQuality) {
+    this.geometryQuality = geometryQuality;
+  }
+
+  public CreateContentGenerationTaskRequest geometryDetail(@javax.annotation.Nullable String geometryDetail) {
+
+    this.geometryDetail = geometryDetail;
+    return this;
+  }
+
+  /**
+   * 3D surface detail: &#x60;smooth&#x60; or &#x60;micro&#x60;. Only valid when &#x60;geometry_quality&#x60; is &#x60;high&#x60;, &#x60;xhigh&#x60; or &#x60;ultra&#x60;.
+   * @return geometryDetail
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_GEOMETRY_DETAIL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getGeometryDetail() {
+    return geometryDetail;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_GEOMETRY_DETAIL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setGeometryDetail(@javax.annotation.Nullable String geometryDetail) {
+    this.geometryDetail = geometryDetail;
+  }
+
+  public CreateContentGenerationTaskRequest face(@javax.annotation.Nullable Long face) {
+
+    this.face = face;
+    return this;
+  }
+
+  /**
+   * Target face count of the 3D mesh, within the range of &#x60;geometry_quality&#x60;.
+   * @return face
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FACE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Long getFace() {
+    return face;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FACE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFace(@javax.annotation.Nullable Long face) {
+    this.face = face;
+  }
+
+  public CreateContentGenerationTaskRequest textureResolution(@javax.annotation.Nullable String textureResolution) {
+
+    this.textureResolution = textureResolution;
+    return this;
+  }
+
+  /**
+   * 3D texture resolution: &#x60;4k&#x60; or &#x60;8k&#x60;.
+   * @return textureResolution
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TEXTURE_RESOLUTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getTextureResolution() {
+    return textureResolution;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TEXTURE_RESOLUTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTextureResolution(@javax.annotation.Nullable String textureResolution) {
+    this.textureResolution = textureResolution;
+  }
+
+  public CreateContentGenerationTaskRequest preserveUv(@javax.annotation.Nullable Boolean preserveUv) {
+
+    this.preserveUv = preserveUv;
+    return this;
+  }
+
+  /**
+   * Keep the UV layout of the input mesh when texturing it.
+   * @return preserveUv
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PRESERVE_UV, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getPreserveUv() {
+    return preserveUv;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PRESERVE_UV, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPreserveUv(@javax.annotation.Nullable Boolean preserveUv) {
+    this.preserveUv = preserveUv;
+  }
+
+  public CreateContentGenerationTaskRequest priority(@javax.annotation.Nullable Integer priority) {
+
+    this.priority = priority;
+    return this;
+  }
+
+  /**
+   * Execution priority within the endpoint queue, 0-9; higher runs first.
+   * @return priority
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PRIORITY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Integer getPriority() {
+    return priority;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PRIORITY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPriority(@javax.annotation.Nullable Integer priority) {
+    this.priority = priority;
+  }
+
   public CreateContentGenerationTaskRequest draft(@javax.annotation.Nullable Boolean draft) {
 
     this.draft = draft;
@@ -599,6 +844,31 @@ public class CreateContentGenerationTaskRequest {
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setOptimizePrompt(@javax.annotation.Nullable Boolean optimizePrompt) {
     this.optimizePrompt = optimizePrompt;
+  }
+
+  public CreateContentGenerationTaskRequest omniReferenceTaskType(@javax.annotation.Nullable String omniReferenceTaskType) {
+
+    this.omniReferenceTaskType = omniReferenceTaskType;
+    return this;
+  }
+
+  /**
+   * Get omniReferenceTaskType
+   * @return omniReferenceTaskType
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_OMNI_REFERENCE_TASK_TYPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getOmniReferenceTaskType() {
+    return omniReferenceTaskType;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_OMNI_REFERENCE_TASK_TYPE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setOmniReferenceTaskType(@javax.annotation.Nullable String omniReferenceTaskType) {
+    this.omniReferenceTaskType = omniReferenceTaskType;
   }
 
   public CreateContentGenerationTaskRequest tools(@javax.annotation.Nullable List<Tool> tools) {
@@ -735,8 +1005,17 @@ public class CreateContentGenerationTaskRequest {
         Objects.equals(this.frames, createContentGenerationTaskRequest.frames) &&
         Objects.equals(this.subdivisionLevel, createContentGenerationTaskRequest.subdivisionLevel) &&
         Objects.equals(this.fileFormat, createContentGenerationTaskRequest.fileFormat) &&
+        Objects.equals(this.outputFormat, createContentGenerationTaskRequest.outputFormat) &&
+        Objects.equals(this.texture, createContentGenerationTaskRequest.texture) &&
+        Objects.equals(this.geometryQuality, createContentGenerationTaskRequest.geometryQuality) &&
+        Objects.equals(this.geometryDetail, createContentGenerationTaskRequest.geometryDetail) &&
+        Objects.equals(this.face, createContentGenerationTaskRequest.face) &&
+        Objects.equals(this.textureResolution, createContentGenerationTaskRequest.textureResolution) &&
+        Objects.equals(this.preserveUv, createContentGenerationTaskRequest.preserveUv) &&
+        Objects.equals(this.priority, createContentGenerationTaskRequest.priority) &&
         Objects.equals(this.draft, createContentGenerationTaskRequest.draft) &&
         Objects.equals(this.optimizePrompt, createContentGenerationTaskRequest.optimizePrompt) &&
+        Objects.equals(this.omniReferenceTaskType, createContentGenerationTaskRequest.omniReferenceTaskType) &&
         Objects.equals(this.tools, createContentGenerationTaskRequest.tools) &&
         Objects.equals(this.reasoningEffort, createContentGenerationTaskRequest.reasoningEffort) &&
         Objects.equals(this.humanFaceMode, createContentGenerationTaskRequest.humanFaceMode) &&
@@ -745,7 +1024,7 @@ public class CreateContentGenerationTaskRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(model, content, callbackUrl, returnLastFrame, serviceTier, executionExpiresAfter, generateAudio, cameraFixed, watermark, seed, resolution, ratio, duration, frames, subdivisionLevel, fileFormat, draft, optimizePrompt, tools, reasoningEffort, humanFaceMode, safetyIdentifier);
+    return Objects.hash(model, content, callbackUrl, returnLastFrame, serviceTier, executionExpiresAfter, generateAudio, cameraFixed, watermark, seed, resolution, ratio, duration, frames, subdivisionLevel, fileFormat, outputFormat, texture, geometryQuality, geometryDetail, face, textureResolution, preserveUv, priority, draft, optimizePrompt, omniReferenceTaskType, tools, reasoningEffort, humanFaceMode, safetyIdentifier);
   }
 
   @Override
@@ -768,8 +1047,17 @@ public class CreateContentGenerationTaskRequest {
     sb.append("    frames: ").append(toIndentedString(frames)).append("\n");
     sb.append("    subdivisionLevel: ").append(toIndentedString(subdivisionLevel)).append("\n");
     sb.append("    fileFormat: ").append(toIndentedString(fileFormat)).append("\n");
+    sb.append("    outputFormat: ").append(toIndentedString(outputFormat)).append("\n");
+    sb.append("    texture: ").append(toIndentedString(texture)).append("\n");
+    sb.append("    geometryQuality: ").append(toIndentedString(geometryQuality)).append("\n");
+    sb.append("    geometryDetail: ").append(toIndentedString(geometryDetail)).append("\n");
+    sb.append("    face: ").append(toIndentedString(face)).append("\n");
+    sb.append("    textureResolution: ").append(toIndentedString(textureResolution)).append("\n");
+    sb.append("    preserveUv: ").append(toIndentedString(preserveUv)).append("\n");
+    sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
     sb.append("    draft: ").append(toIndentedString(draft)).append("\n");
     sb.append("    optimizePrompt: ").append(toIndentedString(optimizePrompt)).append("\n");
+    sb.append("    omniReferenceTaskType: ").append(toIndentedString(omniReferenceTaskType)).append("\n");
     sb.append("    tools: ").append(toIndentedString(tools)).append("\n");
     sb.append("    reasoningEffort: ").append(toIndentedString(reasoningEffort)).append("\n");
     sb.append("    humanFaceMode: ").append(toIndentedString(humanFaceMode)).append("\n");
@@ -862,12 +1150,48 @@ public class CreateContentGenerationTaskRequest {
       this.instance.fileFormat = fileFormat;
       return this;
     }
+    public CreateContentGenerationTaskRequest.Builder outputFormat(String outputFormat) {
+      this.instance.outputFormat = outputFormat;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder texture(Boolean texture) {
+      this.instance.texture = texture;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder geometryQuality(String geometryQuality) {
+      this.instance.geometryQuality = geometryQuality;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder geometryDetail(String geometryDetail) {
+      this.instance.geometryDetail = geometryDetail;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder face(Long face) {
+      this.instance.face = face;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder textureResolution(String textureResolution) {
+      this.instance.textureResolution = textureResolution;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder preserveUv(Boolean preserveUv) {
+      this.instance.preserveUv = preserveUv;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder priority(Integer priority) {
+      this.instance.priority = priority;
+      return this;
+    }
     public CreateContentGenerationTaskRequest.Builder draft(Boolean draft) {
       this.instance.draft = draft;
       return this;
     }
     public CreateContentGenerationTaskRequest.Builder optimizePrompt(Boolean optimizePrompt) {
       this.instance.optimizePrompt = optimizePrompt;
+      return this;
+    }
+    public CreateContentGenerationTaskRequest.Builder omniReferenceTaskType(String omniReferenceTaskType) {
+      this.instance.omniReferenceTaskType = omniReferenceTaskType;
       return this;
     }
     public CreateContentGenerationTaskRequest.Builder tools(List<Tool> tools) {
@@ -936,8 +1260,17 @@ public class CreateContentGenerationTaskRequest {
       .frames(getFrames())
       .subdivisionLevel(getSubdivisionLevel())
       .fileFormat(getFileFormat())
+      .outputFormat(getOutputFormat())
+      .texture(getTexture())
+      .geometryQuality(getGeometryQuality())
+      .geometryDetail(getGeometryDetail())
+      .face(getFace())
+      .textureResolution(getTextureResolution())
+      .preserveUv(getPreserveUv())
+      .priority(getPriority())
       .draft(getDraft())
       .optimizePrompt(getOptimizePrompt())
+      .omniReferenceTaskType(getOmniReferenceTaskType())
       .tools(getTools())
       .reasoningEffort(getReasoningEffort())
       .humanFaceMode(getHumanFaceMode())

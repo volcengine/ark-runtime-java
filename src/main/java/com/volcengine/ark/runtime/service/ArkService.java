@@ -413,6 +413,11 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
                 request.getFilterModel(),
                 request.getFilterServiceTier(),
                 request.getFilterTaskIds(),
+                request.getModel(),
+                contentGenerationQueryValues(request.getFilterStatuses()),
+                request.getLimit(),
+                request.getAfter(),
+                request.getOrder() == null ? null : request.getOrder().getValue(),
                 customHeaders
         ));
     }
@@ -1115,5 +1120,17 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
                     client.dispatcher().executorService()
             );
         }
+    }
+
+    /** Wire values of an enum list query parameter; null when it is not set. */
+    private static List<String> contentGenerationQueryValues(List<?> values) {
+        if (values == null) {
+            return null;
+        }
+        List<String> wireValues = new ArrayList<>(values.size());
+        for (Object value : values) {
+            wireValues.add(String.valueOf(value));
+        }
+        return wireValues;
     }
 }
