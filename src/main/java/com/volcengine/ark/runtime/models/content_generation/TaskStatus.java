@@ -33,7 +33,9 @@ public enum TaskStatus {
 
   SUCCEEDED("succeeded"),
 
-  FAILED("failed");
+  FAILED("failed"),
+
+  EXPIRED("expired");
 
   private String value;
 

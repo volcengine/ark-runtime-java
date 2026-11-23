@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Objects;
 
 /**
- * One element of a generation request &#x60;content&#x60; list. Exactly one of &#x60;text&#x60; / &#x60;image_url&#x60; / &#x60;video_url&#x60; / &#x60;audio_url&#x60; / &#x60;draft_task&#x60; must be set, matching the value of &#x60;type&#x60;.
+ * One element of a generation request &#x60;content&#x60; list. Exactly one of &#x60;text&#x60; / &#x60;image_url&#x60; / &#x60;video_url&#x60; / &#x60;audio_url&#x60; / &#x60;draft_task&#x60; / &#x60;file_url&#x60; must be set, matching the value of &#x60;type&#x60;.
  */
 @JsonPropertyOrder({
   ContentItem.JSON_PROPERTY_TYPE,
@@ -31,6 +31,7 @@ import java.util.Objects;
   ContentItem.JSON_PROPERTY_VIDEO_URL,
   ContentItem.JSON_PROPERTY_AUDIO_URL,
   ContentItem.JSON_PROPERTY_DRAFT_TASK,
+  ContentItem.JSON_PROPERTY_FILE_URL,
   ContentItem.JSON_PROPERTY_ROLE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
@@ -58,6 +59,10 @@ public class ContentItem {
   public static final String JSON_PROPERTY_DRAFT_TASK = "draft_task";
   @javax.annotation.Nullable
   private DraftTask draftTask;
+
+  public static final String JSON_PROPERTY_FILE_URL = "file_url";
+  @javax.annotation.Nullable
+  private FileURL fileUrl;
 
   public static final String JSON_PROPERTY_ROLE = "role";
   @javax.annotation.Nullable
@@ -216,6 +221,31 @@ public class ContentItem {
     this.draftTask = draftTask;
   }
 
+  public ContentItem fileUrl(@javax.annotation.Nullable FileURL fileUrl) {
+
+    this.fileUrl = fileUrl;
+    return this;
+  }
+
+  /**
+   * File content. Required when &#x60;type&#x60; is &#x60;file_url&#x60;.
+   * @return fileUrl
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FILE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public FileURL getFileUrl() {
+    return fileUrl;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FILE_URL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFileUrl(@javax.annotation.Nullable FileURL fileUrl) {
+    this.fileUrl = fileUrl;
+  }
+
   public ContentItem role(@javax.annotation.Nullable String role) {
 
     this.role = role;
@@ -223,7 +253,7 @@ public class ContentItem {
   }
 
   /**
-   * Optional role tag (e.g. &#x60;first_frame&#x60;, &#x60;reference_image&#x60;).
+   * Optional role tag (e.g. &#x60;first_frame&#x60;, &#x60;reference_image&#x60;). 3D generation uses &#x60;front_view&#x60; / &#x60;back_view&#x60; / &#x60;left_view&#x60; / &#x60;right_view&#x60; / &#x60;top_view&#x60; / &#x60;bottom_view&#x60; for images and &#x60;mesh_to_texture&#x60; for the mesh file.
    * @return role
    */
   @javax.annotation.Nullable
@@ -257,12 +287,13 @@ public class ContentItem {
         Objects.equals(this.videoUrl, contentItem.videoUrl) &&
         Objects.equals(this.audioUrl, contentItem.audioUrl) &&
         Objects.equals(this.draftTask, contentItem.draftTask) &&
+        Objects.equals(this.fileUrl, contentItem.fileUrl) &&
         Objects.equals(this.role, contentItem.role);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, text, imageUrl, videoUrl, audioUrl, draftTask, role);
+    return Objects.hash(type, text, imageUrl, videoUrl, audioUrl, draftTask, fileUrl, role);
   }
 
   @Override
@@ -275,6 +306,7 @@ public class ContentItem {
     sb.append("    videoUrl: ").append(toIndentedString(videoUrl)).append("\n");
     sb.append("    audioUrl: ").append(toIndentedString(audioUrl)).append("\n");
     sb.append("    draftTask: ").append(toIndentedString(draftTask)).append("\n");
+    sb.append("    fileUrl: ").append(toIndentedString(fileUrl)).append("\n");
     sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -324,6 +356,10 @@ public class ContentItem {
       this.instance.draftTask = draftTask;
       return this;
     }
+    public ContentItem.Builder fileUrl(FileURL fileUrl) {
+      this.instance.fileUrl = fileUrl;
+      return this;
+    }
     public ContentItem.Builder role(String role) {
       this.instance.role = role;
       return this;
@@ -368,6 +404,7 @@ public class ContentItem {
       .videoUrl(getVideoUrl())
       .audioUrl(getAudioUrl())
       .draftTask(getDraftTask())
+      .fileUrl(getFileUrl())
       .role(getRole());
   }
 

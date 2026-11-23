@@ -28,47 +28,67 @@ import java.util.Objects;
  */
 @JsonPropertyOrder({
   ListContentGenerationTasksResponse.JSON_PROPERTY_TOTAL,
-  ListContentGenerationTasksResponse.JSON_PROPERTY_ITEMS
+  ListContentGenerationTasksResponse.JSON_PROPERTY_ITEMS,
+  ListContentGenerationTasksResponse.JSON_PROPERTY_DATA,
+  ListContentGenerationTasksResponse.JSON_PROPERTY_FIRST_ID,
+  ListContentGenerationTasksResponse.JSON_PROPERTY_LAST_ID,
+  ListContentGenerationTasksResponse.JSON_PROPERTY_HAS_MORE
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
 public class ListContentGenerationTasksResponse {
   public static final String JSON_PROPERTY_TOTAL = "total";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private Integer total;
 
   public static final String JSON_PROPERTY_ITEMS = "items";
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   private List<ContentGenerationTask> items;
+
+  public static final String JSON_PROPERTY_DATA = "data";
+  @javax.annotation.Nullable
+  private List<ContentGenerationTask> data;
+
+  public static final String JSON_PROPERTY_FIRST_ID = "first_id";
+  @javax.annotation.Nullable
+  private String firstId;
+
+  public static final String JSON_PROPERTY_LAST_ID = "last_id";
+  @javax.annotation.Nullable
+  private String lastId;
+
+  public static final String JSON_PROPERTY_HAS_MORE = "has_more";
+  @javax.annotation.Nullable
+  private Boolean hasMore;
 
   public ListContentGenerationTasksResponse() {
   }
 
-  public ListContentGenerationTasksResponse total(@javax.annotation.Nonnull Integer total) {
+  public ListContentGenerationTasksResponse total(@javax.annotation.Nullable Integer total) {
 
     this.total = total;
     return this;
   }
 
   /**
-   * Total number of tasks matching the filter (across all pages).
+   * Total number of tasks matching the filter (across all pages). Not returned by List V2.
    * @return total
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_TOTAL, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TOTAL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public Integer getTotal() {
     return total;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_TOTAL, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setTotal(@javax.annotation.Nonnull Integer total) {
+  @JsonProperty(value = JSON_PROPERTY_TOTAL, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTotal(@javax.annotation.Nullable Integer total) {
     this.total = total;
   }
 
-  public ListContentGenerationTasksResponse items(@javax.annotation.Nonnull List<ContentGenerationTask> items) {
+  public ListContentGenerationTasksResponse items(@javax.annotation.Nullable List<ContentGenerationTask> items) {
 
     this.items = items;
     return this;
@@ -83,22 +103,130 @@ public class ListContentGenerationTasksResponse {
   }
 
   /**
-   * Page of tasks.
+   * Page of tasks. Not returned by List V2.
    * @return items
    */
-  @javax.annotation.Nonnull
-  @JsonProperty(value = JSON_PROPERTY_ITEMS, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_ITEMS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
 
   public List<ContentGenerationTask> getItems() {
     return items;
   }
 
 
-  @JsonProperty(value = JSON_PROPERTY_ITEMS, required = true)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setItems(@javax.annotation.Nonnull List<ContentGenerationTask> items) {
+  @JsonProperty(value = JSON_PROPERTY_ITEMS, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+  public void setItems(@javax.annotation.Nullable List<ContentGenerationTask> items) {
     this.items = items;
+  }
+
+  public ListContentGenerationTasksResponse data(@javax.annotation.Nullable List<ContentGenerationTask> data) {
+
+    this.data = data;
+    return this;
+  }
+
+  public ListContentGenerationTasksResponse addDataItem(ContentGenerationTask dataItem) {
+    if (this.data == null) {
+      this.data = new ArrayList<>();
+    }
+    this.data.add(dataItem);
+    return this;
+  }
+
+  /**
+   * List V2: page of tasks.
+   * @return data
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_DATA, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+
+  public List<ContentGenerationTask> getData() {
+    return data;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_DATA, required = false)
+  @JsonInclude(value = JsonInclude.Include.NON_NULL)
+  public void setData(@javax.annotation.Nullable List<ContentGenerationTask> data) {
+    this.data = data;
+  }
+
+  public ListContentGenerationTasksResponse firstId(@javax.annotation.Nullable String firstId) {
+
+    this.firstId = firstId;
+    return this;
+  }
+
+  /**
+   * Get firstId
+   * @return firstId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FIRST_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getFirstId() {
+    return firstId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FIRST_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFirstId(@javax.annotation.Nullable String firstId) {
+    this.firstId = firstId;
+  }
+
+  public ListContentGenerationTasksResponse lastId(@javax.annotation.Nullable String lastId) {
+
+    this.lastId = lastId;
+    return this;
+  }
+
+  /**
+   * Get lastId
+   * @return lastId
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_LAST_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getLastId() {
+    return lastId;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_LAST_ID, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLastId(@javax.annotation.Nullable String lastId) {
+    this.lastId = lastId;
+  }
+
+  public ListContentGenerationTasksResponse hasMore(@javax.annotation.Nullable Boolean hasMore) {
+
+    this.hasMore = hasMore;
+    return this;
+  }
+
+  /**
+   * List V2: whether more tasks follow this page.
+   * @return hasMore
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_HAS_MORE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getHasMore() {
+    return hasMore;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_HAS_MORE, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setHasMore(@javax.annotation.Nullable Boolean hasMore) {
+    this.hasMore = hasMore;
   }
 
 
@@ -112,12 +240,16 @@ public class ListContentGenerationTasksResponse {
     }
     ListContentGenerationTasksResponse listContentGenerationTasksResponse = (ListContentGenerationTasksResponse) o;
     return Objects.equals(this.total, listContentGenerationTasksResponse.total) &&
-        Objects.equals(this.items, listContentGenerationTasksResponse.items);
+        Objects.equals(this.items, listContentGenerationTasksResponse.items) &&
+        Objects.equals(this.data, listContentGenerationTasksResponse.data) &&
+        Objects.equals(this.firstId, listContentGenerationTasksResponse.firstId) &&
+        Objects.equals(this.lastId, listContentGenerationTasksResponse.lastId) &&
+        Objects.equals(this.hasMore, listContentGenerationTasksResponse.hasMore);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(total, items);
+    return Objects.hash(total, items, data, firstId, lastId, hasMore);
   }
 
   @Override
@@ -126,6 +258,10 @@ public class ListContentGenerationTasksResponse {
     sb.append("class ListContentGenerationTasksResponse {\n");
     sb.append("    total: ").append(toIndentedString(total)).append("\n");
     sb.append("    items: ").append(toIndentedString(items)).append("\n");
+    sb.append("    data: ").append(toIndentedString(data)).append("\n");
+    sb.append("    firstId: ").append(toIndentedString(firstId)).append("\n");
+    sb.append("    lastId: ").append(toIndentedString(lastId)).append("\n");
+    sb.append("    hasMore: ").append(toIndentedString(hasMore)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -156,6 +292,22 @@ public class ListContentGenerationTasksResponse {
     }
     public ListContentGenerationTasksResponse.Builder items(List<ContentGenerationTask> items) {
       this.instance.items = items;
+      return this;
+    }
+    public ListContentGenerationTasksResponse.Builder data(List<ContentGenerationTask> data) {
+      this.instance.data = data;
+      return this;
+    }
+    public ListContentGenerationTasksResponse.Builder firstId(String firstId) {
+      this.instance.firstId = firstId;
+      return this;
+    }
+    public ListContentGenerationTasksResponse.Builder lastId(String lastId) {
+      this.instance.lastId = lastId;
+      return this;
+    }
+    public ListContentGenerationTasksResponse.Builder hasMore(Boolean hasMore) {
+      this.instance.hasMore = hasMore;
       return this;
     }
 
@@ -193,7 +345,11 @@ public class ListContentGenerationTasksResponse {
   public ListContentGenerationTasksResponse.Builder toBuilder() {
     return new ListContentGenerationTasksResponse.Builder()
       .total(getTotal())
-      .items(getItems());
+      .items(getItems())
+      .data(getData())
+      .firstId(getFirstId())
+      .lastId(getLastId())
+      .hasMore(getHasMore());
   }
 
 

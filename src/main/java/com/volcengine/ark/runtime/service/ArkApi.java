@@ -137,6 +137,22 @@ public interface ArkApi {
             @HeaderMap Map<String, String> customHeaders
     );
 
+    @GET("/api/v3/contents/generations/tasks")
+    Single<ListContentGenerationTasksResponse> listContentGenerationTasks(
+            @Query("page_num") Integer pageNum,
+            @Query("page_size") Integer pageSize,
+            @Query("filter.status") String status,
+            @Query("filter.model") String model,
+            @Query("filter.service_tier") String serviceTier,
+            @Query("filter.task_ids") List<String> taskIds,
+            @Query("model") String endpointModel,
+            @Query("filter.statuses") List<String> filterStatuses,
+            @Query("limit") Integer limit,
+            @Query("after") String after,
+            @Query("order") String order,
+            @HeaderMap Map<String, String> customHeaders
+    );
+
     @DELETE("/api/v3/contents/generations/tasks/{taskId}")
     Completable deleteContentGenerationTask(@Path("taskId") String taskId, @HeaderMap Map<String, String> customHeaders);
 

@@ -44,6 +44,10 @@ import java.util.Objects;
   ContentGenerationTask.JSON_PROPERTY_REVISED_PROMPT,
   ContentGenerationTask.JSON_PROPERTY_SUBDIVISIONLEVEL,
   ContentGenerationTask.JSON_PROPERTY_FILEFORMAT,
+  ContentGenerationTask.JSON_PROPERTY_FILE_FORMAT,
+  ContentGenerationTask.JSON_PROPERTY_OUTPUT_FORMAT,
+  ContentGenerationTask.JSON_PROPERTY_TEXTURE_RESOLUTION,
+  ContentGenerationTask.JSON_PROPERTY_PRIORITY,
   ContentGenerationTask.JSON_PROPERTY_SERVICE_TIER,
   ContentGenerationTask.JSON_PROPERTY_EXECUTION_EXPIRES_AFTER,
   ContentGenerationTask.JSON_PROPERTY_GENERATE_AUDIO,
@@ -122,6 +126,22 @@ public class ContentGenerationTask {
   public static final String JSON_PROPERTY_FILEFORMAT = "fileformat";
   @javax.annotation.Nullable
   private String fileformat;
+
+  public static final String JSON_PROPERTY_FILE_FORMAT = "file_format";
+  @javax.annotation.Nullable
+  private String fileFormat;
+
+  public static final String JSON_PROPERTY_OUTPUT_FORMAT = "output_format";
+  @javax.annotation.Nullable
+  private String outputFormat;
+
+  public static final String JSON_PROPERTY_TEXTURE_RESOLUTION = "texture_resolution";
+  @javax.annotation.Nullable
+  private String textureResolution;
+
+  public static final String JSON_PROPERTY_PRIORITY = "priority";
+  @javax.annotation.Nullable
+  private Integer priority;
 
   public static final String JSON_PROPERTY_SERVICE_TIER = "service_tier";
   @javax.annotation.Nullable
@@ -240,7 +260,7 @@ public class ContentGenerationTask {
   }
 
   /**
-   * Populated when the task ended in &#x60;failed&#x60;.
+   * Get error
    * @return error
    */
   @javax.annotation.Nullable
@@ -583,6 +603,106 @@ public class ContentGenerationTask {
     this.fileformat = fileformat;
   }
 
+  public ContentGenerationTask fileFormat(@javax.annotation.Nullable String fileFormat) {
+
+    this.fileFormat = fileFormat;
+    return this;
+  }
+
+  /**
+   * Output file format of a 3D generation task.
+   * @return fileFormat
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_FILE_FORMAT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getFileFormat() {
+    return fileFormat;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_FILE_FORMAT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setFileFormat(@javax.annotation.Nullable String fileFormat) {
+    this.fileFormat = fileFormat;
+  }
+
+  public ContentGenerationTask outputFormat(@javax.annotation.Nullable String outputFormat) {
+
+    this.outputFormat = outputFormat;
+    return this;
+  }
+
+  /**
+   * Get outputFormat
+   * @return outputFormat
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_OUTPUT_FORMAT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getOutputFormat() {
+    return outputFormat;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_OUTPUT_FORMAT, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setOutputFormat(@javax.annotation.Nullable String outputFormat) {
+    this.outputFormat = outputFormat;
+  }
+
+  public ContentGenerationTask textureResolution(@javax.annotation.Nullable String textureResolution) {
+
+    this.textureResolution = textureResolution;
+    return this;
+  }
+
+  /**
+   * Texture resolution actually used by a 3D generation task.
+   * @return textureResolution
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_TEXTURE_RESOLUTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getTextureResolution() {
+    return textureResolution;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_TEXTURE_RESOLUTION, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTextureResolution(@javax.annotation.Nullable String textureResolution) {
+    this.textureResolution = textureResolution;
+  }
+
+  public ContentGenerationTask priority(@javax.annotation.Nullable Integer priority) {
+
+    this.priority = priority;
+    return this;
+  }
+
+  /**
+   * Execution priority echoed back.
+   * @return priority
+   */
+  @javax.annotation.Nullable
+  @JsonProperty(value = JSON_PROPERTY_PRIORITY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Integer getPriority() {
+    return priority;
+  }
+
+
+  @JsonProperty(value = JSON_PROPERTY_PRIORITY, required = false)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setPriority(@javax.annotation.Nullable Integer priority) {
+    this.priority = priority;
+  }
+
   public ContentGenerationTask serviceTier(@javax.annotation.Nullable String serviceTier) {
 
     this.serviceTier = serviceTier;
@@ -818,6 +938,10 @@ public class ContentGenerationTask {
         Objects.equals(this.revisedPrompt, contentGenerationTask.revisedPrompt) &&
         Objects.equals(this.subdivisionlevel, contentGenerationTask.subdivisionlevel) &&
         Objects.equals(this.fileformat, contentGenerationTask.fileformat) &&
+        Objects.equals(this.fileFormat, contentGenerationTask.fileFormat) &&
+        Objects.equals(this.outputFormat, contentGenerationTask.outputFormat) &&
+        Objects.equals(this.textureResolution, contentGenerationTask.textureResolution) &&
+        Objects.equals(this.priority, contentGenerationTask.priority) &&
         Objects.equals(this.serviceTier, contentGenerationTask.serviceTier) &&
         Objects.equals(this.executionExpiresAfter, contentGenerationTask.executionExpiresAfter) &&
         Objects.equals(this.generateAudio, contentGenerationTask.generateAudio) &&
@@ -830,7 +954,7 @@ public class ContentGenerationTask {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, model, status, error, content, usage, createdAt, updatedAt, seed, resolution, ratio, duration, frames, framespersecond, revisedPrompt, subdivisionlevel, fileformat, serviceTier, executionExpiresAfter, generateAudio, draft, draftTaskId, tools, reasoningEffort, safetyIdentifier);
+    return Objects.hash(id, model, status, error, content, usage, createdAt, updatedAt, seed, resolution, ratio, duration, frames, framespersecond, revisedPrompt, subdivisionlevel, fileformat, fileFormat, outputFormat, textureResolution, priority, serviceTier, executionExpiresAfter, generateAudio, draft, draftTaskId, tools, reasoningEffort, safetyIdentifier);
   }
 
   @Override
@@ -854,6 +978,10 @@ public class ContentGenerationTask {
     sb.append("    revisedPrompt: ").append(toIndentedString(revisedPrompt)).append("\n");
     sb.append("    subdivisionlevel: ").append(toIndentedString(subdivisionlevel)).append("\n");
     sb.append("    fileformat: ").append(toIndentedString(fileformat)).append("\n");
+    sb.append("    fileFormat: ").append(toIndentedString(fileFormat)).append("\n");
+    sb.append("    outputFormat: ").append(toIndentedString(outputFormat)).append("\n");
+    sb.append("    textureResolution: ").append(toIndentedString(textureResolution)).append("\n");
+    sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
     sb.append("    serviceTier: ").append(toIndentedString(serviceTier)).append("\n");
     sb.append("    executionExpiresAfter: ").append(toIndentedString(executionExpiresAfter)).append("\n");
     sb.append("    generateAudio: ").append(toIndentedString(generateAudio)).append("\n");
@@ -954,6 +1082,22 @@ public class ContentGenerationTask {
       this.instance.fileformat = fileformat;
       return this;
     }
+    public ContentGenerationTask.Builder fileFormat(String fileFormat) {
+      this.instance.fileFormat = fileFormat;
+      return this;
+    }
+    public ContentGenerationTask.Builder outputFormat(String outputFormat) {
+      this.instance.outputFormat = outputFormat;
+      return this;
+    }
+    public ContentGenerationTask.Builder textureResolution(String textureResolution) {
+      this.instance.textureResolution = textureResolution;
+      return this;
+    }
+    public ContentGenerationTask.Builder priority(Integer priority) {
+      this.instance.priority = priority;
+      return this;
+    }
     public ContentGenerationTask.Builder serviceTier(String serviceTier) {
       this.instance.serviceTier = serviceTier;
       return this;
@@ -1037,6 +1181,10 @@ public class ContentGenerationTask {
       .revisedPrompt(getRevisedPrompt())
       .subdivisionlevel(getSubdivisionlevel())
       .fileformat(getFileformat())
+      .fileFormat(getFileFormat())
+      .outputFormat(getOutputFormat())
+      .textureResolution(getTextureResolution())
+      .priority(getPriority())
       .serviceTier(getServiceTier())
       .executionExpiresAfter(getExecutionExpiresAfter())
       .generateAudio(getGenerateAudio())
