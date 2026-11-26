@@ -537,6 +537,7 @@ public class ArkService extends ArkBaseService implements ArkBaseServiceImpl {
             request.getAfter(),
             request.getPurpose() == null ? null : request.getPurpose().getValue(),
             request.getOrder() == null ? null : request.getOrder().getValue(),
+            request.getScopeId(),
             new HashMap<>()));
     }
 
