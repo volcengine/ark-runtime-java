@@ -205,6 +205,14 @@ public interface ArkApi {
                                        @Query("order") String order,
                                        @HeaderMap Map<String, String> customHeaders);
 
+    @GET("/api/v3/files")
+    Single<FileListResponse> listFiles(@Query("limit") Integer limit,
+                                       @Query("after") String after,
+                                       @Query("purpose") String purpose,
+                                       @Query("order") String order,
+                                       @Query("scope_id") String scopeId,
+                                       @HeaderMap Map<String, String> customHeaders);
+
     // See ark-apis typespec/{agent, environment, memory, session, skill, vault}.
 
     // ---- Environment ----
